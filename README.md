@@ -1,10 +1,12 @@
-# AutoTrimps<br>
-Automation for the idle incremental game 'Trimps'<br><br>
-
-~Installation~<br><br>
-
--install greasemonkey/tampermonkey<br>
--create new script<br>
--copy pasta AutoTrimps.js text <br>
--go to https://trimps.github.io<br>
--profit?<br>
+# AutoTrimps  
+Automation for the idle incremental game 'Trimps'  
+  
+~Installation~  
+  
+-install greasemonkey/tampermonkey  
+-create new script  
+-copy pasta AutoTrimps.js text  
+-go to https://trimps.github.io  
+-profit?  
+  
+For more info or input post on the reddit forum: https://www.reddit.com/r/Trimps/comments/3yjsyq/autotrimps/
