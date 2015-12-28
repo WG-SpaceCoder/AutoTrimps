@@ -4,7 +4,7 @@
     // @version      0.1
     // @description  try to take over the world!
     // @author       zininzinin
-    // @include        https://trimps.github.io/
+    // @include        *trimps.github.io*
     // @grant        none
     // ==/UserScript==
 
@@ -15,6 +15,7 @@
         //Variables//
         var runInterval = 200; //How often to loop through logic
         var enableDebug = true; //Spam console?
+        var startAllSelected = false;
 
         //List Variables//
         var jobList = [{
@@ -220,6 +221,9 @@
         document.getElementById("equipmentTab").style.opacity = "1";
         document.getElementById("buyTabsUl").innerHTML += '<li role="presentation" id="autoTab" onclick="filterTabs(\'auto\')" class="buyTab"><a id="autoA" href="#">Automation</a></li>';
 
+        if (!startAllSelected){
+            //WIP
+        }
 
         //Functions//
         function debug(message) {
@@ -849,7 +853,7 @@
 
                 //Check if stuck in world
                 if (AutoProgressMap()) {
-                    if (!canBeatWorld() && canAffordNewMap()) {
+                    if (!canBeatWorld(window.game.global.lastClearedMapCell+1) && canAffordNewMap()) {
                         // debug('Mapping Non-Unique');
                         goToCurrentLevelMap();
                         return;
@@ -860,7 +864,7 @@
             }
         }
 
-        function autoMap() {
+        function autoMap() { //Depricated because it was horrible
             // return; //just for testing
             if (window.game.global.mapsUnlocked) {
                 // debug('MapsUnlocked');
