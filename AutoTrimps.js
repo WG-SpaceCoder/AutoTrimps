@@ -701,6 +701,7 @@
         }
 
         function canAffordMap() {
+            // debug('canaffordmap' + window.updateMapCost(true) + ' ' + window.game.resources.fragments.owned);
             return window.updateMapCost(true) < window.game.resources.fragments.owned;
         }
 
@@ -843,7 +844,7 @@
 
         function newAutoMap() {
             if (window.game.global.mapsUnlocked) {
-                fixMap();
+                // fixMap();
                 //Check for unique maps
                 var unique = getUniqueMap();
                 if (unique != undefined && canAffordNewMap() && AutoUniqueMap()) {
@@ -855,8 +856,9 @@
 
                 //Check if stuck in world
                 if (AutoProgressMap()) {
-                    if (!canBeatWorld(window.game.global.lastClearedMapCell + 1) && canAffordNewMap()) {
-                        // debug('Mapping Non-Unique');
+                    // debug('canBeatWorld(window.game.global.lastClearedCell + 1)' + (window.game.global.lastClearedCell + 1) + canBeatWorld(window.game.global.lastClearedCell + 1) + ' canAffordNewMap ' + canAffordNewMap());
+                    if (!canBeatWorld(window.game.global.lastClearedCell + 1) && canAffordNewMap()) {
+                        debug('Mapping Non-Unique');
                         goToCurrentLevelMap();
                         return;
                     } else {
