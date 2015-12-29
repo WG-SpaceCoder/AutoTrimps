@@ -137,7 +137,7 @@
 
 
 
-        var upgradeList = ['Shieldblock', 'Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'Potency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm'];
+        var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'Potency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm'];
         var buildingList = ['Hut', 'House', 'Gym', 'Mansion', 'Hotel', 'Resort', 'Gateway', 'Collector', 'Warpstation', 'Tribute', 'Nursery']; //NOTE THAT I REMOVED WORMHOLE TEMPORARILY UNTILL I FIGURE OUT WHAT TO DO WITH IT
 
         //Intervals//
@@ -221,7 +221,7 @@
         document.getElementById("equipmentTab").style.opacity = "1";
         document.getElementById("buyTabsUl").innerHTML += '<li role="presentation" id="autoTab" onclick="filterTabs(\'auto\')" class="buyTab"><a id="autoA" href="#">Automation</a></li>';
 
-        if (!startAllSelected){
+        if (!startAllSelected) {
             //WIP
         }
 
@@ -277,7 +277,9 @@
         function buyJobs() {
             if (autoBuyJobs()) {
                 // debug('AutoBuyJobs = ' + autoBuyJobs());
-                while (freeWorkers() > 0) {
+                var i = 0;
+                while (freeWorkers() > 0 && i < 100) {
+                    i++;
                     // debug('Job loop');
                     var greatestWant = 0;
                     var jobToHire = '';
@@ -853,7 +855,7 @@
 
                 //Check if stuck in world
                 if (AutoProgressMap()) {
-                    if (!canBeatWorld(window.game.global.lastClearedMapCell+1) && canAffordNewMap()) {
+                    if (!canBeatWorld(window.game.global.lastClearedMapCell + 1) && canAffordNewMap()) {
                         // debug('Mapping Non-Unique');
                         goToCurrentLevelMap();
                         return;
