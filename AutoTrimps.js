@@ -213,6 +213,13 @@
             return document.getElementById("chkAutoProgressMap").checked;
         }
 
+        document.getElementById("autoContainer").innerHTML += '<input id="maxHitsTillStuck" style="width: 10%;color: #000000;" value="10">Max hits to kill enemy before stuck <br> ';
+
+        function maxHitsTillStuck() {
+            return document.getElementById("maxHitsTillStuck").value;
+        }
+
+
         //I honestly have no idea why I have to do this >.>
         document.getElementById("wood").style.opacity = "1";
         document.getElementById("science").style.opacity = "1";
@@ -278,6 +285,7 @@
             if (autoBuyJobs()) {
                 // debug('AutoBuyJobs = ' + autoBuyJobs());
                 var i = 0;
+                var amountToBuy = Math.ceil(freeWorkers() * 0.001);
                 while (freeWorkers() > 0 && i < 100) {
                     i++;
                     // debug('Job loop');
@@ -296,10 +304,14 @@
                         // debug('No job to hire :(');
                     } else {
                         // debug('Greastest want for jobs: ' + jobToHire + ' at ' + greatestWant + ' want');
-                        debug('Hiring ' + jobToHire);
-                        var added = window.canAffordJob(jobToHire, true, 1);
+                        // debug('Hiring ' + amountToBuy + ' '+ jobToHire);
+                        var oldAmount = window.game.global.buyAmt;
+                        window.game.global.buyAmt = amountToBuy;
+                        var added = window.canAffordJob(jobToHire, true, Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed);
+                        debug('Hiring ' + added + ' '+ jobToHire);
                         window.game.jobs[jobToHire].owned += added;
                         window.game.resources.trimps.employed += added;
+                        window.game.global.buyAmt = oldAmount;
                         window.tooltip('hide');
                     }
                 }
@@ -686,7 +698,8 @@
         }
 
         function canBeatCell(cell) {
-            return game.global.getEnemyAttack(cell.level, cell.name) < (getTotalDefence() * 0.75);
+            // debug('Running canBeatCell - Enemy Health: ' + window.game.global.getEnemyHealth(cell.level, cell.name)+ ' My damage ' +window.calculateDamage(window.game.global.soldierCurrentAttack, true, true, true)+ ' and max hits: ' +maxHitsTillStuck());
+            return game.global.getEnemyAttack(cell.level, cell.name) < (getTotalDefence() * 0.75) && window.game.global.getEnemyHealth(cell.level, cell.name) < (window.calculateDamage(window.game.global.soldierCurrentAttack, true, true, true) * maxHitsTillStuck());
         }
 
         function canBeatWorld(level) {
@@ -701,7 +714,7 @@
         }
 
         function canAffordMap() {
-            // debug('canaffordmap' + window.updateMapCost(true) + ' ' + window.game.resources.fragments.owned);
+            // debug('canaffordmap ' + window.updateMapCost(true) + ' ' + window.game.resources.fragments.owned);
             return window.updateMapCost(true) < window.game.resources.fragments.owned;
         }
 
@@ -858,7 +871,7 @@
                 if (AutoProgressMap()) {
                     // debug('canBeatWorld(window.game.global.lastClearedCell + 1)' + (window.game.global.lastClearedCell + 1) + canBeatWorld(window.game.global.lastClearedCell + 1) + ' canAffordNewMap ' + canAffordNewMap());
                     if (!canBeatWorld(window.game.global.lastClearedCell + 1) && canAffordNewMap()) {
-                        debug('Mapping Non-Unique');
+                        // debug('Mapping Non-Unique');
                         goToCurrentLevelMap();
                         return;
                     } else {
