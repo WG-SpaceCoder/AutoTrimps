@@ -308,7 +308,7 @@
                     } else {
                         // debug('Greastest want for jobs: ' + jobToHire + ' at ' + greatestWant + ' want');
                         // debug('Hiring ' + amountToBuy + ' '+ jobToHire);
-                        debug('owned ' + window.game.resources.trimps.owned + ' employed ' + window.game.resources.trimps.employed + ' amountToBuy ' + amountToBuy);
+                        // debug('owned ' + window.game.resources.trimps.owned + ' employed ' + window.game.resources.trimps.employed + ' amountToBuy ' + amountToBuy);
                         if (Math.floor(window.game.resources.trimps.owned - window.game.resources.trimps.employed) - amountToBuy <= 2) return;
                         var oldAmount = window.game.global.buyAmt;
                         window.game.global.buyAmt = amountToBuy;
