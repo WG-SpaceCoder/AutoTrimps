@@ -147,38 +147,27 @@
         setInterval(buyUpgrades, runInterval);
         setInterval(buyStorage, runInterval);
         setInterval(manualLabor, runInterval);
-        setInterval(newAutoMap, runInterval);
+        setInterval(newAutoMap, runInterval * 10);
         // setInterval(printGame, runInterval);
 
         //Page Changes//
-        document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row">  <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody>  <tr>  <td style="width: 200px;"> Loops   <br>   <input id="chkBuyStorage" title="Will buy storage when resource is almost full" checked="checked" type="checkbox">Buy Storage   <br>   <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" checked="checked" type="checkbox">Manual Gather   <br>   <input id="chkBuyJobs" title="Buys jobs based on ratios configured" checked="checked" type="checkbox">Buy Jobs   <br>   <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" checked="checked" type="checkbox">Buy Buildings   <br>   <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" checked="checked" type="checkbox">Buy Upgrades   <br>  </td>  <td style="width: 400px; vertical-align: top;">   <table style="text-align: left; vertical-align: middle; width: 100%;" border="0" cellpadding="0" cellspacing="0">   <tbody>    <tr>    <td style="width: 120px;">Equipment     <br>     <input id="chkBuyEquipH" title="Will buy the most efficient armor available" checked="checked" type="checkbox">Buy Armor</td>    <td>     <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" checked="checked" type="checkbox">Buy Armor Upgrades</td>    </tr>    <tr>    <td>     <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" checked="checked" type="checkbox">Buy Weapons</td>    <td>     <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" checked="checked" type="checkbox">Buy Weapon Upgrades</td>    </tr>   </tbody>   </table>   Maps   <br>   <input id="chkAutoUniqueMap" title="Auto run unique maps" checked="checked" type="checkbox">Auto run unique maps   <br>   <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" checked="checked" type="checkbox">Auto map when stuck   <br>   <input id="maxHitsTillStuck" style="width: 10%; color: rgb(0, 0, 0);" value="10">Max hits to kill enemy before stuck  </td>  </tr>  <tr>  <td style="vertical-align: middle; text-align: left;">   <br>  </td>  <td style="text-align: left; vertical-align: top;"></td>  </tr> </tbody> </table></div>';
-        // document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block;"><div id="autoTitleDiv" class="titleDiv"><div class="row"><div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span>            </div>        </div>    </div>    <div class="autoBox" id="autoHere">    </div></div>';
-
-        // document.getElementById("autoContainer").innerHTML += '<input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox" checked>Buy Storage<br>';
+        document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div><br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" checked="checked" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" checked="checked" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" checked="checked" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" checked="checked" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" checked="checked" type="checkbox">Buy Upgrades <br> </td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" checked="checked" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" checked="checked" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" checked="checked" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" checked="checked" type="checkbox">Buy Weapon Upgrades Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" checked="checked" type="checkbox">Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" checked="checked" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck </td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> </td> </tr> </tbody> </table></div>';
 
         function AutoBuyStorage() {
             return document.getElementById("chkBuyStorage").checked;
         }
 
-        // document.getElementById("autoContainer").innerHTML += '<input id="chkManualStorage" title="Will automatically gather resources and trap trimps" type="checkbox" checked>Manual Gather<br>';
-
         function AutoManualLabor() {
             return document.getElementById("chkManualStorage").checked;
         }
-
-        // document.getElementById("autoContainer").innerHTML += '<input id="chkBuyJobs" title="Buys jobs based on ratios configured" type="checkbox" checked></input>Buy Jobs <br>';
 
         function autoBuyJobs() {
             return document.getElementById("chkBuyJobs").checked;
         }
 
-        // document.getElementById("autoContainer").innerHTML += '<input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" type="checkbox" checked>Buy Buildings <br>';
-
         function AutoBuyBuilding() {
             return document.getElementById("chkBuyBuilding").checked;
         }
-
-        // document.getElementById("autoContainer").innerHTML += '<table><tr><td><input id="chkBuyEquipH" title="Will buy the most efficient armor available" type="checkbox" checked>Buy Armor<br><input id="chkBuyEquipA" title="Will buy the most efficient weapon available" type="checkbox" checked>Buy Weapons</td></tr><tr><td><input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" type="checkbox" checked>Buy Armor Upgrades<br><input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" type="checkbox" checked>Buy Weapon Upgrades</td></tr></table>';
 
         function AutoBuyEquipH() {
             return document.getElementById("chkBuyEquipH").checked;
@@ -196,30 +185,23 @@
             return document.getElementById("chkBuyPrestigeA").checked;
         }
 
-        // document.getElementById("autoContainer").innerHTML += '<input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" type="checkbox" checked>Autobuy other Upgrades <br>';
-
         function AutoBuyUpgrades() {
             return document.getElementById("chkBuyUpgrades").checked;
         }
-
-        // document.getElementById("autoContainer").innerHTML += '<input id="chkAutoUniqueMap" title="Auto run unique maps" type="checkbox" checked>Auto run unique maps <br> ';
 
         function AutoUniqueMap() {
             return document.getElementById("chkAutoUniqueMap").checked;
         }
 
-        // document.getElementById("autoContainer").innerHTML += '<input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" type="checkbox" checked>Auto map when stuck <br> ';
-
         function AutoProgressMap() {
             return document.getElementById("chkAutoProgressMap").checked;
         }
-
-        // document.getElementById("autoContainer").innerHTML += '<input id="maxHitsTillStuck" style="width: 10%;color: #000000;" value="10">Max hits to kill enemy before stuck <br> ';
 
         function maxHitsTillStuck() {
             return document.getElementById("maxHitsTillStuck").value;
         }
 
+        fixMap();
 
         //I honestly have no idea why I have to do this >.>
         document.getElementById("wood").style.opacity = "1";
@@ -306,14 +288,12 @@
                     if (jobToHire === '') {
                         // debug('No job to hire :(');
                     } else {
-                        // debug('Greastest want for jobs: ' + jobToHire + ' at ' + greatestWant + ' want');
-                        // debug('Hiring ' + amountToBuy + ' '+ jobToHire);
                         // debug('owned ' + window.game.resources.trimps.owned + ' employed ' + window.game.resources.trimps.employed + ' amountToBuy ' + amountToBuy);
                         if (Math.floor(window.game.resources.trimps.owned - window.game.resources.trimps.employed) - amountToBuy <= 2) return;
                         var oldAmount = window.game.global.buyAmt;
                         window.game.global.buyAmt = amountToBuy;
                         var added = window.canAffordJob(jobToHire, true, Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed);
-                        debug('Hiring ' + added + ' ' + jobToHire);
+                        // debug('Hiring ' + added + ' ' + jobToHire);
                         window.game.jobs[jobToHire].owned += added;
                         window.game.resources.trimps.employed += added;
                         window.game.global.buyAmt = oldAmount;
@@ -323,11 +303,18 @@
             }
         }
 
+        function buildingAtMax(buildingName) {
+            var buildingMax = document.getElementById('max' + buildingName).value;
+            if (buildingMax < 0) return false;
+            return buildingMax <= window.game.buildings[buildingName].owned;
+        }
+
         function buyBuildings() {
             if (AutoBuyBuilding()) {
                 for (var buildingIndex in buildingList) {
                     var building = buildingList[buildingIndex];
-                    if (window.canAffordBuilding(building, false) && !window.game.buildings[building].locked) {
+                    // debug('Checking building ' +building+ ' buildingMax ' +document.getElementById('max' + building).value);
+                    if (window.canAffordBuilding(building, false) && !window.game.buildings[building].locked && !buildingAtMax(building)) {
                         debug('Attempting to build: ' + building);
                         window.buyBuilding(building);
                         window.tooltip('hide');
@@ -542,7 +529,7 @@
                 };
                 for (var B in Bs) {
                     if (window.game.resources[Bs[B]].owned > window.game.resources[Bs[B]].max * packMod * 0.9) {
-                        debug(B + ': ' + Bs[B] + ' - ' + window.game.resources[Bs[B]].owned + '/' + (window.game.resources[Bs[B]].max * packMod * 0.99));
+                        debug('Buying ' +B+ '(' + Bs[B] + ') at ' + ((window.game.resources[Bs[B]].max * packMod * 0.99) / window.game.resources[Bs[B]].owned * 100)+ '%');
                         if (AutoBuyStorage() && window.canAffordBuilding(B)) {
                             debug('Wanna buy ' + B);
                             buyBuilding(B);
@@ -854,17 +841,15 @@
         }
 
         function fixMap() { //Not sure why this happens, but slapping a bandaid on it till I figure it out
-            var currentSelectedMap = window.game.global.mapsOwnedArray[window.getMapIndex(window.game.global.lookingAtMap)];
-            if (currentSelectedMap.size != window.game.global.mapGridArray.length) {
-                game.global.lastClearedMapCell = -1;
-                window.game.global.mapGridArray.length = currentSelectedMap.size;
-                window.startFight();
+            while (window.game.global.currentMapId === "" && window.game.global.mapsActive) {
+                debug('Fixing maps???');
+                window.mapsClicked();
             }
         }
 
         function newAutoMap() {
             if (window.game.global.mapsUnlocked) {
-                // fixMap();
+                fixMap();
                 //Check for unique maps
                 var unique = getUniqueMap();
                 if (unique != undefined && canAffordNewMap() && AutoUniqueMap()) {
