@@ -151,33 +151,34 @@
         // setInterval(printGame, runInterval);
 
         //Page Changes//
-        document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block;"><div id="autoTitleDiv" class="titleDiv"><div class="row"><div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span>            </div>        </div>    </div>    <div class="autoBox" id="autoHere">    </div></div>';
+        document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row">  <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody>  <tr>  <td style="width: 200px;"> Loops   <br>   <input id="chkBuyStorage" title="Will buy storage when resource is almost full" checked="checked" type="checkbox">Buy Storage   <br>   <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" checked="checked" type="checkbox">Manual Gather   <br>   <input id="chkBuyJobs" title="Buys jobs based on ratios configured" checked="checked" type="checkbox">Buy Jobs   <br>   <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" checked="checked" type="checkbox">Buy Buildings   <br>   <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" checked="checked" type="checkbox">Buy Upgrades   <br>  </td>  <td style="width: 400px; vertical-align: top;">   <table style="text-align: left; vertical-align: middle; width: 100%;" border="0" cellpadding="0" cellspacing="0">   <tbody>    <tr>    <td style="width: 120px;">Equipment     <br>     <input id="chkBuyEquipH" title="Will buy the most efficient armor available" checked="checked" type="checkbox">Buy Armor</td>    <td>     <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" checked="checked" type="checkbox">Buy Armor Upgrades</td>    </tr>    <tr>    <td>     <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" checked="checked" type="checkbox">Buy Weapons</td>    <td>     <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" checked="checked" type="checkbox">Buy Weapon Upgrades</td>    </tr>   </tbody>   </table>   Maps   <br>   <input id="chkAutoUniqueMap" title="Auto run unique maps" checked="checked" type="checkbox">Auto run unique maps   <br>   <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" checked="checked" type="checkbox">Auto map when stuck   <br>   <input id="maxHitsTillStuck" style="width: 10%; color: rgb(0, 0, 0);" value="10">Max hits to kill enemy before stuck  </td>  </tr>  <tr>  <td style="vertical-align: middle; text-align: left;">   <br>  </td>  <td style="text-align: left; vertical-align: top;"></td>  </tr> </tbody> </table></div>';
+        // document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block;"><div id="autoTitleDiv" class="titleDiv"><div class="row"><div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span>            </div>        </div>    </div>    <div class="autoBox" id="autoHere">    </div></div>';
 
-        document.getElementById("autoContainer").innerHTML += '<input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox" checked>Buy Storage<br>';
+        // document.getElementById("autoContainer").innerHTML += '<input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox" checked>Buy Storage<br>';
 
         function AutoBuyStorage() {
             return document.getElementById("chkBuyStorage").checked;
         }
 
-        document.getElementById("autoContainer").innerHTML += '<input id="chkManualStorage" title="Will automatically gather resources and trap trimps" type="checkbox" checked>Manual Gather<br>';
+        // document.getElementById("autoContainer").innerHTML += '<input id="chkManualStorage" title="Will automatically gather resources and trap trimps" type="checkbox" checked>Manual Gather<br>';
 
         function AutoManualLabor() {
             return document.getElementById("chkManualStorage").checked;
         }
 
-        document.getElementById("autoContainer").innerHTML += '<input id="chkBuyJobs" title="Buys jobs based on ratios configured" type="checkbox" checked></input>Buy Jobs <br>';
+        // document.getElementById("autoContainer").innerHTML += '<input id="chkBuyJobs" title="Buys jobs based on ratios configured" type="checkbox" checked></input>Buy Jobs <br>';
 
         function autoBuyJobs() {
             return document.getElementById("chkBuyJobs").checked;
         }
 
-        document.getElementById("autoContainer").innerHTML += '<input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" type="checkbox" checked>Buy Buildings <br>';
+        // document.getElementById("autoContainer").innerHTML += '<input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" type="checkbox" checked>Buy Buildings <br>';
 
         function AutoBuyBuilding() {
             return document.getElementById("chkBuyBuilding").checked;
         }
 
-        document.getElementById("autoContainer").innerHTML += '<table><tr><td><input id="chkBuyEquipH" title="Will buy the most efficient armor available" type="checkbox" checked>Buy Armor<br><input id="chkBuyEquipA" title="Will buy the most efficient weapon available" type="checkbox" checked>Buy Weapons</td></tr><tr><td><input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" type="checkbox" checked>Buy Armor Upgrades<br><input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" type="checkbox" checked>Buy Weapon Upgrades</td></tr></table>';
+        // document.getElementById("autoContainer").innerHTML += '<table><tr><td><input id="chkBuyEquipH" title="Will buy the most efficient armor available" type="checkbox" checked>Buy Armor<br><input id="chkBuyEquipA" title="Will buy the most efficient weapon available" type="checkbox" checked>Buy Weapons</td></tr><tr><td><input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" type="checkbox" checked>Buy Armor Upgrades<br><input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" type="checkbox" checked>Buy Weapon Upgrades</td></tr></table>';
 
         function AutoBuyEquipH() {
             return document.getElementById("chkBuyEquipH").checked;
@@ -195,25 +196,25 @@
             return document.getElementById("chkBuyPrestigeA").checked;
         }
 
-        document.getElementById("autoContainer").innerHTML += '<input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" type="checkbox" checked>Autobuy other Upgrades <br>';
+        // document.getElementById("autoContainer").innerHTML += '<input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" type="checkbox" checked>Autobuy other Upgrades <br>';
 
         function AutoBuyUpgrades() {
             return document.getElementById("chkBuyUpgrades").checked;
         }
 
-        document.getElementById("autoContainer").innerHTML += '<input id="chkAutoUniqueMap" title="Auto run unique maps" type="checkbox" checked>Auto run unique maps <br> ';
+        // document.getElementById("autoContainer").innerHTML += '<input id="chkAutoUniqueMap" title="Auto run unique maps" type="checkbox" checked>Auto run unique maps <br> ';
 
         function AutoUniqueMap() {
             return document.getElementById("chkAutoUniqueMap").checked;
         }
 
-        document.getElementById("autoContainer").innerHTML += '<input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" type="checkbox" checked>Auto map when stuck <br> ';
+        // document.getElementById("autoContainer").innerHTML += '<input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" type="checkbox" checked>Auto map when stuck <br> ';
 
         function AutoProgressMap() {
             return document.getElementById("chkAutoProgressMap").checked;
         }
 
-        document.getElementById("autoContainer").innerHTML += '<input id="maxHitsTillStuck" style="width: 10%;color: #000000;" value="10">Max hits to kill enemy before stuck <br> ';
+        // document.getElementById("autoContainer").innerHTML += '<input id="maxHitsTillStuck" style="width: 10%;color: #000000;" value="10">Max hits to kill enemy before stuck <br> ';
 
         function maxHitsTillStuck() {
             return document.getElementById("maxHitsTillStuck").value;
@@ -232,6 +233,8 @@
             //WIP
         }
 
+        window.mapsClicked();
+
         //Functions//
         function debug(message) {
             if (enableDebug)
@@ -248,7 +251,7 @@
         }
 
         function freeWorkers() {
-            if (!canPurchaseWorkers()) return 0;
+            if (!canPurchaseWorkers() || Math.floor(window.game.resources.trimps.owned - window.game.resources.trimps.employed) === 0) return 0;
             return Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed;
         }
 
@@ -305,10 +308,12 @@
                     } else {
                         // debug('Greastest want for jobs: ' + jobToHire + ' at ' + greatestWant + ' want');
                         // debug('Hiring ' + amountToBuy + ' '+ jobToHire);
+                        debug('owned ' + window.game.resources.trimps.owned + ' employed ' + window.game.resources.trimps.employed + ' amountToBuy ' + amountToBuy);
+                        if (Math.floor(window.game.resources.trimps.owned - window.game.resources.trimps.employed) - amountToBuy <= 2) return;
                         var oldAmount = window.game.global.buyAmt;
                         window.game.global.buyAmt = amountToBuy;
                         var added = window.canAffordJob(jobToHire, true, Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed);
-                        debug('Hiring ' + added + ' '+ jobToHire);
+                        debug('Hiring ' + added + ' ' + jobToHire);
                         window.game.jobs[jobToHire].owned += added;
                         window.game.resources.trimps.employed += added;
                         window.game.global.buyAmt = oldAmount;
@@ -565,6 +570,8 @@
 
                 if (window.game.buildings.Trap.owned > 0 && (window.game.resources.trimps.max - window.game.resources.trimps.owned) > 2 && window.game.upgrades.Trapstorm.done != 1) {
                     window.setGather('trimps');
+                } else if (window.game.global.buildingsQueue.length > 2) {
+                    window.setGather('buildings');
                 } else if (window.game.global.autoCraftModifier == 0 && window.game.global.buildingsQueue.length > 0) {
                     window.setGather('buildings');
                 } else {
@@ -699,7 +706,7 @@
 
         function canBeatCell(cell) {
             // debug('Running canBeatCell - Enemy Health: ' + window.game.global.getEnemyHealth(cell.level, cell.name)+ ' My damage ' +window.calculateDamage(window.game.global.soldierCurrentAttack, true, true, true)+ ' and max hits: ' +maxHitsTillStuck());
-            return game.global.getEnemyAttack(cell.level, cell.name) < (getTotalDefence() * 0.75) && window.game.global.getEnemyHealth(cell.level, cell.name) < (window.calculateDamage(window.game.global.soldierCurrentAttack, true, true, true) * maxHitsTillStuck());
+            return window.game.global.getEnemyAttack(cell.level, cell.name) < (getTotalDefence() * 0.75) && window.game.global.getEnemyHealth(cell.level, cell.name) < (window.calculateDamage(window.game.global.soldierCurrentAttack, true, true, true) * maxHitsTillStuck());
         }
 
         function canBeatWorld(level) {
