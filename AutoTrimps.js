@@ -737,17 +737,17 @@
             }
             //size loop
             for (var i = 1; i < 10; i++) {
-                document.getElementById('sizeAdvMapsRange').value = i;
+                document.getElementById('difficultyAdvMapsRange').value = i;
                 if (!canAffordMap()) {
-                    document.getElementById('sizeAdvMapsRange').value = i - 1;
+                    document.getElementById('difficultyAdvMapsRange').value = i - 1;
                     i = 10;
                 }
             }
             //difficulty loop
             for (var i = 1; i < 10; i++) {
-                document.getElementById('difficultyAdvMapsRange').value = i;
+                document.getElementById('sizeAdvMapsRange').value = i;
                 if (!canAffordMap()) {
-                    document.getElementById('difficultyAdvMapsRange').value = i - 1;
+                    document.getElementById('sizeAdvMapsRange').value = i - 1;
                     i = 10;
                 }
             }
