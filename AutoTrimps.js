@@ -148,10 +148,56 @@
         setInterval(buyStorage, runInterval);
         setInterval(manualLabor, runInterval);
         setInterval(newAutoMap, runInterval * 10);
+
         // setInterval(printGame, runInterval);
 
         //Page Changes//
-        document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" checked="checked" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" checked="checked" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" checked="checked" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" checked="checked" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" checked="checked" type="checkbox">Buy Upgrades <br> <input id="chkTrapTrimps" title="automate trapping trimps" checked="checked" type="checkbox">Trap Trimps</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" checked="checked" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" checked="checked" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" checked="checked" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" checked="checked" type="checkbox">Buy Weapon Upgrades Maps <br> </td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" checked="checked" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" checked="checked" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck</td> </tr> </tbody> </table></div>';
+        document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" checked="checked" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" checked="checked" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" checked="checked" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" checked="checked" type="checkbox">Buy Upgrades <br> <input id="chkTrapTrimps" title="automate trapping trimps" checked="checked" type="checkbox">Trap Trimps</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" checked="checked" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" checked="checked" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" checked="checked" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" checked="checked" type="checkbox">Buy Weapon Upgrades Maps <br> </td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" checked="checked" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" checked="checked" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck</td> </tr> </tbody> </table></div>';
+
+        var temp = document.getElementById("autoContainer").innerHTML.split('input id="');
+        temp.splice(0, 1);
+        var pageSettings = [];
+        for (var i in temp) {
+            pageSettings.push(temp[i].substring(0, temp[i].indexOf('"')));
+        }
+
+        //Set all the saved variables
+        for (var index in pageSettings) {
+            var setting = pageSettings[index];
+            if (localStorage.getItem(setting) != null) {
+                // debug(setting + ' is of type ' + document.getElementById(setting).type);
+                var local = localStorage.getItem(setting);
+                if (document.getElementById(setting).type == 'checkbox') {
+                    local = (local == 'true');
+                    if (document.getElementById(setting).checked != local) {
+                        // debug('FIRST Setting ' + setting + ' to ' + local + ' from ' + document.getElementById(setting).checked);
+                        document.getElementById(setting).checked = local;
+                        // debug(setting + ' is set to ' + document.getElementById(setting).checked);
+                    }
+                } else {
+                    if (document.getElementById(setting).value != localStorage.getItem(setting)) {
+                        // debug('FIRST Setting ' + setting + ' to ' + localStorage.getItem(setting));
+                        document.getElementById(setting).value = localStorage.getItem(setting);
+                        // debug(setting + ' is set to ' + document.getElementById(setting).value);
+                    }
+                }
+            }
+        }
+
+        setInterval(saveSettings, 1000);
+
+        function saveSettings() {
+            // debug('Saved');
+            for (var index in pageSettings) {
+                var setting = pageSettings[index];
+                // debug('Setting is ' +setting);
+                if (document.getElementById(setting).type == 'checkbox') {
+                    localStorage.setItem(setting, document.getElementById(setting).checked);
+                } else {
+                    localStorage.setItem(setting, document.getElementById(setting).value);
+                }
+            }
+        }
 
         function AutoBuyStorage() {
             return document.getElementById("chkBuyStorage").checked;
@@ -200,6 +246,7 @@
         function maxHitsTillStuck() {
             return document.getElementById("maxHitsTillStuck").value;
         }
+
         function trapTrimps() {
             return document.getElementById("chkTrapTrimps").checked;
         }
@@ -218,6 +265,8 @@
             //WIP
         }
 
+        window.mapsClicked();
+        window.mapsClicked();
         window.mapsClicked();
 
         //Functions//
@@ -271,6 +320,9 @@
 
         function buyJobs() {
             if (autoBuyJobs()) {
+                if (window.game.resources.trimps.employed === 0 && window.game.resources.trimps.realMax() != window.game.resources.trimps.owned) {
+                    return;
+                }
                 // debug('AutoBuyJobs = ' + autoBuyJobs());
                 var i = 0;
                 var amountToBuy = Math.ceil(freeWorkers() * 0.001);
@@ -313,7 +365,7 @@
         }
 
         function buyBuildings() {
-            if (AutoBuyBuilding()) {
+            if (AutoBuyBuilding() && window.game.global.buildingsQueue.length < 5) {
                 for (var buildingIndex in buildingList) {
                     var building = buildingList[buildingIndex];
                     // debug('Checking building ' +building+ ' buildingMax ' +document.getElementById('max' + building).value);
@@ -532,7 +584,7 @@
                 };
                 for (var B in Bs) {
                     if (window.game.resources[Bs[B]].owned > window.game.resources[Bs[B]].max * packMod * 0.9) {
-                        debug('Buying ' +B+ '(' + Bs[B] + ') at ' + ((window.game.resources[Bs[B]].max * packMod * 0.99) / window.game.resources[Bs[B]].owned * 100)+ '%');
+                        debug('Buying ' + B + '(' + Bs[B] + ') at ' + Math.floor(window.game.resources[Bs[B]].owned / (window.game.resources[Bs[B]].max * packMod * 0.99) * 100) + '%');
                         if (AutoBuyStorage() && window.canAffordBuilding(B)) {
                             debug('Wanna buy ' + B);
                             buyBuilding(B);
@@ -551,13 +603,16 @@
                     // window.tooltip('hide');
                 }
 
+                //If you don't have autofight and you have enough trimps, manual fight
                 if (window.game.upgrades.Bloodlust.done == 0 && (window.game.resources.trimps.owned - window.game.resources.trimps.employed) > 3 && !window.game.global.fighting && window.game.upgrades.Battle.done == 1) {
                     window.fightManual();
                 }
+                //If you can autofight - set autofight to true
                 if (window.game.upgrades.Bloodlust.done == 1 && window.game.global.pauseFight) {
                     window.pauseFight();
                 }
 
+                //TrapTrimps - if need trimps and have trapstorm will autotrap trimps
                 if (window.game.buildings.Trap.owned > 0 && (window.game.resources.trimps.max - window.game.resources.trimps.owned) > 2 && window.game.upgrades.Trapstorm.done != 1 && trapTrimps()) {
                     window.setGather('trimps');
                 } else if (window.game.global.buildingsQueue.length > 2) {
@@ -785,8 +840,8 @@
 
         function goToMap(map) {
             // debug('Going to map ' + map.name + ' ' + map.id + ' looking at ' + window.game.global.lookingAtMap + ' battle screen ' + getBattleScreen());
-            if (getBattleScreen() == 'world') {
-                debug('BattleScreen is world');
+            while (getBattleScreen() == 'world') {
+                // debug('BattleScreen is world');
                 window.mapsClicked();
             }
             if (window.game.global.lookingAtMap == map.id && getBattleScreen() == 'map') {
@@ -794,51 +849,40 @@
                 return;
             }
             if (window.game.global.lookingAtMap != map.id) {
-                if (getBattleScreen() == 'map') {
-                    debug('In the wring map ~ oops');
+                while (getBattleScreen() == 'map') {
+                    debug('In the wrong map ~ oops');
                     window.mapsClicked();
                 }
                 debug('Need to switch to map ' + map.name);
                 window.selectMap(map.id, true);
             }
-            debug('Run Map');
+            debug('Running Map ' + window.game.global.mapsOwnedArray[window.getMapIndex(window.game.global.lookingAtMap)].name + ' Level: ' + window.game.global.mapsOwnedArray[window.getMapIndex(window.game.global.lookingAtMap)].level);
             window.runMap();
         }
 
         function goToCurrentLevelMap() {
             // debug('goToCurrentLevelMap');
-            var currentSelectedMap = window.game.global.mapsOwnedArray[window.getMapIndex(window.game.global.lookingAtMap)];
-            if (getBattleScreen() == 'map' && currentSelectedMap.level == window.game.global.world) {
-                // debug('Already in the right map');
-                return;
-            }
-            if ((getBattleScreen() == 'map' && currentSelectedMap.level != window.game.global.world) || (getBattleScreen() == 'world')) {
-                debug('Moving to premap screen');
-                window.mapsClicked();
-            }
-            var currentLevelMap;
             for (var map in window.game.global.mapsOwnedArray) {
+                // debug('test ' + map+ ' ' +window.game.global.mapsOwnedArray[map]);
                 map = window.game.global.mapsOwnedArray[map];
                 if (map.level == window.game.global.world && !map.noRecycle) {
                     // debug('Found current level map' + map.name);
-                    currentLevelMap = map;
+                    goToMap(map);
+                    return;
                 }
             }
-            if (currentLevelMap == undefined) {
-                debug('Need to make a new map');
-                createNewMap();
-                goToMap(window.game.global.mapsOwnedArray[window.game.global.mapsOwnedArray.length - 1]);
-            } else {
-                debug('Running non-unique map ' + currentLevelMap.name);
-                goToMap(currentLevelMap);
-            }
+
+
+            debug('Need to make a new map');
+            createNewMap();
+            goToMap(window.game.global.mapsOwnedArray[window.game.global.mapsOwnedArray.length - 1]);
+
         }
 
         function goToWorld() {
-            if (getBattleScreen() == 'map') {
-                window.mapsClicked();
-            }
-            if (getBattleScreen() == 'premap') {
+            // debug('Moving back to World');
+            while (getBattleScreen() != 'world') {
+                debug('Moving back to World');
                 window.mapsClicked();
             }
         }
@@ -870,57 +914,8 @@
                         goToCurrentLevelMap();
                         return;
                     } else {
+                        // debug('Need to go to world');
                         goToWorld();
-                    }
-                }
-            }
-        }
-
-        function autoMap() { //Depricated because it was horrible
-            // return; //just for testing
-            if (window.game.global.mapsUnlocked) {
-                // debug('MapsUnlocked');
-                //window.game.resources.fragments.owned
-                if (!canBeatWorld()) {
-                    debug('Cantbeatworld');
-                    if (!window.game.global.preMapsActive && !window.game.global.mapsActive) {
-                        window.mapsClicked();
-                    } else {
-                        // debug('MapsActive');
-                        //Find unique maps
-                        var currentLevelMap;
-                        for (var map in window.game.global.mapsOwnedArray) {
-                            map = window.game.global.mapsOwnedArray[map];
-                            if (map.noRecycle && window.getUniqueColor(map) != ' noRecycleDone' && canBeatMap(map)) {
-                                debug('Found good map: ' + map.id + ' ' + map.name);
-                                window.recycleMap();
-                                window.selectMap(map.id);
-                                window.runMap();
-                                return;
-                            } else if (map.level == window.game.global.world) {
-                                debug('Found current level map' + map.name);
-                                currentLevelMap = map;
-                            }
-                        }
-                        //NonUnique map
-                        if (currentLevelMap == undefined) {
-                            // var newMap = createNewMap();
-                            debug('Need to make a new map');
-                            createNewMap();
-                        } else {
-                            debug('Running non-unique map ' + map.name);
-                            window.selectMap(map.id);
-                            window.runMap();
-                        }
-                    }
-                } else if (window.game.global.preMapsActive || window.game.global.mapsActive) {
-                    //Go back to world
-                    debug('Need to go back to world'); //should only do this is not on world map
-                    if (!window.game.global.preMapsActive && window.game.global.mapsActive) {
-                        window.mapsClicked();
-                    }
-                    if (window.game.global.preMapsActive && window.game.global.mapsActive) {
-                        window.mapsClicked();
                     }
                 }
             }
