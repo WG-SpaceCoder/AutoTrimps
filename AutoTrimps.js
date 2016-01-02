@@ -177,7 +177,7 @@
             }
         }
 
-        
+
 
         function saveSettings() {
             // debug('Saved');
@@ -258,10 +258,6 @@
         document.getElementById("equipmentTab").style.opacity = "1";
         document.getElementById("buyTabsUl").innerHTML += '<li role="presentation" id="autoTab" onclick="filterTabs(\'auto\')" class="buyTab"><a id="autoA" href="#">Automation</a></li>';
 
-        if (!startAllSelected) {
-            //WIP
-        }
-
         window.mapsClicked();
         window.mapsClicked();
         window.mapsClicked();
@@ -270,6 +266,18 @@
         function debug(message) {
             if (enableDebug)
                 console.log(message);
+        }
+
+        function clickButton(id) {
+            debug('Trying to click button: ' + id);
+            if (document.getElementById(id).style.visibility != 'hidden') {
+                document.getElementById(id).click();
+                setTimeout(function() {}, 10);
+                return true;
+            } else {
+                debug('Cannot click button: ' + id);
+                return false;
+            }
         }
 
         function canPurchaseWorkers() {
@@ -367,7 +375,7 @@
                     var building = buildingList[buildingIndex];
                     // debug('Checking building ' +building+ ' buildingMax ' +document.getElementById('max' + building).value);
                     if (window.canAffordBuilding(building, false) && !window.game.buildings[building].locked && !buildingAtMax(building)) {
-                        debug('Attempting to build: ' + building);
+                        // debug('Attempting to build: ' + building);
                         window.buyBuilding(building);
                         window.tooltip('hide');
                     }
@@ -893,8 +901,14 @@
                     i = 10;
                 }
             }
-            window.recycleMap();
-            window.buyMap();
+            clickButton('mapCreateBtn');
+            if (window.game.global.currentMapId === '') {
+                clickButton('recycleMapBtn');
+            }
+            clickButton(window.game.global.mapsOwnedArray[window.game.global.mapsOwnedArray.length - 1].id);
+            clickButton('selectMapBtn');
+            // window.recycleMap();
+            // window.buyMap();
             return true;
         }
 
@@ -936,7 +950,8 @@
                 window.selectMap(map.id, true);
             }
             debug('Running Map ' + window.game.global.mapsOwnedArray[window.getMapIndex(window.game.global.lookingAtMap)].name + ' Level: ' + window.game.global.mapsOwnedArray[window.getMapIndex(window.game.global.lookingAtMap)].level);
-            window.runMap();
+            clickButton(map.id);
+            clickButton('selectMapBtn');
         }
 
         function goToCurrentLevelMap() {
@@ -977,28 +992,30 @@
             if (window.game.global.mapsUnlocked) {
                 fixMap();
                 //Check for unique maps
+                if (AutoUniqueMap()) {}
                 var unique = getUniqueMap();
-                if (unique != undefined && canAffordNewMap() && AutoUniqueMap()) {
+                if (unique != undefined && canAffordNewMap()) {
                     // debug('Mapping Unique');
                     goToMap(unique);
                     return;
                 }
-                //Check if upgrades can be unlocked (need to work through logic here)
+            }
+            //Check if upgrades can be unlocked (need to work through logic here)
 
-                //Check if stuck in world
-                if (AutoProgressMap()) {
-                    // debug('canBeatWorld(window.game.global.lastClearedCell + 1)' + (window.game.global.lastClearedCell + 1) + canBeatWorld(window.game.global.lastClearedCell + 1) + ' canAffordNewMap ' + canAffordNewMap());
-                    if (!canBeatWorld(window.game.global.lastClearedCell + 1) && canAffordNewMap()) {
-                        // debug('Mapping Non-Unique');
-                        goToCurrentLevelMap();
-                        return;
-                    } else {
-                        // debug('Need to go to world');
-                        goToWorld();
-                    }
+            //Check if stuck in world
+            if (AutoProgressMap()) {
+                // debug('canBeatWorld(window.game.global.lastClearedCell + 1)' + (window.game.global.lastClearedCell + 1) + canBeatWorld(window.game.global.lastClearedCell + 1) + ' canAffordNewMap ' + canAffordNewMap());
+                if (!canBeatWorld(window.game.global.lastClearedCell + 1) && canAffordNewMap()) {
+                    // debug('Mapping Non-Unique');
+                    goToCurrentLevelMap();
+                    return;
+                } else {
+                    // debug('Need to go to world');
+                    goToWorld();
                 }
             }
         }
+
 
         //Intervals//
         setInterval(buyJobs, runInterval);
