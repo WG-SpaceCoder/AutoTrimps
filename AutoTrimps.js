@@ -1008,7 +1008,7 @@
         setInterval(buyStorage, runInterval);
         setInterval(manualLabor, runInterval);
         setInterval(newAutoMap, runInterval * 10);
-        setInterval(autoStance(), runInterval);
+        setInterval(autoStance, runInterval);
         setInterval(saveSettings, 1000);
 
     })();
