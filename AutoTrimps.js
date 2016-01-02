@@ -140,19 +140,12 @@
         var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'Potency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm'];
         var buildingList = ['Hut', 'House', 'Gym', 'Mansion', 'Hotel', 'Resort', 'Gateway', 'Collector', 'Warpstation', 'Tribute', 'Nursery']; //NOTE THAT I REMOVED WORMHOLE TEMPORARILY UNTILL I FIGURE OUT WHAT TO DO WITH IT
 
-        //Intervals//
-        setInterval(buyJobs, runInterval);
-        setInterval(buyBuildings, runInterval);
-        setInterval(buyEquipment, runInterval);
-        setInterval(buyUpgrades, runInterval);
-        setInterval(buyStorage, runInterval);
-        setInterval(manualLabor, runInterval);
-        setInterval(newAutoMap, runInterval * 10);
+
 
         // setInterval(printGame, runInterval);
 
         //Page Changes//
-        document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" checked="checked" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" checked="checked" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" checked="checked" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" checked="checked" type="checkbox">Buy Upgrades <br> <input id="chkTrapTrimps" title="automate trapping trimps" checked="checked" type="checkbox">Trap Trimps</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" checked="checked" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" checked="checked" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" checked="checked" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" checked="checked" type="checkbox">Buy Weapon Upgrades Maps <br> </td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" checked="checked" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" checked="checked" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck</td> </tr> </tbody> </table></div>';
+        document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" checked="checked" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" checked="checked" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" checked="checked" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" checked="checked" type="checkbox">Buy Upgrades <br> <input id="chkTrapTrimps" title="automate trapping trimps" checked="checked" type="checkbox">Trap Trimps<br> <input id="chkAutoStance" title="automate setting stance" checked="checked" type="checkbox">Auto Stance</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" checked="checked" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" checked="checked" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" checked="checked" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" checked="checked" type="checkbox">Buy Weapon Upgrades Maps <br> </td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" checked="checked" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" checked="checked" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck</td> </tr> </tbody> </table></div>';
 
         var temp = document.getElementById("autoContainer").innerHTML.split('input id="');
         temp.splice(0, 1);
@@ -184,7 +177,7 @@
             }
         }
 
-        setInterval(saveSettings, 1000);
+        
 
         function saveSettings() {
             // debug('Saved');
@@ -249,6 +242,10 @@
 
         function trapTrimps() {
             return document.getElementById("chkTrapTrimps").checked;
+        }
+
+        function autoStanceChecked() {
+            return document.getElementById("chkAutoStance").checked;
         }
 
         fixMap();
@@ -676,6 +673,88 @@
             }
         }
 
+
+
+        function autoStance() {
+            if (window.game.global.gridArray.length != 0 && window.game.global.challengeActive != "Electricity" && window.game.global.challengeActive != "Nom" && autoStanceChecked()) {
+                var badguyMinAtt = window.game.global.gridArray[window.game.global.lastClearedCell + 1].attack * .805; //fudge factor
+                var badguyMaxAtt = window.game.global.gridArray[window.game.global.lastClearedCell + 1].attack * 1.19;
+                var badguyFast = window.game.badGuys[window.game.global.gridArray[window.game.global.lastClearedCell + 1].name].fast;
+
+                if (window.game.global.mapsActive && !window.game.global.preMapsActive) {
+                    badguyMinAtt = window.game.global.mapGridArray[window.game.global.lastClearedMapCell + 1].attack * .805;
+                    badguyMaxAtt = window.game.global.mapGridArray[window.game.global.lastClearedMapCell + 1].attack * 1.19;
+                    badguyFast = window.game.badGuys[window.game.global.mapGridArray[window.game.global.lastClearedMapCell + 1].name].fast;
+                }
+                var mysoldiers = (window.game.portal.Coordinated.level) ? window.game.portal.Coordinated.currentSend : window.game.resources.trimps.maxSoldiers;
+                var myblock = window.game.global.soldierCurrentBlock;
+                var myhealth = window.game.global.soldierHealthMax;
+
+                //Switch Formations
+                if (window.game.upgrades.Formations.done == 1 && window.game.upgrades.Dominance.done == 0) {
+                    var healthFraction = window.game.global.soldierHealth / window.game.global.soldierHealthMax;
+                    // If trimps are plenty, go to nostance
+                    if (window.game.resources.trimps.owned >= window.game.resources.trimps.realMax()) {
+                        window.setFormation('0');
+                    } else if (healthFraction < 0.2 && window.game.global.formation == 0) {
+                        window.setFormation('1');
+                        // If the army is strong, switch to nostance
+                    } else if ((healthFraction > 0.8 && window.game.global.formation == 1)) {
+                        window.setFormation('0');
+                    }
+                } else if (window.game.upgrades.Dominance.done == 1) {
+                    healthFraction = window.game.global.soldierHealth / window.game.global.soldierHealthMax;
+                    if (window.game.global.mapsActive && !window.game.global.preMapsActive) {
+                        if (window.game.badGuys[window.game.global.mapGridArray[window.game.global.lastClearedMapCell + 1].name].fast) {
+                            if (window.game.global.formation == 2 && myblock < badguyMaxAtt && !(window.game.resources.trimps.owned >= window.game.resources.trimps.realMax())) {
+                                window.setFormation(1);
+                            }
+                        } else {
+                            // If trimps are plenty, go to Dominance
+                            if (window.game.resources.trimps.owned >= window.game.resources.trimps.realMax()) {
+                                window.setFormation('2');
+                                // If Dominance is failing, switch to None
+                            } else if (healthFraction < 0.2 && window.game.global.formation == 2) {
+                                window.setFormation('0');
+                                // If None is failing, switch to Heap
+                            } else if (healthFraction < 0.2 && window.game.global.formation == 0) {
+                                window.setFormation('1');
+                                // If the army is strong, switch to Dominance
+                            } else if ((healthFraction > 0.9 && window.game.global.formation == 1) || (healthFraction > 0.6 && window.game.global.formation == 0)) {
+                                window.setFormation('2');
+                            } else if ((healthFraction > .8 && healthFraction < .9) && window.game.global.formation == 1) {
+                                window.setFormation('0');
+                            }
+                        }
+                    } else {
+                        if (window.game.badGuys[window.game.global.gridArray[window.game.global.lastClearedCell + 1].name].fast) {
+                            if (window.game.global.formation == 2 && !(window.game.resources.trimps.owned >= window.game.resources.trimps.realMax())) {
+                                window.setFormation(1);
+                            }
+                        } else {
+                            // If trimps are plenty, go to Dominance
+                            if (window.game.resources.trimps.owned >= window.game.resources.trimps.realMax()) {
+                                window.setFormation('2');
+                                // If Dominance is failing, switch to None
+                            } else if (healthFraction < 0.2 && window.game.global.formation == 2) {
+                                window.setFormation('0');
+                                // If None is failing, switch to Heap
+                            } else if (healthFraction < 0.2 && window.game.global.formation == 0) {
+                                window.setFormation('1');
+                                // If the army is strong, switch to Dominance
+                            } else if ((healthFraction > 0.9 && window.game.global.formation == 1) || (healthFraction > 0.6 && window.game.global.formation == 0)) {
+                                window.setFormation('2');
+                            }
+
+                        }
+                    }
+
+                }
+            }
+        }
+
+
+
         function objectToArray(obj, key) {
             var result = [];
             for (var i in obj) {
@@ -920,4 +999,16 @@
                 }
             }
         }
+
+        //Intervals//
+        setInterval(buyJobs, runInterval);
+        setInterval(buyBuildings, runInterval);
+        setInterval(buyEquipment, runInterval);
+        setInterval(buyUpgrades, runInterval);
+        setInterval(buyStorage, runInterval);
+        setInterval(manualLabor, runInterval);
+        setInterval(newAutoMap, runInterval * 10);
+        setInterval(autoStance(), runInterval);
+        setInterval(saveSettings, 1000);
+
     })();
