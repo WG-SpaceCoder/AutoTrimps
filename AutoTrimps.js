@@ -602,7 +602,7 @@
 
         function manualLabor() {
             if (AutoManualLabor()) {
-                if ((window.game.resources.trimps.owned - window.game.resources.trimps.employed) < 2 && window.canAffordBuilding('Trap') && window.game.global.buildingsQueue.length == 0 && trapTrimps()) {
+                if ((window.game.resources.trimps.owned - window.game.resources.trimps.employed) < 2 && window.canAffordBuilding('Trap') && window.game.global.buildingsQueue.length == 0 && (trapTrimps() || (window.game.resources.trimps.realMax()/window.game.resources.trimps.owned > 2))) {
                     debug('Wanna buy Trap');
                     buyBuilding('Trap');
                     // window.tooltip('hide');
@@ -618,7 +618,8 @@
                 }
 
                 //TrapTrimps - if need trimps and have trapstorm will autotrap trimps
-                if (window.game.buildings.Trap.owned > 0 && (window.game.resources.trimps.max - window.game.resources.trimps.owned) > 2 && window.game.upgrades.Trapstorm.done != 1 && trapTrimps()) {
+                //Overrides trap trimps option if total trimps is below half (presumeably at start of game)
+                if (window.game.buildings.Trap.owned > 0 && (window.game.resources.trimps.realMax() - window.game.resources.trimps.owned) > 2 && window.game.upgrades.Trapstorm.done != 1 && (trapTrimps() || (window.game.resources.trimps.realMax()/window.game.resources.trimps.owned > 2))) {
                     window.setGather('trimps');
                 } else if (window.game.global.buildingsQueue.length > 2) {
                     window.setGather('buildings');
