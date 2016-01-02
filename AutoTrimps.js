@@ -145,7 +145,7 @@
         // setInterval(printGame, runInterval);
 
         //Page Changes//
-        document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" checked="checked" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" checked="checked" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" checked="checked" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" checked="checked" type="checkbox">Buy Upgrades <br> <input id="chkTrapTrimps" title="automate trapping trimps" checked="checked" type="checkbox">Trap Trimps<br> <input id="chkAutoStance" title="automate setting stance" checked="checked" type="checkbox">Auto Stance</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" checked="checked" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" checked="checked" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" checked="checked" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" checked="checked" type="checkbox">Buy Weapon Upgrades Maps <br> </td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" checked="checked" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" checked="checked" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck</td> </tr> </tbody> </table></div>';
+        document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" checked="checked" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" checked="checked" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" checked="checked" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" checked="checked" type="checkbox">Buy Upgrades <br>  <input id="chkAutoStance" title="automate setting stance" checked="checked" type="checkbox">Auto Stance</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" checked="checked" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" checked="checked" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" checked="checked" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" checked="checked" type="checkbox">Buy Weapon Upgrades <br><br> Misc Settings <br> <input id="chkTrapTrimps" title="automate trapping trimps" checked="checked" type="checkbox">Trap Trimps<br><input id="geneticistTargetBreedTime" title="Breed time in seconds to shoot for using geneticists" style="width: 20%;color: #000000;font-size: 12px;" value="5">&nbsp;Geneticist Timer<br></td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" checked="checked" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" checked="checked" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck</td> </tr> </tbody> </table></div>';
 
         var temp = document.getElementById("autoContainer").innerHTML.split('input id="');
         temp.splice(0, 1);
@@ -247,8 +247,9 @@
         function autoStanceChecked() {
             return document.getElementById("chkAutoStance").checked;
         }
-
-        fixMap();
+        function getTargetBreedTime() {
+            return document.getElementById("geneticistTargetBreedTime").value;
+        }
 
         //I honestly have no idea why I have to do this >.>
         document.getElementById("wood").style.opacity = "1";
@@ -278,6 +279,37 @@
                 debug('Cannot click button: ' + id);
                 return false;
             }
+        }
+
+        function getBreedTime() {
+            var trimps = window.game.resources.trimps;
+            var breeding = trimps.owned - trimps.employed;
+            var trimpsMax = trimps.realMax();
+
+            var potencyMod = trimps.potency;
+            if (window.game.global.brokenPlanet) breeding /= 10;
+
+            //Pheromones
+            potencyMod += (potencyMod * window.game.portal.Pheromones.level * window.game.portal.Pheromones.modifier);
+            if (window.game.jobs.Geneticist.owned > 0) potencyMod *= Math.pow(.98, window.game.jobs.Geneticist.owned);
+            if (window.game.unlocks.quickTrimps) potencyMod *= 2;
+            breeding = breeding * potencyMod;
+            updatePs(breeding, true);
+
+
+            var timeRemaining = log10((trimpsMax - trimps.employed) / (trimps.owned - trimps.employed)) / log10(1 + (potencyMod / 10));
+            if (!window.game.global.brokenPlanet) timeRemaining /= 10;
+            timeRemaining = Math.floor(timeRemaining) + " Secs";
+            var fullBreed = 0;
+            if (window.game.options.menu.showFullBreed.enabled) {
+                var adjustedMax = (window.game.portal.Coordinated.level) ? window.game.portal.Coordinated.currentSend : trimps.maxSoldiers;
+                var totalTime = log10((trimpsMax - trimps.employed) / ((trimpsMax - adjustedMax) - trimps.employed)) / log10(1 + (potencyMod / 10));
+                if (!window.game.global.brokenPlanet) totalTime /= 10;
+                fullBreed = Math.floor(totalTime) + " Secs";
+                timeRemaining += " / " + fullBreed;
+            }
+            // debug('Time to breed is ' +Math.floor(totalTime));
+            return Math.floor(totalTime);
         }
 
         function canPurchaseWorkers() {
@@ -336,6 +368,16 @@
                     // debug('Job loop');
                     var greatestWant = 0;
                     var jobToHire = '';
+                    if (getTargetBreedTime() >=0 && getTargetBreedTime() > getBreedTime()){
+                        var oldAmount = window.game.global.buyAmt;
+                        window.game.global.buyAmt = 1;
+                        var added = window.canAffordJob('Geneticist', true, Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed);
+                        debug('Hiring ' + added + 'Geneticist');
+                        window.game.jobs['Geneticist'].owned += added;
+                        window.game.resources.trimps.employed += added;
+                        window.game.global.buyAmt = oldAmount;
+                        window.tooltip('hide');
+                    }
                     for (var j in jobList) {
                         // debug('Job: ' +jobList[j].name+ '. Is unlocked? ' +window.game.jobs[jobList[j].name].locked);
                         var want = determineJobWant(j);
@@ -1027,5 +1069,6 @@
         setInterval(newAutoMap, runInterval * 10);
         setInterval(autoStance, runInterval);
         setInterval(saveSettings, 1000);
+        setInterval(getBreedTime, 1000);
 
     })();
