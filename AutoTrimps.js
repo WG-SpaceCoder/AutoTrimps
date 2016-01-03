@@ -311,6 +311,36 @@
             // debug('Time to breed is ' +Math.floor(totalTime));
             return Math.floor(totalTime);
         }
+        //adjust geneticists to reach desired breed timer
+        function manageGenes() {
+            var oldAmount = window.game.global.buyAmt;
+            var fWorkers = Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed;
+            window.game.global.buyAmt = 1;
+            //if we need to hire geneticists
+             if (getTargetBreedTime() >=0 && getTargetBreedTime() > getBreedTime() && !window.game.jobs.Geneticist.locked){
+                 //if there's no free worker spots, fire a scientist
+                 if(fWorkers < 1 && window.canAffordJob('Geneticist', false, fWorkers)){
+                     game.global.firing = true;
+                     buyJob('Scientist');
+                     game.global.firing = false;
+                     fWorkers = Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed;
+                 }
+                 //hire a geneticist
+                var added = window.canAffordJob('Geneticist', true, fWorkers);
+                debug('Hiring ' + added + 'Geneticist');
+                window.game.jobs['Geneticist'].owned += added;
+                window.game.resources.trimps.employed += added;
+                window.tooltip('hide');
+                }
+            //if we need to fire geneticists
+            if (getTargetBreedTime() >=0 && getTargetBreedTime() < getBreedTime() && !window.game.jobs.Geneticist.locked){
+                game.global.firing = true;
+                buyJob('Geneticist');
+                game.global.firing = false;
+                }
+                 window.game.global.buyAmt = oldAmount;
+            }
+        
 
         function canPurchaseWorkers() {
             for (var j in jobList) {
@@ -356,8 +386,8 @@
         }
 
         function buyJobs() {
-            if (autoBuyJobs()) {
-                if (window.game.resources.trimps.employed === 0 && window.game.resources.trimps.realMax() != window.game.resources.trimps.owned) {
+            if (autoBuyJobs()) {          //don't buy jobs if total trimps has dropped below 80%, to prevent dropping to 0 breeding during large population cap purchase (gigastation)                                                          
+                if ((window.game.resources.trimps.employed === 0 && window.game.resources.trimps.realMax() != window.game.resources.trimps.owned) || window.game.resources.trimps.owned/window.game.resources.trimps.realMax() < .8) {
                     return;
                 }
                 // debug('AutoBuyJobs = ' + autoBuyJobs());
@@ -368,16 +398,6 @@
                     // debug('Job loop');
                     var greatestWant = 0;
                     var jobToHire = '';
-                    if (getTargetBreedTime() >=0 && getTargetBreedTime() > getBreedTime() && !window.game.jobs.Geneticist.locked){
-                        var oldAmount = window.game.global.buyAmt;
-                        window.game.global.buyAmt = 1;
-                        var added = window.canAffordJob('Geneticist', true, Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed);
-                        debug('Hiring ' + added + 'Geneticist');
-                        window.game.jobs['Geneticist'].owned += added;
-                        window.game.resources.trimps.employed += added;
-                        window.game.global.buyAmt = oldAmount;
-                        window.tooltip('hide');
-                    }
                     for (var j in jobList) {
                         // debug('Job: ' +jobList[j].name+ '. Is unlocked? ' +window.game.jobs[jobList[j].name].locked);
                         var want = determineJobWant(j);
@@ -413,6 +433,8 @@
 
         function buyBuildings() {
             if (AutoBuyBuilding() && window.game.global.buildingsQueue.length < 5) {
+                var oldAmount = window.game.global.buyAmt;
+                window.game.global.buyAmt = 1;
                 for (var buildingIndex in buildingList) {
                     var building = buildingList[buildingIndex];
                     // debug('Checking building ' +building+ ' buildingMax ' +document.getElementById('max' + building).value);
@@ -422,6 +444,7 @@
                         window.tooltip('hide');
                     }
                 }
+                window.game.global.buyAmt = oldAmount;
             }
         }
 
@@ -710,9 +733,9 @@
                             window.toggleAutoTrap();
                         }
                         if (window.game.resources.trimps.realMax() == window.game.resources.trimps.owned || window.game.buildings.Trap.owned < 100) {
-                            window.setGather('buildings')
+                            window.setGather('buildings');
                         } else {
-                            window.setGather('trimps')
+                            window.setGather('trimps');
                         }
                     } else if (window.game.global.playerGathering != lowestResource) {
                         // debug('Changing gather to ' + lowestResource);
@@ -1073,5 +1096,6 @@
         setInterval(autoStance, runInterval);
         setInterval(saveSettings, 1000);
         setInterval(getBreedTime, 1000);
+        setInterval(manageGenes, runInterval);
 
     })();
