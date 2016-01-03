@@ -608,19 +608,20 @@
                 }
             }
         }
-
+        //add way to buy scientists upgrade before bloodlust and miners?
         function buyUpgrades() {
             for (var upgrade in upgradeList) {
                 upgrade = upgradeList[upgrade];
                 var gameUpgrade = window.game.upgrades[upgrade];
-                if (AutoBuyUpgrades() && gameUpgrade.allowed > gameUpgrade.done && window.canAffordTwoLevel(upgrade)) {
+                if (AutoBuyUpgrades() && gameUpgrade.allowed > gameUpgrade.done && window.canAffordTwoLevel(upgrade) /*&& !window.jobs.Scientist.locked*/) {
                     window.buyUpgrade(upgrade);
                     // window.tooltip('hide');
                     document.getElementById("upgradesAlert").innerHTML = '';
                 }
+            
             }
         }
-
+        //spams buys of storage in early game but oh well. Just get rid of console spam
         function buyStorage() {
             if (AutoBuyStorage()) {
                 var packMod = 1 + window.game.portal.Packrat.level * window.game.portal.Packrat.modifier;
@@ -631,10 +632,10 @@
                 };
                 for (var B in Bs) {
                     if (window.game.resources[Bs[B]].owned > window.game.resources[Bs[B]].max * packMod * 0.9) {
-                        debug('Buying ' + B + '(' + Bs[B] + ') at ' + Math.floor(window.game.resources[Bs[B]].owned / (window.game.resources[Bs[B]].max * packMod * 0.99) * 100) + '%');
+                       // debug('Buying ' + B + '(' + Bs[B] + ') at ' + Math.floor(window.game.resources[Bs[B]].owned / (window.game.resources[Bs[B]].max * packMod * 0.99) * 100) + '%');
                         if (AutoBuyStorage() && window.canAffordBuilding(B)) {
                             debug('Wanna buy ' + B);
-                            buyBuilding(B);
+                            window.buyBuilding(B);
                             window.tooltip('hide');
                         }
                     }
@@ -644,7 +645,7 @@
 
         function manualLabor() {
             if (AutoManualLabor()) {
-                if ((window.game.resources.trimps.owned - window.game.resources.trimps.employed) < 2 && window.canAffordBuilding('Trap') && window.game.global.buildingsQueue.length == 0 && trapTrimps()) {
+                if ((window.game.resources.trimps.owned - window.game.resources.trimps.employed) < 2 && window.canAffordBuilding('Trap') && window.game.global.buildingsQueue.length == 0 && (trapTrimps() || (window.game.resources.trimps.realMax()/window.game.resources.trimps.owned > 2))) {
                     debug('Wanna buy Trap');
                     buyBuilding('Trap');
                     // window.tooltip('hide');
@@ -660,11 +661,13 @@
                 }
 
                 //TrapTrimps - if need trimps and have trapstorm will autotrap trimps
-                if (window.game.buildings.Trap.owned > 0 && (window.game.resources.trimps.max - window.game.resources.trimps.owned) > 2 && window.game.upgrades.Trapstorm.done != 1 && trapTrimps()) {
+                //Overrides trap trimps option if total trimps is below half (presumeably at start of game)
+                if (window.game.buildings.Trap.owned > 0 && (window.game.resources.trimps.realMax() - window.game.resources.trimps.owned) > 2 && window.game.upgrades.Trapstorm.done != 1 && (trapTrimps() || (window.game.resources.trimps.realMax()/window.game.resources.trimps.owned > 2))) {
                     window.setGather('trimps');
-                } else if (window.game.global.buildingsQueue.length > 2) {
+                    //if scientists are still locked, don't give building priority
+                } else if (window.game.global.buildingsQueue.length > 2 && !window.game.jobs.Scientist.locked) {
                     window.setGather('buildings');
-                } else if (window.game.global.autoCraftModifier == 0 && window.game.global.buildingsQueue.length > 0) {
+                } else if (window.game.global.autoCraftModifier == 0 && window.game.global.buildingsQueue.length > 0 && window.game.upgrades.Scientists.allowed == 0) {
                     window.setGather('buildings');
                 } else {
                     //Do something here :/ 
