@@ -368,7 +368,7 @@
                     // debug('Job loop');
                     var greatestWant = 0;
                     var jobToHire = '';
-                    if (getTargetBreedTime() >=0 && getTargetBreedTime() > getBreedTime()){
+                    if (getTargetBreedTime() >=0 && getTargetBreedTime() > getBreedTime() && !window.game.jobs.Geneticist.locked){
                         var oldAmount = window.game.global.buyAmt;
                         window.game.global.buyAmt = 1;
                         var added = window.canAffordJob('Geneticist', true, Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed);
