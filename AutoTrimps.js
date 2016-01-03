@@ -366,6 +366,36 @@
             }
             return true;
         }
+        
+      /*  
+        function jobMax(jobName){
+            
+        }
+
+        function jobRatio(jobName){
+            
+        }
+
+        function determineJobWant(jobName) { 
+            var max = jobMax(jobName);
+            var ratio = jobRatio(jobName);
+            if (!window.game.jobs[jobName].locked) {
+                if (!canAffordJob(jobName)) {
+                    return 0;
+                } else if (max >= 0) {
+                    if (max <= window.game.jobs[jobName].owned) {
+                        return 0;
+                    } else {
+                        return 1 / (max, window.game.jobs[jobName].owned / ratio));
+                    }
+                } else {
+                    return 1 / (window.game.jobs[jobName].owned / ratio);
+                }
+                // debug('Job: ' +jobList[jobIndex].name+ '. Want: ' +jobList[j].want);
+            }
+            return 0;
+        }
+*/
 
         function determineJobWant(jobIndex) { //Wow this needs to be cleaned up :P
             if (!window.game.jobs[jobList[jobIndex].name].locked) {
@@ -1108,14 +1138,16 @@
             if (window.game.global.mapsUnlocked) {
                 fixMap();
                 //Check for unique maps
-                if (AutoUniqueMap()) {}
+                if (AutoUniqueMap()) {
                 var unique = getUniqueMap();
-                if (unique != undefined && canAffordNewMap()) {
+                    if (unique != undefined && canAffordNewMap()) {
                     // debug('Mapping Unique');
                     goToMap(unique);
                     return;
+                    }
                 }
             }
+        }
             //Check if upgrades can be unlocked (need to work through logic here)
 
             //Check if stuck in world
