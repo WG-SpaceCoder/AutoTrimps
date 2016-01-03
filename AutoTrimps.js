@@ -666,7 +666,54 @@
             }
         }
 
-        function manualLabor() {
+            var ManualGather='metal';
+            function manualLabor()
+            {
+                //if science perk level is none, dont turn on auto labor until scientists are unlocked
+             if (AutoManualLabor() && (window.game.global.sLevel > 0 || !window.game.jobs.Scientist.locked)){
+                                //If you don't have autofight and you have enough trimps, manual fight
+                if (window.game.upgrades.Bloodlust.done == 0 && (window.game.resources.trimps.owned - window.game.resources.trimps.employed) > 3 && !window.game.global.fighting && window.game.upgrades.Battle.done == 1) {
+                    window.fightManual();
+                }
+                //If you can autofight - set autofight to true
+                if (window.game.upgrades.Bloodlust.done == 1 && window.game.global.pauseFight) {
+                    window.pauseFight();
+                }
+                //set gather to whatever player has clicked. Will be nothing on fresh portal
+                if (game.global.playerGathering!='buildings' && game.global.playerGathering!='science'){
+                    ManualGather=game.global.playerGathering;
+                }
+                //if we have more than 2 buildings in queue, or our modifier is real fast, build
+                if ((game.global.buildingsQueue.length > 2)||(game.global.buildingsQueue.length > 0 && game.global.playerModifier>1000)&& game.global.playerGathering!='buildings') 
+                {
+                    setGather('buildings');
+                } 
+                //if we can gather more science in 1 min by ourselves than we currently have, get some science
+                else if (game.global.playerModifier*60>game.resources.science.owned)
+                {
+                    setGather('science');
+                }
+                //otherwise gather what the player chose
+                else 
+                { 
+                    setGather(ManualGather);          
+                }
+                //trap trimps if option is checked
+                if (window.game.upgrades.Trapstorm.done == 1 && trapTrimps()) {
+                        if (!window.game.global.trapBuildToggled) {
+                            window.toggleAutoTrap();
+                        }
+                        if (window.game.resources.trimps.realMax() == window.game.resources.trimps.owned || window.game.buildings.Trap.owned < 100) {
+                            window.setGather('buildings');
+                        } else {
+                            window.setGather('trimps');
+                        }
+                    }
+             }
+            }
+
+
+      /*  function manualLabor() {
             if (AutoManualLabor()) {
                 if ((window.game.resources.trimps.owned - window.game.resources.trimps.employed) < 2 && window.canAffordBuilding('Trap') && window.game.global.buildingsQueue.length == 0 && (trapTrimps() || (window.game.resources.trimps.realMax()/window.game.resources.trimps.owned > 2))) {
                     debug('Wanna buy Trap');
@@ -687,12 +734,13 @@
                 //Overrides trap trimps option if total trimps is below half (presumeably at start of game)
                 if (window.game.buildings.Trap.owned > 0 && (window.game.resources.trimps.realMax() - window.game.resources.trimps.owned) > 2 && window.game.upgrades.Trapstorm.done != 1 && (trapTrimps() || (window.game.resources.trimps.realMax()/window.game.resources.trimps.owned > 2))) {
                     window.setGather('trimps');
-                    //if scientists are still locked, don't give building priority
-                } else if (window.game.global.buildingsQueue.length > 2 && !window.game.jobs.Scientist.locked) {
+                    //if scientists are still locked, don't give building priority. If player modifier is large, always switch to build real quick
+                } else if ((window.game.global.buildingsQueue.length > 2 && !window.game.jobs.Scientist.locked) || (window.game.global.buildingsQueue.length > 0 && window.game.global.playerModifier > 1000)) {
                     window.setGather('buildings');
                 } else if (window.game.global.autoCraftModifier == 0 && window.game.global.buildingsQueue.length > 0 && window.game.upgrades.Scientists.allowed == 0) {
                     window.setGather('buildings');
-                } else {
+                } 
+                else if (window.game.global.playerModifier <= 8){
                     //Do something here :/ 
                     var manualResourceList = {
                         'food': 'Farmer',
@@ -749,7 +797,7 @@
             }
         }
 
-
+*/
 
         function autoStance() {
             if (window.game.global.gridArray.length != 0 && window.game.global.challengeActive != "Electricity" && window.game.global.challengeActive != "Nom" && autoStanceChecked()) {
