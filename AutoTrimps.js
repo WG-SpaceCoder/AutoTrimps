@@ -439,10 +439,21 @@
                     if (jobToHire === '') {
                         // debug('No job to hire :(');
                     } else {
+                        //debug ('entering buy. jobtohire:' + jobToHire);
+                        //why does this instantly break the game?!
+                     /*     if (amountToBuy > jobMax(jobToHire) && jobMax(jobToHire) > 0) {
+                      debug('buy over max amt:' + amountToBuy +'jobmax:' + jobMax(jobToHire) + 'for job:' +jobToHire);
+                      amountToBuy = jobMax(jobToHire);
+                    }*/
                         // debug('owned ' + window.game.resources.trimps.owned + ' employed ' + window.game.resources.trimps.employed + ' amountToBuy ' + amountToBuy);
                         if (Math.floor(window.game.resources.trimps.owned - window.game.resources.trimps.employed) - amountToBuy <= 2) return;
                         var oldAmount = window.game.global.buyAmt;
-                        window.game.global.buyAmt = amountToBuy;
+                        if(amountToBuy > jobMax(jobToHire) && jobMax(jobToHire) > 0){
+                            window.game.global.buyAmt = (jobMax(jobToHire) - window.game.jobs[jobToHire].owned);
+                        }
+                        else {
+                            window.game.global.buyAmt = amountToBuy;
+                        }
                         var added = window.canAffordJob(jobToHire, true, Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed);
                         // debug('Hiring ' + added + ' ' + jobToHire);
                         window.game.jobs[jobToHire].owned += added;
