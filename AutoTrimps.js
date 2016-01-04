@@ -1040,13 +1040,14 @@
             if (window.game.global.mapsUnlocked) {
                 fixMap();
                 //Check for unique maps
-                if (AutoUniqueMap()) {}
+                if (AutoUniqueMap()) {
                 var unique = getUniqueMap();
                 if (unique != undefined && canAffordNewMap()) {
                     // debug('Mapping Unique');
                     goToMap(unique);
                     return;
                 }
+               }
             }
             //Check if upgrades can be unlocked (need to work through logic here)
 
