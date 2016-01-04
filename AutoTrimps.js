@@ -1147,7 +1147,7 @@
                     }
                 }
             }
-        }
+        
             //Check if upgrades can be unlocked (need to work through logic here)
 
             //Check if stuck in world
