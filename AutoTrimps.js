@@ -16,6 +16,7 @@
         var runInterval = 200; //How often to loop through logic
         var enableDebug = true; //Spam console?
         var startAllSelected = false;
+        var avoidFast = false; //switch to heap when encountering a fast enemy?
 
         //List Variables//
         var jobList = [{
@@ -730,18 +731,20 @@
 
         function autoStance() {
             if (window.game.global.gridArray.length != 0 && window.game.global.challengeActive != "Electricity" && window.game.global.challengeActive != "Nom" && autoStanceChecked()) {
-                var badguyMinAtt = window.game.global.gridArray[window.game.global.lastClearedCell + 1].attack * .805; //fudge factor
-                var badguyMaxAtt = window.game.global.gridArray[window.game.global.lastClearedCell + 1].attack * 1.19;
-                var badguyFast = window.game.badGuys[window.game.global.gridArray[window.game.global.lastClearedCell + 1].name].fast;
+               if(avoidFast) {
+                    var badguyMinAtt = window.game.global.gridArray[window.game.global.lastClearedCell + 1].attack * .805; //fudge factor
+                    var badguyMaxAtt = window.game.global.gridArray[window.game.global.lastClearedCell + 1].attack * 1.19;
+                    var badguyFast = window.game.badGuys[window.game.global.gridArray[window.game.global.lastClearedCell + 1].name].fast;
 
-                if (window.game.global.mapsActive && !window.game.global.preMapsActive) {
-                    badguyMinAtt = window.game.global.mapGridArray[window.game.global.lastClearedMapCell + 1].attack * .805;
-                    badguyMaxAtt = window.game.global.mapGridArray[window.game.global.lastClearedMapCell + 1].attack * 1.19;
-                    badguyFast = window.game.badGuys[window.game.global.mapGridArray[window.game.global.lastClearedMapCell + 1].name].fast;
-                }
-                var mysoldiers = (window.game.portal.Coordinated.level) ? window.game.portal.Coordinated.currentSend : window.game.resources.trimps.maxSoldiers;
-                var myblock = window.game.global.soldierCurrentBlock;
-                var myhealth = window.game.global.soldierHealthMax;
+                    if (window.game.global.mapsActive && !window.game.global.preMapsActive) {
+                        badguyMinAtt = window.game.global.mapGridArray[window.game.global.lastClearedMapCell + 1].attack * .805;
+                        badguyMaxAtt = window.game.global.mapGridArray[window.game.global.lastClearedMapCell + 1].attack * 1.19;
+                        badguyFast = window.game.badGuys[window.game.global.mapGridArray[window.game.global.lastClearedMapCell + 1].name].fast;
+                    }
+                    var mysoldiers = (window.game.portal.Coordinated.level) ? window.game.portal.Coordinated.currentSend : window.game.resources.trimps.maxSoldiers;
+                    var myblock = window.game.global.soldierCurrentBlock;
+                    var myhealth = window.game.global.soldierHealthMax;
+               }
 
                 //Switch Formations
                 if (window.game.upgrades.Formations.done == 1 && window.game.upgrades.Dominance.done == 0) {
@@ -758,7 +761,7 @@
                 } else if (window.game.upgrades.Dominance.done == 1) {
                     healthFraction = window.game.global.soldierHealth / window.game.global.soldierHealthMax;
                     if (window.game.global.mapsActive && !window.game.global.preMapsActive) {
-                        if (window.game.badGuys[window.game.global.mapGridArray[window.game.global.lastClearedMapCell + 1].name].fast) {
+                        if (window.game.badGuys[window.game.global.mapGridArray[window.game.global.lastClearedMapCell + 1].name].fast && avoidFast) {
                             if (window.game.global.formation == 2 && myblock < badguyMaxAtt && !(window.game.resources.trimps.owned >= window.game.resources.trimps.realMax())) {
                                 window.setFormation(1);
                             }
@@ -780,7 +783,7 @@
                             }
                         }
                     } else {
-                        if (window.game.badGuys[window.game.global.gridArray[window.game.global.lastClearedCell + 1].name].fast) {
+                        if (window.game.badGuys[window.game.global.gridArray[window.game.global.lastClearedCell + 1].name].fast && avoidFast) {
                             if (window.game.global.formation == 2 && !(window.game.resources.trimps.owned >= window.game.resources.trimps.realMax())) {
                                 window.setFormation(1);
                             }
