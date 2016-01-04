@@ -1065,6 +1065,10 @@
             }
         }
 
+        function setTitle(){
+            document.title = '('+window.game.global.world+')'+' Trimps '+document.getElementById('versionNumber').innerHTML;
+        }
+
 
         //Intervals//
         setInterval(buyJobs, runInterval);
@@ -1077,5 +1081,6 @@
         setInterval(autoStance, runInterval);
         setInterval(saveSettings, 1000);
         setInterval(getBreedTime, 1000);
+        setInterval(setTitle, 1000);
 
     })();
