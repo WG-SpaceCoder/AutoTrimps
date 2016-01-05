@@ -1162,5 +1162,6 @@
         setInterval(saveSettings, 1000);
         setInterval(getBreedTime, 1000);
         setInterval(setTitle, 1000);
+        setInterval(manageGenes, 1000);
 
     })();
