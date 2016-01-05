@@ -290,7 +290,6 @@
 
         //adjust geneticists to reach desired breed timer
         function manageGenes() {
-            var oldAmount = window.game.global.buyAmt;
             var fWorkers = Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed;
             window.game.global.buyAmt = 1;
             //if we need to hire geneticists
@@ -303,11 +302,7 @@
                     fWorkers = Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed;
                 }
                 //hire a geneticist
-                var added = window.canAffordJob('Geneticist', true, fWorkers);
-                debug('Hiring ' + added + ' Geneticist');
-                window.game.jobs['Geneticist'].owned += added;
-                window.game.resources.trimps.employed += added;
-                window.tooltip('hide');
+                buyJob('Scientist');
             }
             //if we need to fire geneticists
             if (getTargetBreedTime() >= 0 && getTargetBreedTime() < getBreedTime() && !window.game.jobs.Geneticist.locked) {
@@ -315,7 +310,6 @@
                 buyJob('Geneticist');
                 window.game.global.firing = false;
             }
-            window.game.global.buyAmt = oldAmount;
         }
 
         function jobMax(jobName) {
