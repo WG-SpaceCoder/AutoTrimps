@@ -278,12 +278,16 @@
             }
         }
 
-        function buyJob(jobTitle, amount) {
+        function buyJob(jobTitle, amount, fire) {
+            debug('Hiring ' + amount + ' ' + jobTitle);
             if (amount == undefined) amount = 1;
             var oldAmount = window.game.global.buyAmt;
+            var oldFire = window.game.global.firing;
+            window.game.global.firing = fire == true ? true : false;
             window.game.global.buyAmt = amount;
             window.buyJob(jobTitle);
             window.game.global.buyAmt = oldAmount;
+            window.game.global.firing = oldFire;
             // window.tooltip('hide');
 
         }
@@ -296,20 +300,15 @@
             if (getTargetBreedTime() >= 0 && getTargetBreedTime() > getBreedTime() && !window.game.jobs.Geneticist.locked) {
                 //if there's no free worker spots, fire a scientist
                 if (fWorkers < 1 && window.canAffordJob('Geneticist', false, fWorkers)) {
-                    window.game.global.firing = true;
-                    buyJob('Scientist');
-                    window.game.global.firing = false;
+                    buyJob('Scientist', 1, true);
                     fWorkers = Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed;
                 }
                 //hire a geneticist
-                window.game.global.firing = false;
                 buyJob('Geneticist');
             }
             //if we need to fire geneticists
             if (getTargetBreedTime() >= 0 && getTargetBreedTime() < getBreedTime() && !window.game.jobs.Geneticist.locked) {
-                window.game.global.firing = true;
-                buyJob('Geneticist');
-                window.game.global.firing = false;
+                buyJob('Geneticist', 1, true);
             }
         }
 
@@ -388,9 +387,11 @@
         }
 
         function canAffordJob(jobName) {
-            if (freeWorkers() === 0) {
-                return false;
-            }
+            var workspaces = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+            if (workspaces <= 0) return false;
+            if (!window.canAffordJob(jobName, false, workspaces)) return false;
+            if (freeWorkers() === 0) return false;
+
             for (var costItem in window.game.jobs[jobName].cost) {
                 // debug('Checking cost for ' +costItem+ ' and ' +jobName+ ': ' + window.checkJobItem(jobName, false, costItem, null, 1));
                 if (!window.checkJobItem(jobName, false, costItem, null, 1)) return false;
@@ -433,10 +434,8 @@
                         if (Math.floor(window.game.resources.trimps.owned - window.game.resources.trimps.employed) - amountToBuy <= 2) return;
                         var oldAmount = window.game.global.buyAmt;
                         if (jobMax(jobToHire) > 0) {
-                            window.game.global.firing = false;
                             buyJob(jobToHire, Math.min(jobMax(jobToHire), amountToBuy));
                         } else {
-                            window.game.global.firing = false;
                             buyJob(jobToHire, amountToBuy);
                         }
                     }
