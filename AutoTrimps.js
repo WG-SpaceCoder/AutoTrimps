@@ -28,10 +28,6 @@
             max: -1,
             ratio: 99
         }, {
-            name: 'Geneticist',
-            max: 5,
-            ratio: 10
-        }, {
             name: 'Miner',
             max: -1,
             ratio: 10
@@ -142,11 +138,10 @@
         var buildingList = ['Hut', 'House', 'Gym', 'Mansion', 'Hotel', 'Resort', 'Gateway', 'Collector', 'Warpstation', 'Tribute', 'Nursery']; //NOTE THAT I REMOVED WORMHOLE TEMPORARILY UNTILL I FIGURE OUT WHAT TO DO WITH IT
 
 
-
         // setInterval(printGame, runInterval);
 
         //Page Changes//
-        document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" type="checkbox">Buy Upgrades <br>  <input id="chkAutoStance" title="automate setting stance" type="checkbox">Auto Stance</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" type="checkbox">Buy Weapon Upgrades <br><br> Misc Settings <br> <input id="chkTrapTrimps" title="automate trapping trimps" type="checkbox">Trap Trimps<br><input id="geneticistTargetBreedTime" title="Breed time in seconds to shoot for using geneticists" style="width: 20%;color: #000000;font-size: 12px;" value="5">&nbsp;Geneticist Timer<br></td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck</td> </tr> </tbody> </table></div>';
+        document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" type="checkbox">Buy Upgrades <br>  <input id="chkAutoStance" title="automate setting stance" type="checkbox">Auto Stance</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" type="checkbox">Buy Weapon Upgrades <br><br> Misc Settings <br> <input id="chkTrapTrimps" title="automate trapping trimps" type="checkbox">Trap Trimps<br><input id="geneticistTargetBreedTime" title="Breed time in seconds to shoot for using geneticists" style="width: 20%;color: #000000;font-size: 12px;" value="5">&nbsp;Geneticist Timer<br></td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck<br><br>Ratios&nbsp&nbsp;Max<br><input id="FarmerRatio" style="width: 10%; color: #000000;" value="10"><input id="FarmerMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Farmer<br><input id="LumberjackRatio" style="width: 10%; color: #000000;" value="10"><input id="LumberjackMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Lumberjack<br><input id="MinerRatio" style="width: 10%; color: #000000;" value="10"><input id="MinerMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Miner<br><input id="ScientistRatio" style="width: 10%; color: #000000;" value="10"><input id="ScientistMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Scientist<br><input id="TrainerRatio" style="width: 10%; color: #000000;" value="10"><input id="TrainerMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Trainer<br><input id="ExplorerRatio" style="width: 10%; color: #000000;" value="10"><input id="ExplorerMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Explorer</td> </tr> </tbody> </table></div>';
 
         var temp = document.getElementById("autoContainer").innerHTML.split('input id="');
         temp.splice(0, 1);
@@ -248,6 +243,7 @@
         function autoStanceChecked() {
             return document.getElementById("chkAutoStance").checked;
         }
+
         function getTargetBreedTime() {
             return document.getElementById("geneticistTargetBreedTime").value;
         }
@@ -280,6 +276,65 @@
                 debug('Cannot click button: ' + id);
                 return false;
             }
+        }
+
+        //adjust geneticists to reach desired breed timer
+        function manageGenes() {
+            var oldAmount = window.game.global.buyAmt;
+            var fWorkers = Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed;
+            window.game.global.buyAmt = 1;
+            //if we need to hire geneticists
+            if (getTargetBreedTime() >= 0 && getTargetBreedTime() > getBreedTime() && !window.game.jobs.Geneticist.locked) {
+                //if there's no free worker spots, fire a scientist
+                if (fWorkers < 1 && window.canAffordJob('Geneticist', false, fWorkers)) {
+                    game.global.firing = true;
+                    buyJob('Scientist');
+                    game.global.firing = false;
+                    fWorkers = Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed;
+                }
+                //hire a geneticist
+                var added = window.canAffordJob('Geneticist', true, fWorkers);
+                debug('Hiring ' + added + 'Geneticist');
+                window.game.jobs['Geneticist'].owned += added;
+                window.game.resources.trimps.employed += added;
+                window.tooltip('hide');
+            }
+            //if we need to fire geneticists
+            if (getTargetBreedTime() >= 0 && getTargetBreedTime() < getBreedTime() && !window.game.jobs.Geneticist.locked) {
+                game.global.firing = true;
+                buyJob('Geneticist');
+                game.global.firing = false;
+            }
+            window.game.global.buyAmt = oldAmount;
+        }
+
+        function jobMax(jobName) {
+            return document.getElementById(jobName + 'Max').value;
+        }
+
+        function jobRatio(jobName) {
+            return document.getElementById(jobName + 'Ratio').value;
+        }
+
+        function determineJobWant(j) {
+            var jobName = jobList[j].name;
+            var max = jobMax(jobName);
+            var ratio = jobRatio(jobName);
+            if (!window.game.jobs[jobName].locked) {
+                if (!canAffordJob(jobName)) {
+                    return 0;
+                } else if (max >= 0) {
+                    if (max <= window.game.jobs[jobName].owned) {
+                        return 0;
+                    } else {
+                        return 1 / Math.min(max, window.game.jobs[jobName].owned / ratio);
+                    }
+                } else {
+                    return 1 / (window.game.jobs[jobName].owned / ratio);
+                }
+                // debug('Job: ' +jobList[jobIndex].name+ '. Want: ' +jobList[j].want);
+            }
+            return 0;
         }
 
         function getBreedTime() {
@@ -338,27 +393,9 @@
             return true;
         }
 
-        function determineJobWant(jobIndex) { //Wow this needs to be cleaned up :P
-            if (!window.game.jobs[jobList[jobIndex].name].locked) {
-                if (!canAffordJob(jobList[jobIndex].name)) {
-                    return 0;
-                } else if (jobList[jobIndex].max >= 0) {
-                    if (jobList[jobIndex].max <= window.game.jobs[jobList[jobIndex].name].owned) {
-                        return 0;
-                    } else {
-                        return 1 / (Math.min(jobList[jobIndex].max, window.game.jobs[jobList[jobIndex].name].owned / jobList[jobIndex].ratio));
-                    }
-                } else {
-                    return 1 / (window.game.jobs[jobList[jobIndex].name].owned / jobList[jobIndex].ratio);
-                }
-                // debug('Job: ' +jobList[jobIndex].name+ '. Want: ' +jobList[j].want);
-            }
-            return 0;
-        }
-
         function buyJobs() {
-            if (autoBuyJobs()) {
-                if (window.game.resources.trimps.employed === 0 && window.game.resources.trimps.realMax() != window.game.resources.trimps.owned) {
+            if (autoBuyJobs()) { //don't buy jobs if total trimps has dropped below 80%, to prevent dropping to 0 breeding during large population cap purchase (gigastation)                                                          
+                if ((window.game.resources.trimps.employed === 0 && window.game.resources.trimps.realMax() != window.game.resources.trimps.owned) || window.game.resources.trimps.owned / window.game.resources.trimps.realMax() < .8) {
                     return;
                 }
                 // debug('AutoBuyJobs = ' + autoBuyJobs());
@@ -369,16 +406,6 @@
                     // debug('Job loop');
                     var greatestWant = 0;
                     var jobToHire = '';
-                    if (getTargetBreedTime() >=0 && getTargetBreedTime() > getBreedTime() && !window.game.jobs.Geneticist.locked){
-                        var oldAmount = window.game.global.buyAmt;
-                        window.game.global.buyAmt = 1;
-                        var added = window.canAffordJob('Geneticist', true, Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed);
-                        debug('Hiring ' + added + 'Geneticist');
-                        window.game.jobs['Geneticist'].owned += added;
-                        window.game.resources.trimps.employed += added;
-                        window.game.global.buyAmt = oldAmount;
-                        window.tooltip('hide');
-                    }
                     for (var j in jobList) {
                         // debug('Job: ' +jobList[j].name+ '. Is unlocked? ' +window.game.jobs[jobList[j].name].locked);
                         var want = determineJobWant(j);
@@ -391,10 +418,20 @@
                     if (jobToHire === '') {
                         // debug('No job to hire :(');
                     } else {
+                        //debug ('entering buy. jobtohire:' + jobToHire);
+                        //why does this instantly break the game?!
+                        /*     if (amountToBuy > jobMax(jobToHire) && jobMax(jobToHire) > 0) {
+                      debug('buy over max amt:' + amountToBuy +'jobmax:' + jobMax(jobToHire) + 'for job:' +jobToHire);
+                      amountToBuy = jobMax(jobToHire);
+                    }*/
                         // debug('owned ' + window.game.resources.trimps.owned + ' employed ' + window.game.resources.trimps.employed + ' amountToBuy ' + amountToBuy);
                         if (Math.floor(window.game.resources.trimps.owned - window.game.resources.trimps.employed) - amountToBuy <= 2) return;
                         var oldAmount = window.game.global.buyAmt;
-                        window.game.global.buyAmt = amountToBuy;
+                        if (amountToBuy > jobMax(jobToHire) && jobMax(jobToHire) > 0) {
+                            window.game.global.buyAmt = (jobMax(jobToHire) - window.game.jobs[jobToHire].owned);
+                        } else {
+                            window.game.global.buyAmt = amountToBuy;
+                        }
                         var added = window.canAffordJob(jobToHire, true, Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed);
                         // debug('Hiring ' + added + ' ' + jobToHire);
                         window.game.jobs[jobToHire].owned += added;
@@ -414,6 +451,8 @@
 
         function buyBuildings() {
             if (AutoBuyBuilding() && window.game.global.buildingsQueue.length < 5) {
+                var oldAmount = window.game.global.buyAmt;
+                window.game.global.buyAmt = 1;
                 for (var buildingIndex in buildingList) {
                     var building = buildingList[buildingIndex];
                     // debug('Checking building ' +building+ ' buildingMax ' +document.getElementById('max' + building).value);
@@ -423,6 +462,7 @@
                         window.tooltip('hide');
                     }
                 }
+                window.game.global.buyAmt = oldAmount;
             }
         }
 
@@ -614,12 +654,12 @@
             for (var upgrade in upgradeList) {
                 upgrade = upgradeList[upgrade];
                 var gameUpgrade = window.game.upgrades[upgrade];
-                if (AutoBuyUpgrades() && gameUpgrade.allowed > gameUpgrade.done && window.canAffordTwoLevel(upgrade) /*&& !window.jobs.Scientist.locked*/) {
+                if (AutoBuyUpgrades() && gameUpgrade.allowed > gameUpgrade.done && window.canAffordTwoLevel(upgrade) /*&& !window.jobs.Scientist.locked*/ ) {
                     window.buyUpgrade(upgrade);
                     // window.tooltip('hide');
                     document.getElementById("upgradesAlert").innerHTML = '';
                 }
-            
+
             }
         }
         //spams buys of storage in early game but oh well. Just get rid of console spam
@@ -633,7 +673,7 @@
                 };
                 for (var B in Bs) {
                     if (window.game.resources[Bs[B]].owned > window.game.resources[Bs[B]].max * packMod * 0.9) {
-                       // debug('Buying ' + B + '(' + Bs[B] + ') at ' + Math.floor(window.game.resources[Bs[B]].owned / (window.game.resources[Bs[B]].max * packMod * 0.99) * 100) + '%');
+                        // debug('Buying ' + B + '(' + Bs[B] + ') at ' + Math.floor(window.game.resources[Bs[B]].owned / (window.game.resources[Bs[B]].max * packMod * 0.99) * 100) + '%');
                         if (AutoBuyStorage() && window.canAffordBuilding(B)) {
                             debug('Wanna buy ' + B);
                             window.buyBuilding(B);
@@ -645,13 +685,9 @@
         }
 
         function manualLabor() {
-            if (AutoManualLabor()) {
-                if ((window.game.resources.trimps.owned - window.game.resources.trimps.employed) < 2 && window.canAffordBuilding('Trap') && window.game.global.buildingsQueue.length == 0 && (trapTrimps() || (window.game.resources.trimps.realMax()/window.game.resources.trimps.owned > 2))) {
-                    debug('Wanna buy Trap');
-                    buyBuilding('Trap');
-                    // window.tooltip('hide');
-                }
-
+            var ManualGather='metal';
+            //if science perk level is none, dont turn on auto labor until scientists are unlocked
+            if (AutoManualLabor() && (window.game.global.sLevel > 0 || !window.game.jobs.Scientist.locked)) {
                 //If you don't have autofight and you have enough trimps, manual fight
                 if (window.game.upgrades.Bloodlust.done == 0 && (window.game.resources.trimps.owned - window.game.resources.trimps.employed) > 3 && !window.game.global.fighting && window.game.upgrades.Battle.done == 1) {
                     window.fightManual();
@@ -660,78 +696,124 @@
                 if (window.game.upgrades.Bloodlust.done == 1 && window.game.global.pauseFight) {
                     window.pauseFight();
                 }
-
-                //TrapTrimps - if need trimps and have trapstorm will autotrap trimps
-                //Overrides trap trimps option if total trimps is below half (presumeably at start of game)
-                if (window.game.buildings.Trap.owned > 0 && (window.game.resources.trimps.realMax() - window.game.resources.trimps.owned) > 2 && window.game.upgrades.Trapstorm.done != 1 && (trapTrimps() || (window.game.resources.trimps.realMax()/window.game.resources.trimps.owned > 2))) {
-                    window.setGather('trimps');
-                    //if scientists are still locked, don't give building priority
-                } else if (window.game.global.buildingsQueue.length > 2 && !window.game.jobs.Scientist.locked) {
-                    window.setGather('buildings');
-                } else if (window.game.global.autoCraftModifier == 0 && window.game.global.buildingsQueue.length > 0 && window.game.upgrades.Scientists.allowed == 0) {
-                    window.setGather('buildings');
-                } else {
-                    //Do something here :/ 
-                    var manualResourceList = {
-                        'food': 'Farmer',
-                        'wood': 'Lumberjack',
-                        'metal': 'Miner',
-                        'science': 'Scientist'
-                    };
-                    var lowestResource = 'food';
-                    var lowestResourceRate = -1;
-                    var haveWorkers = true;
-                    for (var resource in manualResourceList) {
-                        var job = manualResourceList[resource];
-                        var currentRate = window.game.jobs[job].owned * window.game.jobs[job].modifier;
-                        // debug('Current rate for ' + resource + ' is ' + currentRate + ' is hidden? ' + (document.getElementById(resource).style.visibility == 'hidden'));
-                        if (document.getElementById(resource).style.visibility != 'hidden') {
-                            // debug('INNERLOOP for resource ' +resource);
-                            if (currentRate == 0) {
-                                currentRate = window.game.resources[resource].owned;
-                                // debug('Current rate for ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate);
-                                if ((haveWorkers) || (currentRate < lowestResourceRate)) {
-                                    // debug('New Lowest1 ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate+ ' haveworkers ' +haveWorkers);
-                                    haveWorkers = false;
-                                    lowestResource = resource;
-                                    lowestResourceRate = currentRate;
-                                }
-                            }
-                            if ((currentRate < lowestResourceRate || lowestResourceRate == -1) && haveWorkers) {
-                                // debug('New Lowest2 ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate);
-                                lowestResource = resource;
-                                lowestResourceRate = currentRate;
-                            }
-                        }
-                        // debug('Current Stats ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate+ ' haveworkers ' +haveWorkers);
+                //set gather to whatever player has clicked. Will be nothing on fresh portal
+                if (game.global.playerGathering != 'buildings' && game.global.playerGathering != 'science') {
+                    ManualGather = game.global.playerGathering;
+                }
+                //if we have more than 2 buildings in queue, or our modifier is real fast, build
+                if ((game.global.buildingsQueue.length > 2) || (game.global.buildingsQueue.length > 0 && game.global.playerModifier > 1000) && game.global.playerGathering != 'buildings') {
+                    setGather('buildings');
+                }
+                //if we can gather more science in 1 min by ourselves than we currently have, get some science
+                else if (game.global.playerModifier * 60 > game.resources.science.owned) {
+                    setGather('science');
+                }
+                //otherwise gather what the player chose
+                else {
+                    setGather(ManualGather);
+                }
+                //trap trimps if option is checked
+                if (window.game.upgrades.Trapstorm.done == 1 && trapTrimps()) {
+                    if (!window.game.global.trapBuildToggled) {
+                        window.toggleAutoTrap();
                     }
-
-                    if (window.game.upgrades.Trapstorm.done == 1 && trapTrimps()) {
-                        if (!window.game.global.trapBuildToggled) {
-                            window.toggleAutoTrap();
-                        }
-                        if (window.game.resources.trimps.realMax() == window.game.resources.trimps.owned || window.game.buildings.Trap.owned < 100) {
-                            window.setGather('buildings')
-                        } else {
-                            window.setGather('trimps')
-                        }
-                    } else if (window.game.global.playerGathering != lowestResource) {
-                        // debug('Changing gather to ' + lowestResource);
-                        window.setGather(lowestResource);
-                        // window.tooltip('hide');
+                    if (window.game.resources.trimps.realMax() == window.game.resources.trimps.owned || window.game.buildings.Trap.owned < 100) {
+                        window.setGather('buildings');
+                    } else {
+                        window.setGather('trimps');
                     }
                 }
-
-
-
             }
         }
+
+        // function manualLabor() {
+        //     if (AutoManualLabor()) {
+        //         if ((window.game.resources.trimps.owned - window.game.resources.trimps.employed) < 2 && window.canAffordBuilding('Trap') && window.game.global.buildingsQueue.length == 0 && (trapTrimps() || (window.game.resources.trimps.realMax() / window.game.resources.trimps.owned > 2))) {
+        //             debug('Wanna buy Trap');
+        //             buyBuilding('Trap');
+        //             // window.tooltip('hide');
+        //         }
+
+        //         //If you don't have autofight and you have enough trimps, manual fight
+        //         if (window.game.upgrades.Bloodlust.done == 0 && (window.game.resources.trimps.owned - window.game.resources.trimps.employed) > 3 && !window.game.global.fighting && window.game.upgrades.Battle.done == 1) {
+        //             window.fightManual();
+        //         }
+        //         //If you can autofight - set autofight to true
+        //         if (window.game.upgrades.Bloodlust.done == 1 && window.game.global.pauseFight) {
+        //             window.pauseFight();
+        //         }
+
+        //         //TrapTrimps - if need trimps and have trapstorm will autotrap trimps
+        //         //Overrides trap trimps option if total trimps is below half (presumeably at start of game)
+        //         if (window.game.buildings.Trap.owned > 0 && (window.game.resources.trimps.realMax() - window.game.resources.trimps.owned) > 2 && window.game.upgrades.Trapstorm.done != 1 && (trapTrimps() || (window.game.resources.trimps.realMax() / window.game.resources.trimps.owned > 2))) {
+        //             window.setGather('trimps');
+        //             //if scientists are still locked, don't give building priority
+        //         } else if (window.game.global.buildingsQueue.length > 2 && !window.game.jobs.Scientist.locked) {
+        //             window.setGather('buildings');
+        //         } else if (window.game.global.autoCraftModifier == 0 && window.game.global.buildingsQueue.length > 0 && window.game.upgrades.Scientists.allowed == 0) {
+        //             window.setGather('buildings');
+        //         } else {
+        //             //Do something here :/ 
+        //             var manualResourceList = {
+        //                 'food': 'Farmer',
+        //                 'wood': 'Lumberjack',
+        //                 'metal': 'Miner',
+        //                 'science': 'Scientist'
+        //             };
+        //             var lowestResource = 'food';
+        //             var lowestResourceRate = -1;
+        //             var haveWorkers = true;
+        //             for (var resource in manualResourceList) {
+        //                 var job = manualResourceList[resource];
+        //                 var currentRate = window.game.jobs[job].owned * window.game.jobs[job].modifier;
+        //                 // debug('Current rate for ' + resource + ' is ' + currentRate + ' is hidden? ' + (document.getElementById(resource).style.visibility == 'hidden'));
+        //                 if (document.getElementById(resource).style.visibility != 'hidden') {
+        //                     // debug('INNERLOOP for resource ' +resource);
+        //                     if (currentRate == 0) {
+        //                         currentRate = window.game.resources[resource].owned;
+        //                         // debug('Current rate for ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate);
+        //                         if ((haveWorkers) || (currentRate < lowestResourceRate)) {
+        //                             // debug('New Lowest1 ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate+ ' haveworkers ' +haveWorkers);
+        //                             haveWorkers = false;
+        //                             lowestResource = resource;
+        //                             lowestResourceRate = currentRate;
+        //                         }
+        //                     }
+        //                     if ((currentRate < lowestResourceRate || lowestResourceRate == -1) && haveWorkers) {
+        //                         // debug('New Lowest2 ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate);
+        //                         lowestResource = resource;
+        //                         lowestResourceRate = currentRate;
+        //                     }
+        //                 }
+        //                 // debug('Current Stats ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate+ ' haveworkers ' +haveWorkers);
+        //             }
+
+        //             if (window.game.upgrades.Trapstorm.done == 1 && trapTrimps()) {
+        //                 if (!window.game.global.trapBuildToggled) {
+        //                     window.toggleAutoTrap();
+        //                 }
+        //                 if (window.game.resources.trimps.realMax() == window.game.resources.trimps.owned || window.game.buildings.Trap.owned < 100) {
+        //                     window.setGather('buildings')
+        //                 } else {
+        //                     window.setGather('trimps')
+        //                 }
+        //             } else if (window.game.global.playerGathering != lowestResource) {
+        //                 // debug('Changing gather to ' + lowestResource);
+        //                 window.setGather(lowestResource);
+        //                 // window.tooltip('hide');
+        //             }
+        //         }
+
+
+
+        //     }
+        // }
 
 
 
         function autoStance() {
             if (window.game.global.gridArray.length != 0 && window.game.global.challengeActive != "Electricity" && window.game.global.challengeActive != "Nom" && autoStanceChecked()) {
-               if(avoidFast) {
+                if (avoidFast) {
                     var badguyMinAtt = window.game.global.gridArray[window.game.global.lastClearedCell + 1].attack * .805; //fudge factor
                     var badguyMaxAtt = window.game.global.gridArray[window.game.global.lastClearedCell + 1].attack * 1.19;
                     var badguyFast = window.game.badGuys[window.game.global.gridArray[window.game.global.lastClearedCell + 1].name].fast;
@@ -744,7 +826,7 @@
                     var mysoldiers = (window.game.portal.Coordinated.level) ? window.game.portal.Coordinated.currentSend : window.game.resources.trimps.maxSoldiers;
                     var myblock = window.game.global.soldierCurrentBlock;
                     var myhealth = window.game.global.soldierHealthMax;
-               }
+                }
 
                 //Switch Formations
                 if (window.game.upgrades.Formations.done == 1 && window.game.upgrades.Dominance.done == 0) {
@@ -808,8 +890,6 @@
                 }
             }
         }
-
-
 
         function objectToArray(obj, key) {
             var result = [];
@@ -1041,13 +1121,13 @@
                 fixMap();
                 //Check for unique maps
                 if (AutoUniqueMap()) {
-                var unique = getUniqueMap();
-                if (unique != undefined && canAffordNewMap()) {
-                    // debug('Mapping Unique');
-                    goToMap(unique);
-                    return;
+                    var unique = getUniqueMap();
+                    if (unique != undefined && canAffordNewMap()) {
+                        // debug('Mapping Unique');
+                        goToMap(unique);
+                        return;
+                    }
                 }
-               }
             }
             //Check if upgrades can be unlocked (need to work through logic here)
 
@@ -1065,8 +1145,8 @@
             }
         }
 
-        function setTitle(){
-            document.title = '('+window.game.global.world+')'+' Trimps '+document.getElementById('versionNumber').innerHTML;
+        function setTitle() {
+            document.title = '(' + window.game.global.world + ')' + ' Trimps ' + document.getElementById('versionNumber').innerHTML;
         }
 
 
