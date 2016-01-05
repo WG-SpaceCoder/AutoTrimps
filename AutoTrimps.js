@@ -290,7 +290,7 @@
             window.buyJob(jobTitle);
             window.game.global.buyAmt = oldAmount;
             window.game.global.firing = oldFire;
-            // window.tooltip('hide');
+            window.tooltip('hide');
 
         }
 
