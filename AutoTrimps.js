@@ -302,6 +302,7 @@
                     fWorkers = Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed;
                 }
                 //hire a geneticist
+                window.game.global.firing = false;
                 buyJob('Geneticist');
             }
             //if we need to fire geneticists
@@ -432,8 +433,10 @@
                         if (Math.floor(window.game.resources.trimps.owned - window.game.resources.trimps.employed) - amountToBuy <= 2) return;
                         var oldAmount = window.game.global.buyAmt;
                         if (jobMax(jobToHire) > 0) {
+                            window.game.global.firing = false;
                             buyJob(jobToHire, Math.min(jobMax(jobToHire), amountToBuy));
                         } else {
+                            window.game.global.firing = false;
                             buyJob(jobToHire, amountToBuy);
                         }
                     }
