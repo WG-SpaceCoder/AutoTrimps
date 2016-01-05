@@ -278,6 +278,16 @@
             }
         }
 
+        function buyJob(jobTitle, amount) {
+            if (amount == undefined) amount = 1;
+            var oldAmount = window.game.global.buyAmt;
+            window.game.global.buyAmt = amount;
+            window.buyJob(jobTitle);
+            window.game.global.buyAmt = oldAmount;
+            // window.tooltip('hide');
+
+        }
+
         //adjust geneticists to reach desired breed timer
         function manageGenes() {
             var oldAmount = window.game.global.buyAmt;
@@ -287,23 +297,23 @@
             if (getTargetBreedTime() >= 0 && getTargetBreedTime() > getBreedTime() && !window.game.jobs.Geneticist.locked) {
                 //if there's no free worker spots, fire a scientist
                 if (fWorkers < 1 && window.canAffordJob('Geneticist', false, fWorkers)) {
-                    game.global.firing = true;
+                    window.game.global.firing = true;
                     buyJob('Scientist');
-                    game.global.firing = false;
+                    window.game.global.firing = false;
                     fWorkers = Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed;
                 }
                 //hire a geneticist
                 var added = window.canAffordJob('Geneticist', true, fWorkers);
-                debug('Hiring ' + added + 'Geneticist');
+                debug('Hiring ' + added + ' Geneticist');
                 window.game.jobs['Geneticist'].owned += added;
                 window.game.resources.trimps.employed += added;
                 window.tooltip('hide');
             }
             //if we need to fire geneticists
             if (getTargetBreedTime() >= 0 && getTargetBreedTime() < getBreedTime() && !window.game.jobs.Geneticist.locked) {
-                game.global.firing = true;
+                window.game.global.firing = true;
                 buyJob('Geneticist');
-                game.global.firing = false;
+                window.game.global.firing = false;
             }
             window.game.global.buyAmt = oldAmount;
         }
@@ -427,17 +437,11 @@
                         // debug('owned ' + window.game.resources.trimps.owned + ' employed ' + window.game.resources.trimps.employed + ' amountToBuy ' + amountToBuy);
                         if (Math.floor(window.game.resources.trimps.owned - window.game.resources.trimps.employed) - amountToBuy <= 2) return;
                         var oldAmount = window.game.global.buyAmt;
-                        if (amountToBuy > jobMax(jobToHire) && jobMax(jobToHire) > 0) {
-                            window.game.global.buyAmt = (jobMax(jobToHire) - window.game.jobs[jobToHire].owned);
+                        if (jobMax(jobToHire) > 0) {
+                            buyJob(jobToHire, Math.min(jobMax(jobToHire), amountToBuy));
                         } else {
-                            window.game.global.buyAmt = amountToBuy;
+                            buyJob(jobToHire, amountToBuy);
                         }
-                        var added = window.canAffordJob(jobToHire, true, Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed);
-                        // debug('Hiring ' + added + ' ' + jobToHire);
-                        window.game.jobs[jobToHire].owned += added;
-                        window.game.resources.trimps.employed += added;
-                        window.game.global.buyAmt = oldAmount;
-                        window.tooltip('hide');
                     }
                 }
             }
@@ -685,7 +689,7 @@
         }
 
         function manualLabor() {
-            var ManualGather='metal';
+            var ManualGather = 'metal';
             //if science perk level is none, dont turn on auto labor until scientists are unlocked
             if (AutoManualLabor() && (window.game.global.sLevel > 0 || !window.game.jobs.Scientist.locked)) {
                 //If you don't have autofight and you have enough trimps, manual fight
@@ -971,7 +975,7 @@
 
         function canBeatWorld(level) {
             if (level == undefined) {
-                level = window.game.global.gridArray.length - 1;
+                level = window.game.global.gridArray.length - 1; //Checks zone boss
             }
             return canBeatCell(window.game.global.gridArray[level]);
         }
@@ -1134,7 +1138,8 @@
             //Check if stuck in world
             if (AutoProgressMap()) {
                 // debug('canBeatWorld(window.game.global.lastClearedCell + 1)' + (window.game.global.lastClearedCell + 1) + canBeatWorld(window.game.global.lastClearedCell + 1) + ' canAffordNewMap ' + canAffordNewMap());
-                if (!canBeatWorld(window.game.global.lastClearedCell + 1) && canAffordNewMap()) {
+                // if (!canBeatWorld(window.game.global.lastClearedCell + 1) && canAffordNewMap()) { //Checks current zone
+                if (!canBeatWorld() && canAffordNewMap()) { //Checks zone boss
                     // debug('Mapping Non-Unique');
                     goToCurrentLevelMap();
                     return;
@@ -1157,12 +1162,11 @@
         setInterval(buyUpgrades, runInterval);
         setInterval(buyStorage, runInterval);
         setInterval(manualLabor, runInterval);
-        setInterval(newAutoMap, runInterval * 10);
+        setInterval(manageGenes, runInterval);
         setInterval(autoStance, runInterval);
+        setInterval(newAutoMap, runInterval * 10);
         setInterval(saveSettings, 1000);
         setInterval(getBreedTime, 1000);
         setInterval(setTitle, 1000);
-        setInterval(manageGenes, 1000);
-        
 
     })();
