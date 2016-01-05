@@ -302,7 +302,7 @@
                     fWorkers = Math.ceil(window.game.resources.trimps.realMax() / 2) - window.game.resources.trimps.employed;
                 }
                 //hire a geneticist
-                buyJob('Scientist');
+                buyJob('Geneticist');
             }
             //if we need to fire geneticists
             if (getTargetBreedTime() >= 0 && getTargetBreedTime() < getBreedTime() && !window.game.jobs.Geneticist.locked) {
