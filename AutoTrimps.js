@@ -1148,6 +1148,36 @@
                 }
             }
         }
+        var startTime;
+        var startCell;
+        var cellsPerMinLast;
+        var isCheckpoint = false;
+        
+        function newCheckpoint(){
+            if(isCheckpoint){
+            cellsPerMinLast = cellProgress();
+            }
+            debug('Checkpointing. CPM since last checkpoint:' + cellsPerMinLast);
+            startCell = (game.global.world - 1)*100 + game.global.lastClearedCell;
+            startTime = new Date().getTime();
+        }
+        //game.global.zonestarted
+        //5m = 300k ms
+        function cellProgress(){
+            if(isCheckpoint){
+                var now = new Date().getTime();
+                var currentCell = (game.global.world - 1)*100 + game.global.lastClearedCell;
+                var cellsPerMin = (currentCell - startCell)/((now-startTime)/60000);
+                debug('CPM:' + cellsPerMin);
+                return cellsPerMin;
+            }
+            else {
+                newCheckpoint();
+                debug('making new checkpoint');
+                isCheckpoint = true;
+                return 0;
+            }
+        }
 
         function setTitle() {
             document.title = '(' + window.game.global.world + ')' + ' Trimps ' + document.getElementById('versionNumber').innerHTML;
@@ -1167,5 +1197,6 @@
         setInterval(saveSettings, 1000);
         setInterval(getBreedTime, 1000);
         setInterval(setTitle, 1000);
+        setInterval(cellProgress, 60000);
 
     })();
