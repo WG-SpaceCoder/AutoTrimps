@@ -691,7 +691,7 @@
             //if science perk level is none, dont turn on auto labor until scientists are unlocked
             if (AutoManualLabor() && (window.game.global.sLevel > 0 || !window.game.jobs.Scientist.locked)) {
                 //If you don't have autofight and you have enough trimps, manual fight
-                if (window.game.upgrades.Bloodlust.done == 0 && (window.game.resources.trimps.owned - window.game.resources.trimps.employed) > 3 && !window.game.global.fighting && window.game.upgrades.Battle.done == 1) {
+                if (((window.game.resources.trimps.owned - window.game.resources.trimps.employed) > (window.game.resources.trimps.realMax())/8 && window.game.global.world < 5) && !window.game.global.fighting && window.game.upgrades.Battle.done == 1) {
                     window.fightManual();
                 }
                 //If you can autofight - set autofight to true
