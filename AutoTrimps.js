@@ -1148,6 +1148,76 @@
                 }
             }
         }
+        var startTime;
+        var startCell;
+        var inWorld = false;
+        var isValid = false;
+        var inMap = false;
+        var lastMapCPM;
+        var lastWorldCPM;
+        
+        function newCheckpoint(){
+            if(inMap){
+                startCell = window.game.stats.battlesWon.value;
+            }
+            else {
+                startCell = (game.global.world - 1)*100 + game.global.lastClearedCell;
+            }
+            startTime = new Date().getTime();
+            debug('Checkpointing');
+        }
+        //game.global.zonestarted
+        //5m = 300k ms
+        function cellProgress(){
+            var now = new Date().getTime();
+            var currentCell;
+            var cellsPerMin;
+            //are we in a map?
+            if(window.game.global.mapsActive && !window.game.global.preMapsActive){
+                debug('detected in map');
+                //if we weren't in a map before
+                if(inMap == false){
+                    inMap = true;
+                    newCheckpoint();
+                    return 0;
+                }
+                //if we knew we were in a map
+                currentCell = game.stats.battlesWon.value;
+                cellsPerMin = (currentCell - startCell)/((now-startTime)/60000);
+                debug('MAP CPM:' + cellsPerMin);
+                lastMapCPM = cellsPerMin;
+            }
+            //we're not in a map
+           else {
+               //we though we were in a map, so we must have switched to the world
+               if(inMap){
+                   inMap = false;
+                   debug('not in a map anymore');
+                   newCheckpoint();
+                   inWorld = true;
+                   return 0;
+               }
+               //We knew we were in the world already
+               if(inWorld){
+                    currentCell = (game.global.world - 1)*100 + game.global.lastClearedCell;
+                    cellsPerMin = (currentCell - startCell)/((now-startTime)/60000);
+                    //we portaled?
+                    if(cellsPerMin < 0){
+                       newCheckpoint();
+                       return 0;
+                    } 
+                    debug('CPM:' + cellsPerMin);
+                    lastWorldCPM = cellsPerMin;
+                }
+                //brand new load
+                else {
+                    newCheckpoint();
+                    inWorld = true;
+                    return 0;
+                }
+           }
+            return cellsPerMin;
+        }
 
         function setTitle() {
             document.title = '(' + window.game.global.world + ')' + ' Trimps ' + document.getElementById('versionNumber').innerHTML;
@@ -1167,5 +1237,6 @@
         setInterval(saveSettings, 1000);
         setInterval(getBreedTime, 1000);
         setInterval(setTitle, 1000);
+        setInterval(cellProgress, 60000);
 
     })();
