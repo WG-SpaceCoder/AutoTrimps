@@ -17,6 +17,7 @@
         var enableDebug = true; //Spam console?
         var startAllSelected = false;
         var avoidFast = false; //switch to heap when encountering a fast enemy?
+        var ManualGather = 'metal';
 
         //List Variables//
         var jobList = [{
@@ -687,7 +688,6 @@
         }
 
         function manualLabor() {
-            var ManualGather = 'metal';
             //if science perk level is none, dont turn on auto labor until scientists are unlocked
             if (AutoManualLabor() && (window.game.global.sLevel > 0 || !window.game.jobs.Scientist.locked)) {
                 //If you don't have autofight and you have enough trimps, manual fight
