@@ -281,7 +281,7 @@
 
         function buyJob(jobTitle, amount, fire) {
             //debug('Hiring ' + amount + ' ' + jobTitle);
-            if (amount == undefined || !canAffordJob(jobTitle, amount)){
+            if (amount == undefined || (!canAffordJob(jobTitle, amount) && !fire)){
                amount = 1;
                if(!canAffordJob(jobTitle, amount)) return;
             } 
