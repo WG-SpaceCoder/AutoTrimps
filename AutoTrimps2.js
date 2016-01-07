@@ -376,12 +376,6 @@ function buyBuildings() {
 
 initializeAutoTrimps();
 
-//This is totally cheating Only use for debugging
-game.settings.speed = 0;
-setTimeout(function() {
-    game.settings.speed = 2;
-}, 1000);
-
 setInterval(function() {
     if (getPageSetting('chkBuyUpgrades')) buyUpgrades();
     if (getPageSetting('chkBuyStorage')) buyStorage();
