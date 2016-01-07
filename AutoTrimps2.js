@@ -10,15 +10,15 @@
 
 
 
-////////////////////
-//Variables/////////
-////////////////////
+////////////////////////////////////////
+//Variables/////////////////////////////
+////////////////////////////////////////
 var runInterval = 200; //How often to loop through logic
 var enableDebug = true; //Spam console?
 
-////////////////////
-//List Variables////
-////////////////////
+////////////////////////////////////////
+//List Variables////////////////////////
+////////////////////////////////////////
 var jobList = [{
     name: 'Explorer',
     max: -1,
@@ -131,19 +131,26 @@ var equipmentList = {
         Equip: false
     }
 };
+
 var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'Potency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm'];
 var buildingList = ['Hut', 'House', 'Gym', 'Mansion', 'Hotel', 'Resort', 'Gateway', 'Collector', 'Warpstation', 'Tribute', 'Nursery']; //NOTE THAT I REMOVED WORMHOLE TEMPORARILY UNTILL I FIGURE OUT WHAT TO DO WITH IT
 var pageSettings = [];
+var bestBuilding;
 
-////////////////////
-//Page Changes//////
-////////////////////
+var preBuyAmt = game.global.buyAmt;
+var preBuyFiring = game.global.firing;
+var preBuyTooltip = game.global.lockTooltip;
+
+
+////////////////////////////////////////
+//Page Changes//////////////////////////
+////////////////////////////////////////
 document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" type="checkbox">Buy Upgrades <br>  <input id="chkAutoStance" title="automate setting stance" type="checkbox">Auto Stance</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" type="checkbox">Buy Weapon Upgrades <br><br> Misc Settings <br> <input id="chkTrapTrimps" title="automate trapping trimps" type="checkbox">Trap Trimps<br><input id="geneticistTargetBreedTime" title="Breed time in seconds to shoot for using geneticists" style="width: 20%;color: #000000;font-size: 12px;" value="5">&nbsp;Geneticist Timer<br></td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck<br><br>Ratios&nbsp&nbsp;Max<br><input id="FarmerRatio" style="width: 10%; color: #000000;" value="10"><input id="FarmerMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Farmer<br><input id="LumberjackRatio" style="width: 10%; color: #000000;" value="10"><input id="LumberjackMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Lumberjack<br><input id="MinerRatio" style="width: 10%; color: #000000;" value="10"><input id="MinerMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Miner<br><input id="ScientistRatio" style="width: 10%; color: #000000;" value="10"><input id="ScientistMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Scientist<br><input id="TrainerRatio" style="width: 10%; color: #000000;" value="10"><input id="TrainerMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Trainer<br><input id="ExplorerRatio" style="width: 10%; color: #000000;" value="10"><input id="ExplorerMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Explorer</td> </tr> </tbody> </table></div>';
 
 
-////////////////////
-//Utility Functions/
-////////////////////
+////////////////////////////////////////
+//Utility Functions/////////////////////
+////////////////////////////////////////
 
 //Loads the automation settings from browser cache
 function loadPageVariables() {
@@ -203,7 +210,7 @@ function getPageSetting(setting) {
 //Global debug message (need to implement debugging to in game window)
 function debug(message) {
     if (enableDebug)
-        console.log(message);
+        console.log(timeStamp() + ' ' + message);
 }
 
 //Finds an element on the page and does the onClick() function
@@ -219,17 +226,100 @@ function clickButton(id) {
     }
 }
 
-function safeBuyBuilding(building){
-	for (var building in game.global.buildingsQueue){
-		if (game.global.buildingsQueue[building].includes(building)) return;
-	}
-	debug('Building ' + building);
-	buyBuilding(building);
+//Simply returns a formatted text timestamp
+function timeStamp() {
+    var now = new Date();
+
+    // Create an array with the current hour, minute and second
+    var time = [now.getHours(), now.getMinutes(), now.getSeconds()];
+
+    // If seconds and minutes are less than 10, add a zero
+    for (var i = 1; i < 3; i++) {
+        if (time[i] < 10) {
+            time[i] = "0" + time[i];
+        }
+    }
+    return time.join(":");
 }
 
-////////////////////
-//Main Functions////
-////////////////////
+//Called before buying things that can be purchased in bulk
+function preBuy() {
+    preBuyAmt = game.global.buyAmt;
+    preBuyFiring = game.global.firing;
+    preBuyTooltip = game.global.lockTooltip;
+}
+
+//Called after buying things that can be purchased in bulk
+function postBuy() {
+    game.global.buyAmt = preBuyAmt;
+    game.global.firing = preBuyFiring;
+    game.global.lockTooltip = preBuyTooltip;
+    tooltip('hide');
+}
+
+function safeBuyBuilding(building) {
+    for (var b in game.global.buildingsQueue) {
+        if (game.global.buildingsQueue[b].includes(building)) return false;
+    }
+    if (!canAffordBuilding(building)) return false;
+    debug('Building ' + building);
+    preBuy();
+    game.global.buyAmt = 1;
+    game.global.firing = false;
+    buyBuilding(building);
+    postBuy();
+    return true;
+}
+
+//Outlines the most efficient housing based on gems (credits to Belaith)
+function highlightHousing() {
+    game.global.buyAmt = 1;
+    var allHousing = ["Mansion", "Hotel", "Resort", "Collector", "Warpstation"];
+    var unlockedHousing = [];
+    for (house in allHousing) {
+        if (game.buildings[allHousing[house]].locked == 0) {
+            unlockedHousing.push(allHousing[house]);
+        }
+    }
+    if (unlockedHousing.length) {
+        var obj = {};
+        for (var house in unlockedHousing) {
+            var building = game.buildings[unlockedHousing[house]];
+            var cost = 0;
+            cost += getBuildingItemPrice(building, "gems");
+            var ratio = cost / building.increase.by;
+            obj[unlockedHousing[house]] = ratio;
+            if (document.getElementById(unlockedHousing[house]).style.border = "1px solid #00CC00") {
+                document.getElementById(unlockedHousing[house]).style.border = "1px solid #FFFFFF";
+                // document.getElementById(unlockedHousing[house]).removeEventListener("click", update);
+            }
+        }
+        var keysSorted = Object.keys(obj).sort(function(a, b) {
+            return obj[a] - obj[b]
+        });
+        bestBuilding = keysSorted[0];
+        document.getElementById(bestBuilding).style.border = "1px solid #00CC00";
+        // document.getElementById(bestBuilding).addEventListener('click', update, false);
+    } else {
+        bestBuilding = null;
+    }
+}
+
+function buyFoodEfficientHousing() {
+    var houseWorth = game.buildings.House.locked ? 0 : getBuildingItemPrice(game.buildings.House, "food") / game.buildings.House.increase.by;
+    var hutWorth = getBuildingItemPrice(game.buildings.Hut, "food") / game.buildings.Hut.increase.by;
+
+    if (houseWorth > hutWorth && canAffordBuilding('House')){
+    	safeBuyBuilding('House');
+    } else {
+    	safeBuyBuilding('Hut');
+    }
+}
+
+
+////////////////////////////////////////
+//Main Functions////////////////////////
+////////////////////////////////////////
 
 function initializeAutoTrimps() {
     loadPageVariables();
@@ -264,17 +354,38 @@ function buyStorage() {
     }
 }
 
+function buyBuildings() {
+    highlightHousing();
+
+    //if housing is highlighted
+    if (bestBuilding != null) {
+        //insert gigastation logic here ###############
+        if (!safeBuyBuilding(bestBuilding)) {
+            buyFoodEfficientHousing();
+        }
+    } else {
+    	buyFoodEfficientHousing();
+    }
+}
 
 
-////////////////////
-//Logic Loop////////
-////////////////////
+
+////////////////////////////////////////
+//Logic Loop////////////////////////////
+////////////////////////////////////////
 
 initializeAutoTrimps();
+
+//This is totally cheating Only use for debugging
+game.settings.speed = 0;
+setTimeout(function() {
+    game.settings.speed = 2;
+}, 1000);
 
 setInterval(function() {
     if (getPageSetting('chkBuyUpgrades')) buyUpgrades();
     if (getPageSetting('chkBuyStorage')) buyStorage();
-    
+    if (getPageSetting('chkBuyBuilding')) buyBuildings();
+
     saveSettings();
 }, runInterval);
