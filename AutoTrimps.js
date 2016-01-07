@@ -283,8 +283,8 @@
             //debug('Hiring ' + amount + ' ' + jobTitle);
             if (amount == undefined || (!canAffordJob(jobTitle, amount) && !fire)){
                amount = 1;
-               if(!canAffordJob(jobTitle, amount)) return;
             } 
+            if(!canAffordJob(jobTitle, amount)) return;
             var oldAmount = window.game.global.buyAmt;
             var oldFire = window.game.global.firing;
             window.game.global.firing = fire == true ? true : false;
