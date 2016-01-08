@@ -19,32 +19,6 @@ var enableDebug = true; //Spam console?
 ////////////////////////////////////////
 //List Variables////////////////////////
 ////////////////////////////////////////
-var jobList = [{
-    name: 'Explorer',
-    max: -1,
-    ratio: 10
-}, {
-    name: 'Trainer',
-    max: -1,
-    ratio: 99
-}, {
-    name: 'Miner',
-    max: -1,
-    ratio: 10
-}, {
-    name: 'Farmer',
-    max: -1,
-    ratio: 10
-}, {
-    name: 'Lumberjack',
-    max: -1,
-    ratio: 10
-}, {
-    name: 'Scientist',
-    max: -1,
-    ratio: 1
-}];
-
 var equipmentList = {
     'Dagger': {
         Upgrade: 'Dagadder',
@@ -145,7 +119,7 @@ var preBuyTooltip = game.global.lockTooltip;
 ////////////////////////////////////////
 //Page Changes//////////////////////////
 ////////////////////////////////////////
-document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" type="checkbox">Buy Upgrades <br>  <input id="chkAutoStance" title="automate setting stance" type="checkbox">Auto Stance</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" type="checkbox">Buy Weapon Upgrades <br><br> Misc Settings <br> <input id="chkTrapTrimps" title="automate trapping trimps" type="checkbox">Trap Trimps<br><input id="geneticistTargetBreedTime" title="Breed time in seconds to shoot for using geneticists" style="width: 20%;color: #000000;font-size: 12px;" value="5">&nbsp;Geneticist Timer<br></td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck<br><br>Ratios&nbsp&nbsp;Max<br><input id="FarmerRatio" style="width: 10%; color: #000000;" value="10"><input id="FarmerMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Farmer<br><input id="LumberjackRatio" style="width: 10%; color: #000000;" value="10"><input id="LumberjackMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Lumberjack<br><input id="MinerRatio" style="width: 10%; color: #000000;" value="10"><input id="MinerMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Miner<br><input id="ScientistRatio" style="width: 10%; color: #000000;" value="10"><input id="ScientistMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Scientist<br><input id="TrainerRatio" style="width: 10%; color: #000000;" value="10"><input id="TrainerMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Trainer<br><input id="ExplorerRatio" style="width: 10%; color: #000000;" value="10"><input id="ExplorerMax" style="width: 10%; color: #000000;" value="-1">&nbsp;Explorer</td> </tr> </tbody> </table></div>';
+document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" type="checkbox">Buy Upgrades <br>  <input id="chkAutoStance" title="automate setting stance" type="checkbox">Auto Stance</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" type="checkbox">Buy Weapon Upgrades <br><br> Misc Settings <br> <input id="chkTrapTrimps" title="automate trapping trimps" type="checkbox">Trap Trimps<br><input id="geneticistTargetBreedTime" title="Breed time in seconds to shoot for using geneticists" style="width: 20%;color: #000000;font-size: 12px;" value="5">&nbsp;Geneticist Timer<br></td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck<br><br>Ratio<br><input id="FarmerRatio" style="width: 10%; color: #000000;" value="10">&nbsp;Farmer<br><input id="LumberjackRatio" style="width: 10%; color: #000000;" value="10">&nbsp;Lumberjack<br><input id="MinerRatio" style="width: 10%; color: #000000;" value="10">&nbsp;Miner<br><input id="chkScientist" type="checkbox">&nbsp;Scientist<br><input id="chkTrainer" type="checkbox">&nbsp;Trainer<br><input id="chkExplorer" type="checkbox">&nbsp;Explorer<br><input id="chkGym" type="checkbox">&nbsp;Gym<br><input id="chkTribute" type="checkbox">&nbsp;Tribute<br><input id="chkNursery" type="checkbox">&nbsp;Nursery</td> </tr> </tbody> </table></div>';
 
 
 ////////////////////////////////////////
@@ -306,13 +280,43 @@ function highlightHousing() {
 }
 
 function buyFoodEfficientHousing() {
-    var houseWorth = game.buildings.House.locked ? 0 : getBuildingItemPrice(game.buildings.House, "food") / game.buildings.House.increase.by;
-    var hutWorth = getBuildingItemPrice(game.buildings.Hut, "food") / game.buildings.Hut.increase.by;
+    var houseWorth = game.buildings.House.locked ? 0 : game.buildings.House.increase.by / getBuildingItemPrice(game.buildings.House, "food");
+    var hutWorth = game.buildings.Hut.increase.by / getBuildingItemPrice(game.buildings.Hut, "food");
 
-    if (houseWorth > hutWorth && canAffordBuilding('House')){
-    	safeBuyBuilding('House');
+    if (houseWorth > hutWorth && canAffordBuilding('House')) {
+        safeBuyBuilding('House');
     } else {
-    	safeBuyBuilding('Hut');
+        safeBuyBuilding('Hut');
+    }
+}
+
+function safeBuyJob(jobTitle, amount) {
+    if (amount == undefined) amount = 1;
+    if (amount === 0) return false;
+    preBuy();
+    if (amount < 0) {
+        game.global.firing = true;
+        amount = Math.abs(amount);
+    } else {
+        game.global.firing = false;
+    }
+    game.global.buyAmt = amount;
+    if (!canAffordJob(jobTitle, false)) {
+        postBuy();
+        return false;
+    }
+    // debug((game.global.firing ? 'Firing ' : 'Hiring ') + game.global.buyAmt + ' ' + jobTitle);
+    buyJob(jobTitle);
+    postBuy();
+    return true;
+}
+
+function getScienceCostToUpgrade(upgrade) {
+    var upgradeObj = game.upgrades[upgrade];
+    if (upgradeObj.cost.resources.science != undefined) {
+        return Math.floor(upgradeObj.cost.resources.science[0] * Math.pow(upgradeObj.cost.resources.science[1], (upgradeObj.done)));
+    } else {
+        return 0;
     }
 }
 
@@ -354,6 +358,7 @@ function buyStorage() {
     }
 }
 
+//Buy all non-storage buildings
 function buyBuildings() {
     highlightHousing();
 
@@ -364,8 +369,80 @@ function buyBuildings() {
             buyFoodEfficientHousing();
         }
     } else {
-    	buyFoodEfficientHousing();
+        buyFoodEfficientHousing();
     }
+
+    //Buy non-housing buildings
+    if (getPageSetting('chkGym') && !game.buildings.Gym.locked) {
+            safeBuyBuilding('Gym');
+    }
+    if (getPageSetting('chkTribute') && !game.buildings.Tribute.locked) {
+            safeBuyBuilding('Tribute');
+    }
+    if (getPageSetting('chkNursery') && !game.buildings.Nursery.locked) {
+            safeBuyBuilding('Nursery');
+    }
+}
+
+function setTitle() {
+    document.title = '(' + window.game.global.world + ')' + ' Trimps ' + document.getElementById('versionNumber').innerHTML;
+}
+
+function buyJobs() {
+    //Implement Ratio thingy
+    var freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+    var totalDistributableWorkers = freeWorkers + game.jobs.Farmer.owned + game.jobs.Miner.owned + game.jobs.Lumberjack.owned;
+
+    var farmerRatio = parseInt(getPageSetting('FarmerRatio'));
+    var lumberjackRatio = parseInt(getPageSetting('LumberjackRatio'));
+    var minerRatio = parseInt(getPageSetting('MinerRatio'));
+    var totalRatio = farmerRatio + lumberjackRatio + minerRatio;
+
+    // debug('Total farmers to add = ' + Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
+
+
+
+    //Simple buy if you can
+    if (getPageSetting('chkTrainer')) {
+        game.global.buyAmt = 1;
+        while (canAffordJob('Trainer', false)) {
+            freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+            if (!freeWorkers) safeBuyJob('Farmer', -1);
+            safeBuyJob('Trainer');
+        }
+    }
+    if (getPageSetting('chkExplorer')) {
+        game.global.buyAmt = 1;
+        while (canAffordJob('Explorer', false)) {
+            freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+            if (!freeWorkers) safeBuyJob('Farmer', -1);
+            safeBuyJob('Explorer');
+        }
+    }
+
+    if (getPageSetting('chkScientist') && !game.jobs.Scientist.locked) {
+        var neededScienceForUpgrades = 0;
+        for (var upgrade in upgradeList) {
+            upgrade = upgradeList[upgrade];
+            if (game.upgrades[upgrade].allowed > game.upgrades[upgrade].done) { //If the upgrade is available
+                neededScienceForUpgrades += getScienceCostToUpgrade(upgrade);
+            }
+        }
+        // debug('Total needed science ' +neededScienceForUpgrades);
+        if (game.resources.science.owned < neededScienceForUpgrades) {
+            safeBuyJob('Farmer', game.jobs.Farmer.owned * -1);
+            safeBuyJob('Lumberjack', game.jobs.Lumberjack.owned * -1);
+            safeBuyJob('Miner', game.jobs.Miner.owned * -1);
+            safeBuyJob('Scientist', Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed);
+        } else {
+        	safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
+        }
+    }
+
+    //Distribute Farmer/Lumberjack/Miner
+    safeBuyJob('Farmer', Math.ceil((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
+    safeBuyJob('Lumberjack', Math.ceil((lumberjackRatio / totalRatio * totalDistributableWorkers) - game.jobs.Lumberjack.owned));
+    safeBuyJob('Miner', Math.ceil((minerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Miner.owned));
 }
 
 
@@ -376,10 +453,19 @@ function buyBuildings() {
 
 initializeAutoTrimps();
 
+//This is totally cheating Only use for debugging
+// game.settings.speed = 1;
+// game.settings.speedTemp = 1;
+// setTimeout(function() {
+//     game.settings.speed = 2;
+// }, 1000);
+
 setInterval(function() {
+    setTitle();
     if (getPageSetting('chkBuyUpgrades')) buyUpgrades();
     if (getPageSetting('chkBuyStorage')) buyStorage();
     if (getPageSetting('chkBuyBuilding')) buyBuildings();
+    if (getPageSetting('chkBuyJobs')) buyJobs();
 
     saveSettings();
 }, runInterval);
