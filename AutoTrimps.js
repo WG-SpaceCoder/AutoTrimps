@@ -968,9 +968,31 @@
         }
 
         function canBeatCell(cell) {
-            // debug('Running canBeatCell - Enemy Health: ' + window.game.global.getEnemyHealth(cell.level, cell.name)+ ' My damage ' +window.calculateDamage(window.game.global.soldierCurrentAttack, true, true, true)+ ' and max hits: ' +maxHitsTillStuck());
-            return window.game.global.getEnemyAttack(cell.level, cell.name) < (getTotalDefence() * 0.75) && window.game.global.getEnemyHealth(cell.level, cell.name) < (window.calculateDamage(window.game.global.soldierCurrentAttack, true, true, true) * maxHitsTillStuck());
+        // debug('Running canBeatCell - Enemy Health: ' + window.game.global.getEnemyHealth(cell.level, cell.name)+ ' My damage ' +window.calculateDamage(window.game.global.soldierCurrentAttack, true, true, true)+ ' and max hits: ' +maxHitsTillStuck());
+        //return window.game.global.getEnemyAttack(cell.level, cell.name) < (getTotalDefence() * 0.75) && window.game.global.getEnemyHealth(cell.level, cell.name) < (window.calculateDamage(window.game.global.soldierCurrentAttack, true, true, true) * maxHitsTillStuck());
+
+        var live=false;
+        var hitsToTake=2;//2 hits feels low. Maybe a text box for the player to determine? 
+        if (game.global.world>59)
+        {
+            var atk=window.game.global.getEnemyAttack(cell.level, cell.name);
+            if (atk*0.8>window.game.global.soldierCurrentBlock )
+            {
+                atk-=window.game.global.soldierCurrentBlock;
+            }
+            else
+            {
+                atk*=0.2;
+            }
+            live=(window.game.global.soldierHealthMax)>atk*hitsToTake;
         }
+        else
+        {
+            live=(window.game.global.getEnemyAttack(cell.level, cell.name)-window.game.global.soldierCurrentBlock)*hitsToTake<window.game.global.soldierHealthMax;
+        }
+        return live && window.game.global.getEnemyHealth(cell.level, cell.name) < (window.calculateDamage(window.game.global.soldierCurrentAttack, true, true, true) * maxHitsTillStuck());
+
+    }
 
         function canBeatWorld(level) {
             if (level == undefined) {
