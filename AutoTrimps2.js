@@ -664,9 +664,9 @@ function buyJobs() {
     }
 
     //Distribute Farmer/Lumberjack/Miner
-    safeBuyJob('Farmer', Math.ceil((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
-    safeBuyJob('Lumberjack', Math.ceil((lumberjackRatio / totalRatio * totalDistributableWorkers) - game.jobs.Lumberjack.owned));
-    safeBuyJob('Miner', Math.ceil((minerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Miner.owned));
+    safeBuyJob('Farmer', Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
+    safeBuyJob('Lumberjack', Math.floor((lumberjackRatio / totalRatio * totalDistributableWorkers) - game.jobs.Lumberjack.owned));
+    safeBuyJob('Miner', Math.floor((minerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Miner.owned));
 }
 
 function autoLevelEquipment() {
