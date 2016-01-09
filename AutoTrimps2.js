@@ -926,7 +926,7 @@ function autoStance() {
                 setFormation(3);
             }
         } else {
-            if (game.global.formation != 1) {
+            if (game.upgrades.Formations.done && game.global.formation != 1) {
                 setFormation(1);
             }
         }
