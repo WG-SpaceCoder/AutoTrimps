@@ -277,7 +277,8 @@ function highlightHousing() {
         var keysSorted = Object.keys(obj).sort(function(a, b) {
             return obj[a] - obj[b]
         });
-        bestBuilding = keysSorted[0];
+        if(keysSorted[0] == "Gateway" && game.buildings.Gateway.owned >= 35) bestBuilding = keysSorted[1];
+        else bestBuilding = keysSorted[0];
         document.getElementById(bestBuilding).style.border = "1px solid #00CC00";
         // document.getElementById(bestBuilding).addEventListener('click', update, false);
     } else {
