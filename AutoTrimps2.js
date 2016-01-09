@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.0
 // @description  try to take over the world!
-// @author       zininzinin, spindrjr
+// @author       zininzinin, spindrjr, belaith
 // @include        *trimps.github.io*
 // @grant        none
 // ==/UserScript==
@@ -254,7 +254,7 @@ function safeBuyBuilding(building) {
 //Outlines the most efficient housing based on gems (credits to Belaith)
 function highlightHousing() {
     game.global.buyAmt = 1;
-    var allHousing = ["Mansion", "Hotel", "Resort", "Collector", "Warpstation"];
+    var allHousing = ["Mansion", "Hotel", "Resort", "Gateway", "Collector", "Warpstation"];
     var unlockedHousing = [];
     for (house in allHousing) {
         if (game.buildings[allHousing[house]].locked == 0) {
@@ -643,7 +643,7 @@ function buyJobs() {
     //Simple buy if you can
     if (getPageSetting('chkTrainer')) {
         game.global.buyAmt = 1;
-        while (canAffordJob('Trainer', false)) {
+        while (canAffordJob('Trainer', false) && !game.jobs.Trainer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
             if (!freeWorkers) safeBuyJob('Farmer', -1);
             safeBuyJob('Trainer');
@@ -651,7 +651,7 @@ function buyJobs() {
     }
     if (getPageSetting('chkExplorer')) {
         game.global.buyAmt = 1;
-        while (canAffordJob('Explorer', false)) {
+        while (canAffordJob('Explorer', false) && !game.jobs.Explorer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
             if (!freeWorkers) safeBuyJob('Farmer', -1);
             safeBuyJob('Explorer');
@@ -838,7 +838,7 @@ function manualLabor() {
     }
 }
 
-function aFormation() {
+function autoStance() {
     if(game.global.gridArray.length == 0) return;
     var missingHealth = game.global.soldierHealthMax - game.global.soldierHealth;
     var newSquadRdy = game.resources.trimps.realMax() <= game.resources.trimps.owned + 1;
@@ -918,7 +918,7 @@ function aFormation() {
     }
 }
 
-function aMap() {
+function autoMap() {
     if (game.global.mapsUnlocked) {
         var obj = {};
         for (var map in game.global.mapsOwnedArray) {
@@ -933,7 +933,7 @@ function aMap() {
 
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
         var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
-        var enoughHealth = (baseHealth * 3 > 30 * (enemyDamage - baseBlock / 2 > enemyDamage ? enemyDamage - baseBlock / 2 : enemyDamage) || baseHealth > 30 * (enemyDamage - baseBlock > enemyDamage ? enemyDamage - baseBlock : enemyDamage));
+        var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0));
         var enoughDamage = (baseDamage * 4 > enemyHeath);
         var shouldDoMaps = !enoughHealth || !enoughDamage;
 
@@ -1079,8 +1079,8 @@ function mainLoop() {
     if (getPageSetting('chkBuyBuilding')) buyBuildings();
     if (getPageSetting('chkBuyJobs')) buyJobs();
     if (getPageSetting('chkManualStorage')) manualLabor();
-    if (getPageSetting('chkAutoStance')) aFormation();
-    if (getPageSetting('chkAutoProgressMap')) aMap();
+    if (getPageSetting('chkAutoStance')) autoStance();
+    if (getPageSetting('chkAutoProgressMap')) autoMap();
     if (parseInt(getPageSetting('geneticistTargetBreedTime')) >= 0) manageGenes();
 
 
@@ -1093,7 +1093,7 @@ function mainLoop() {
             pauseFight(); //Disable autofight
         }
     }
-    if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length != 0 && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || breedTime(0) < 2)) {
+    if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length != 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || breedTime(0) < 2)) {
         fightManual();
         debug('triggered fight');
     }
