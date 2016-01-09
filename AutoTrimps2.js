@@ -458,6 +458,51 @@ function breedTime(genes) {
     return Math.log(numerus) / Math.log(base);
 }
 
+function getEnemyMaxAttack(zone) {
+    var amt = 0;
+    var level = 30;
+    var world = zone;
+    amt += 50 * Math.sqrt(world * Math.pow(3.27, world));
+    amt -= 10;
+    if (world == 1) {
+        amt *= 0.35;
+        amt = (amt * 0.20) + ((amt * 0.75) * (level / 100));
+    } else if (world == 2) {
+        amt *= 0.5;
+        amt = (amt * 0.32) + ((amt * 0.68) * (level / 100));
+    } else if (world < 60) {
+        amt = (amt * 0.375) + ((amt * 0.7) * (level / 100));
+    } else {
+        amt = (amt * 0.4) + ((amt * 0.9) * (level / 100));
+        amt *= Math.pow(1.15, world - 59);
+    }
+
+    amt *= 1.1;
+    amt *= game.badGuys["Snimp"].attack;
+    return Math.floor(amt);
+}
+
+function getEnemyMaxHealth(zone) {
+    var amt = 0;
+    var level = 30;
+    var world = zone;
+    amt += 130 * Math.sqrt(world * Math.pow(3.265, world));
+    amt -= 110;
+    if (world == 1 || world == 2 && level < 10) {
+        amt *= 0.6;
+        amt = (amt * 0.25) + ((amt * 0.72) * (level / 100));
+    } else if (world < 60) {
+        amt = (amt * 0.4) + ((amt * 0.4) * (level / 110));
+    } else {
+        amt = (amt * 0.5) + ((amt * 0.8) * (level / 100));
+        amt *= Math.pow(1.1, world - 59);
+    }
+    amt *= 1.1;
+    amt *= game.badGuys["Grimp"].health;
+    amt *= 0.84;
+    return Math.floor(amt);
+}
+
 
 ////////////////////////////////////////
 //Main Functions////////////////////////
@@ -827,6 +872,117 @@ function aFormation() {
     }
 }
 
+function aMap() {
+    if (game.global.mapsUnlocked) {
+        var obj = {};
+        for (var map in game.global.mapsOwnedArray) {
+            if (!game.global.mapsOwnedArray[map].noRecycle) {
+                obj[map] = game.global.mapsOwnedArray[map].level;
+            }
+        }
+        var keysSorted = Object.keys(obj).sort(function(a, b) {
+            return obj[b] - obj[a]
+        });
+        var highestMap = keysSorted[0];
+
+        var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
+        var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
+        var enoughHealth = (baseHealth * 3 > 30 * (enemyDamage - baseBlock / 2 > enemyDamage ? enemyDamage - baseBlock / 2 : enemyDamage) || baseHealth > 30 * (enemyDamage - baseBlock > enemyDamage ? enemyDamage - baseBlock : enemyDamage));
+        var enoughDamage = (baseDamage * 4 > enemyHeath);
+        var shouldDoMaps = !enoughHealth || !enoughDamage;
+
+        var shouldDoMap = "world";
+
+        for (var map in game.global.mapsOwnedArray) {
+            if (game.global.mapsOwnedArray[map].noRecycle && addSpecials(true, true, game.global.mapsOwnedArray[map]) == 1) {
+                shouldDoMap = game.global.mapsOwnedArray[map].id;
+                break;
+            }
+        }
+
+        if (shouldDoMaps) {
+            if (shouldDoMap == "world") {
+                if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
+                    shouldDoMap = game.global.mapsOwnedArray[highestMap].id;
+                } else {
+                    shouldDoMap = "create";
+                }
+            }
+        }
+
+        if (!game.global.preMapsActive) {
+            if (game.global.mapsActive) {
+                if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle) {
+                    if (!game.global.repeatMap) {
+                        repeatClicked();
+                    }
+                } else {
+                    if (game.global.repeatMap) {
+                        repeatClicked();
+                    }
+                }
+            } else if (!game.global.mapsActive) {
+                if (shouldDoMap != "world") {
+                    if (!game.global.switchToMaps) {
+                        mapsClicked();
+                    }
+                }
+            }
+        } else if (game.global.preMapsActive) {
+            if (shouldDoMap == "world") {
+                mapsClicked();
+            } else if (shouldDoMap == "create") {
+                //TODO optimize buying
+                if (game.global.world > 70) {
+                    sizeAdvMapsRange.value = 9;
+                    adjustMap('size', 9);
+                    difficultyAdvMapsRange.value = 9;
+                    adjustMap('difficulty', 9);
+                    lootAdvMapsRange.value = 9;
+                    adjustMap('loot', 9);
+
+                    biomeAdvMapsSelect.value = "Mountain";
+                    updateMapCost();
+                } else if (game.global.world < 16) {
+                    sizeAdvMapsRange.value = 0;
+                    adjustMap('size', 0);
+                    difficultyAdvMapsRange.value = 0;
+                    adjustMap('difficulty', 0);
+                    lootAdvMapsRange.value = 0;
+                    adjustMap('loot', 0);
+
+                    biomeAdvMapsSelect.value = "Random";
+                    updateMapCost();
+                } else {
+                    sizeAdvMapsRange.value = 9;
+                    adjustMap('size', 9);
+                    difficultyAdvMapsRange.value = 9;
+                    adjustMap('difficulty', 9);
+                    lootAdvMapsRange.value = 0;
+                    adjustMap('loot', 0);
+
+                    biomeAdvMapsSelect.value = "Random";
+                    updateMapCost();
+                }
+
+                while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+                    lootAdvMapsRange.value += -1;
+                    adjustMap('loot', lootAdvMapsRange.value);
+                }
+
+                if (updateMapCost(true) > game.resources.fragments.owned) {
+                    selectMap(game.global.mapsOwnedArray[highestMap].id);
+                    runMap();
+                } else {
+                    buyMap();
+                }
+            } else {
+                selectMap(shouldDoMap);
+                runMap();
+            }
+        }
+    }
+}
 
 
 
@@ -857,6 +1013,7 @@ function mainLoop() {
     if (getPageSetting('chkBuyJobs')) buyJobs();
     if (getPageSetting('chkManualStorage')) manualLabor();
     if (getPageSetting('chkAutoStance')) aFormation();
+    if (getPageSetting('chkAutoProgressMap')) aMap();
 
     autoLevelEquipment();
 
