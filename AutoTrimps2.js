@@ -503,6 +503,37 @@ function getEnemyMaxHealth(zone) {
     return Math.floor(amt);
 }
 
+function getBreedTime() {
+    var trimps = game.resources.trimps;
+    var breeding = trimps.owned - trimps.employed;
+    var trimpsMax = trimps.realMax();
+
+    var potencyMod = trimps.potency;
+    if (game.global.brokenPlanet) breeding /= 10;
+
+    //Pheromones
+    potencyMod += (potencyMod * game.portal.Pheromones.level * game.portal.Pheromones.modifier);
+    if (game.jobs.Geneticist.owned > 0) potencyMod *= Math.pow(.98, game.jobs.Geneticist.owned);
+    if (game.unlocks.quickTrimps) potencyMod *= 2;
+    breeding = breeding * potencyMod;
+    updatePs(breeding, true);
+
+
+    var timeRemaining = log10((trimpsMax - trimps.employed) / (trimps.owned - trimps.employed)) / log10(1 + (potencyMod / 10));
+    if (!game.global.brokenPlanet) timeRemaining /= 10;
+    timeRemaining = Math.floor(timeRemaining) + " Secs";
+    var fullBreed = 0;
+    if (game.options.menu.showFullBreed.enabled) {
+        var adjustedMax = (game.portal.Coordinated.level) ? game.portal.Coordinated.currentSend : trimps.maxSoldiers;
+        var totalTime = log10((trimpsMax - trimps.employed) / ((trimpsMax - adjustedMax) - trimps.employed)) / log10(1 + (potencyMod / 10));
+        if (!game.global.brokenPlanet) totalTime /= 10;
+        fullBreed = Math.floor(totalTime) + " Secs";
+        timeRemaining += " / " + fullBreed;
+    }
+    // debug('Time to breed is ' +Math.floor(totalTime));
+    return Math.floor(totalTime);
+}
+
 
 ////////////////////////////////////////
 //Main Functions////////////////////////
@@ -984,6 +1015,27 @@ function aMap() {
     }
 }
 
+//adjust geneticists to reach desired breed timer
+function manageGenes() {
+    var fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+    var targetBreed = parseInt(getPageSetting('geneticistTargetBreedTime'));
+    //if we need to hire geneticists
+    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked) {
+        //if there's no free worker spots, fire a scientist
+        if (fWorkers < 1 && canAffordJob('Geneticist', false)) {
+            safeBuyJob('Farmer', -1);
+
+            fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+        }
+        //hire a geneticist
+        safeBuyJob('Geneticist');
+    }
+    //if we need to fire geneticists
+    if (targetBreed < getBreedTime() && !game.jobs.Geneticist.locked) {
+        safeBuyJob('Geneticist', -1);
+    }
+}
+
 
 
 ////////////////////////////////////////
@@ -1014,6 +1066,9 @@ function mainLoop() {
     if (getPageSetting('chkManualStorage')) manualLabor();
     if (getPageSetting('chkAutoStance')) aFormation();
     if (getPageSetting('chkAutoProgressMap')) aMap();
+    if (parseInt(getPageSetting('geneticistTargetBreedTime')) >= 0) manageGenes();
+
+
 
     autoLevelEquipment();
 
