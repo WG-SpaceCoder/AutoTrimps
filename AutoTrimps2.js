@@ -234,7 +234,6 @@ function postBuy() {
     game.global.buyAmt = preBuyAmt;
     game.global.firing = preBuyFiring;
     game.global.lockTooltip = preBuyTooltip;
-    tooltip('hide');
 }
 
 function safeBuyBuilding(building) {
@@ -248,6 +247,7 @@ function safeBuyBuilding(building) {
     game.global.firing = false;
     buyBuilding(building);
     postBuy();
+    tooltip("hide");
     return true;
 }
 
@@ -311,9 +311,10 @@ function safeBuyJob(jobTitle, amount) {
         postBuy();
         return false;
     }
-    // debug((game.global.firing ? 'Firing ' : 'Hiring ') + game.global.buyAmt + ' ' + jobTitle);
+    //debug((game.global.firing ? 'Firing ' : 'Hiring ') + game.global.buyAmt + ' ' + jobTitle);
     buyJob(jobTitle);
     postBuy();
+    tooltip("hide");
     return true;
 }
 
@@ -565,8 +566,11 @@ function buyUpgrades() {
     for (var upgrade in upgradeList) {
         upgrade = upgradeList[upgrade];
         var gameUpgrade = game.upgrades[upgrade];
-        if ((game.jobs.Scientist.locked && upgrade != 'Battle') ? (canAffordTwoLevel(upgrade) && upgrade == 'Scientists') : (gameUpgrade.allowed > gameUpgrade.done && canAffordTwoLevel(upgrade))) {
+        var available = (gameUpgrade.allowed > gameUpgrade.done && canAffordTwoLevel(gameUpgrade));
+        if(upgrade == 'Coordination' && !canAffordCoordinationTrimps()) continue;
+        if ((!game.upgrades.Scientists.done && upgrade != 'Battle') ? (available && upgrade == 'Scientists' && game.upgrades.Scientists.allowed) : (available)) {
             buyUpgrade(upgrade);
+            //debug('bought upgrade ' + upgrade);
         }
     }
 }
@@ -621,6 +625,7 @@ function setTitle() {
 
 function buyJobs() {
     //Implement Ratio thingy
+    if(game.resources.trimps.owned < game.resources.trimps.realMax()*.8) return;
     var freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
     var totalDistributableWorkers = freeWorkers + game.jobs.Farmer.owned + game.jobs.Miner.owned + game.jobs.Lumberjack.owned;
 
@@ -825,6 +830,7 @@ function manualLabor() {
 }
 
 function aFormation() {
+    if(game.global.gridArray.length == 0) return;
     var missingHealth = game.global.soldierHealthMax - game.global.soldierHealth;
     var newSquadRdy = game.resources.trimps.realMax() <= game.resources.trimps.owned + 1;
 
@@ -1078,8 +1084,9 @@ function mainLoop() {
             pauseFight(); //Disable autofight
         }
     }
-    if (!game.global.fighting && game.global.gridArray.length != 0 && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) || game.global.soldierHealth > 0 || breedTime(0) < 2) {
+    if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length != 0 && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || breedTime(0) < 2)) {
         fightManual();
+        debug('triggered fight');
     }
 
     saveSettings();
