@@ -681,7 +681,7 @@ function buyJobs() {
     //Distribute Farmer/Lumberjack/Miner
     safeBuyJob('Farmer', Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
     safeBuyJob('Lumberjack', Math.floor((lumberjackRatio / totalRatio * totalDistributableWorkers) - game.jobs.Lumberjack.owned));
-    safeBuyJob('Miner', Math.floor((minerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Miner.owned));
+    safeBuyJob('Miner', Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed);
 }
 
 function autoLevelEquipment() {
@@ -1013,8 +1013,7 @@ function autoMap() {
                 }
 
                 while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
-                    lootAdvMapsRange.value += -1;
-                    adjustMap('loot', lootAdvMapsRange.value);
+                    lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
                 }
 
                 if (updateMapCost(true) > game.resources.fragments.owned) {
