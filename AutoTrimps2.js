@@ -112,6 +112,10 @@ var pageSettings = [];
 var bestBuilding;
 var scienceNeeded;
 
+var baseDamage = 0;
+var baseBlock = 0;
+var baseHealth = 0;
+
 var preBuyAmt = game.global.buyAmt;
 var preBuyFiring = game.global.firing;
 var preBuyTooltip = game.global.lockTooltip;
@@ -464,20 +468,20 @@ function initializeAutoTrimps() {
     loadPageVariables();
 }
 
-function easyMode(){
-	if (game.jobs.Farmer.owned > 1000000) {
-		document.getElementById("FarmerRatio").value = 3;
-		document.getElementById("LumberjackRatio").value = 1;
-		document.getElementById("MinerRatio").value = 4;
-	} else if (game.jobs.Farmer.owned > 100000) {
-		document.getElementById("FarmerRatio").value = 3;
-		document.getElementById("LumberjackRatio").value = 3;
-		document.getElementById("MinerRatio").value = 5;
-	} else {
-		document.getElementById("FarmerRatio").value = 1;
-		document.getElementById("LumberjackRatio").value = 1;
-		document.getElementById("MinerRatio").value = 1;
-	}
+function easyMode() {
+    if (game.jobs.Farmer.owned > 1000000) {
+        document.getElementById("FarmerRatio").value = 3;
+        document.getElementById("LumberjackRatio").value = 1;
+        document.getElementById("MinerRatio").value = 4;
+    } else if (game.jobs.Farmer.owned > 100000) {
+        document.getElementById("FarmerRatio").value = 3;
+        document.getElementById("LumberjackRatio").value = 3;
+        document.getElementById("MinerRatio").value = 5;
+    } else {
+        document.getElementById("FarmerRatio").value = 1;
+        document.getElementById("LumberjackRatio").value = 1;
+        document.getElementById("MinerRatio").value = 1;
+    }
 }
 
 //Buys all available non-equip upgrades listed in var upgradeList
@@ -735,11 +739,90 @@ function manualLabor() {
         }
 
         if (game.global.playerGathering != lowestResource && !haveWorkers) {
-        	// debug('Set gather lowestResource');
+            // debug('Set gather lowestResource');
             setGather(lowestResource);
         } else if (game.global.playerGathering != ManualGather) {
-        	// debug('Set gather ManualGather');
+            // debug('Set gather ManualGather');
             setGather(ManualGather);
+        }
+    }
+}
+
+function aFormation() {
+    var missingHealth = game.global.soldierHealthMax - game.global.soldierHealth;
+    var newSquadRdy = game.resources.trimps.realMax() <= game.resources.trimps.owned + 1;
+
+    //baseDamage
+    baseDamage = game.global.soldierCurrentAttack * 2 * (1 + (game.global.achievementBonus / 100)) * ((game.global.antiStacks * game.portal.Anticipation.level * game.portal.Anticipation.modifier) + 1);
+    if (game.global.formation == 2) {
+        baseDamage /= 4;
+    } else if (game.global.formation != "0") {
+        baseDamage *= 2;
+    }
+
+    //baseBlock
+    baseBlock = game.global.soldierCurrentBlock;
+    if (game.global.formation == 3) {
+        baseBlock /= 4;
+    } else if (game.global.formation != "0") {
+        baseBlock *= 2;
+    }
+
+    //baseHealth
+    baseHealth = game.global.soldierHealthMax;
+    if (game.global.formation == 1) {
+        baseHealth /= 4;
+    } else if (game.global.formation != "0") {
+        baseHealth *= 2;
+    }
+
+    if (!game.global.mapsActive && !game.global.preMapsActive) {
+        if (typeof game.global.gridArray[game.global.lastClearedCell + 1] === 'undefined') {
+            var enemy = game.global.gridArray[0];
+        } else {
+            var enemy = game.global.gridArray[game.global.lastClearedCell + 1];
+        }
+        var enemyFast = game.badGuys[enemy.name].fast;
+        var enemyHealth = enemy.health;
+        var enemyDamage = enemy.attack * 1.19;
+        var dDamage = enemyDamage - baseBlock / 2 > enemyDamage * 0.2 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2;
+        var xDamage = enemyDamage - baseBlock > enemyDamage * 0.2 ? enemyDamage - baseBlock : enemyDamage * 0.2;
+        var bDamage = enemyDamage - baseBlock * 4 > enemyDamage * 0.1 ? enemyDamage - baseBlock * 4 : enemyDamage * 0.1;
+    } else if (game.global.mapsActive && !game.global.preMapsActive) {
+        if (typeof game.global.mapGridArray[game.global.lastClearedMapCell + 1] === 'undefined') {
+            var enemy = game.global.mapGridArray[0];
+        } else {
+            var enemy = game.global.mapGridArray[game.global.lastClearedMapCell + 1];
+        }
+        var enemyFast = game.badGuys[enemy.name].fast;
+        var enemyHealth = enemy.health;
+        var enemyDamage = enemy.attack * 1.19;
+        var dDamage = enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0;
+        var xDamage = enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0;
+        var bDamage = enemyDamage - baseBlock * 4 > 0 ? enemyDamage - baseBlock * 4 : 0;
+    }
+
+    if (!game.global.preMapsActive) {
+        if (!enemyFast && game.upgrades.Dominance.done && enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) && (newSquadRdy || baseHealth / 2 - missingHealth > 0)) {
+            if (game.global.formation != 2) {
+                setFormation(2);
+            }
+        } else if (game.upgrades.Dominance.done && ((newSquadRdy && baseHealth / 2 > dDamage) || baseHealth / 2 - missingHealth > dDamage)) {
+            if (game.global.formation != 2) {
+                setFormation(2);
+            }
+        } else if (game.upgrades.Formations.done && ((newSquadRdy && baseHealth > xDamage) || baseHealth - missingHealth > xDamage)) {
+            if (game.global.formation != "0") {
+                setFormation("0");
+            }
+        } else if (game.upgrades.Barrier.done && ((newSquadRdy && baseHealth / 2 > bDamage) || baseHealth / 2 - missingHealth > bDamage)) {
+            if (game.global.formation != 3) {
+                setFormation(3);
+            }
+        } else {
+            if (game.global.formation != 1) {
+                setFormation(1);
+            }
         }
     }
 }
@@ -773,6 +856,8 @@ function mainLoop() {
     if (getPageSetting('chkBuyBuilding')) buyBuildings();
     if (getPageSetting('chkBuyJobs')) buyJobs();
     if (getPageSetting('chkManualStorage')) manualLabor();
+    if (getPageSetting('chkAutoStance')) aFormation();
+
     autoLevelEquipment();
 
     //Manually fight instead of using builtin auto-fight
