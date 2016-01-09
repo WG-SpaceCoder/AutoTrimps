@@ -681,7 +681,7 @@ function buyJobs() {
     //Distribute Farmer/Lumberjack/Miner
     safeBuyJob('Farmer', Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
     safeBuyJob('Lumberjack', Math.floor((lumberjackRatio / totalRatio * totalDistributableWorkers) - game.jobs.Lumberjack.owned));
-    safeBuyJob('Miner', Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed);
+    safeBuyJob('Miner', Math.floor((minerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Miner.owned));
 }
 
 function autoLevelEquipment() {
@@ -711,6 +711,11 @@ function autoLevelEquipment() {
             Status: 'white'
         }
     };
+    var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
+    var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
+    var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0));
+    var enoughDamage = (baseDamage * 4 > enemyHeath);
+    
     for (var equipName in equipmentList) {
         var equip = equipmentList[equipName];
         // debug('Equip: ' + equip + ' EquipIndex ' + equipName);
@@ -769,8 +774,15 @@ function autoLevelEquipment() {
         if (Best[stat].Name != '') {
             var DaThing = equipmentList[Best[stat].Name];
             document.getElementById(Best[stat].Name).style.color = Best[stat].Wall ? 'orange' : 'red';
-            if ((getPageSetting('chkBuyEquipA') && DaThing.Stat == 'attack') || (getPageSetting('chkBuyEquipH') && (DaThing.Stat == 'health' || DaThing.Stat == 'block'))) {
+            if (getPageSetting('chkBuyEquipA') && DaThing.Stat == 'attack' && !enoughDamage) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
+                    debug('Leveling equipment ' + Best[stat].Name);
+                    buyEquipment(Best[stat].Name);
+                    tooltip('hide');
+                }
+            }
+            if (getPageSetting('chkBuyEquipH') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealth){
+                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
                     buyEquipment(Best[stat].Name);
                     tooltip('hide');
@@ -1095,7 +1107,7 @@ function mainLoop() {
     }
     if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length != 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || breedTime(0) < 2)) {
         fightManual();
-        debug('triggered fight');
+       // debug('triggered fight');
     }
 
     saveSettings();
