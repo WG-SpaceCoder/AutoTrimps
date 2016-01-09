@@ -9,12 +9,12 @@
 // ==/UserScript==
 
 
-
 ////////////////////////////////////////
 //Variables/////////////////////////////
 ////////////////////////////////////////
-var runInterval = 200; //How often to loop through logic
+var runInterval = 10; //How often to loop through logic
 var enableDebug = true; //Spam console?
+var running = false;
 
 ////////////////////////////////////////
 //List Variables////////////////////////
@@ -110,6 +110,7 @@ var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 
 var buildingList = ['Hut', 'House', 'Gym', 'Mansion', 'Hotel', 'Resort', 'Gateway', 'Collector', 'Warpstation', 'Tribute', 'Nursery']; //NOTE THAT I REMOVED WORMHOLE TEMPORARILY UNTILL I FIGURE OUT WHAT TO DO WITH IT
 var pageSettings = [];
 var bestBuilding;
+var scienceNeeded;
 
 var preBuyAmt = game.global.buyAmt;
 var preBuyFiring = game.global.firing;
@@ -174,6 +175,7 @@ function saveSettings() {
 
 //Grabs the automation settings from the page
 function getPageSetting(setting) {
+    // debug('Looking for setting ' + setting);
     if (document.getElementById(setting).type == 'checkbox') {
         return document.getElementById(setting).checked;
     } else {
@@ -320,13 +322,162 @@ function getScienceCostToUpgrade(upgrade) {
     }
 }
 
+function evaluateEfficiency(equipName) {
+    var equip = equipmentList[equipName];
+    var gameResource = equip.Equip ? game.equipment[equipName] : game.buildings[equipName];
+    if (equipName == 'Shield') {
+        if (gameResource.blockNow) {
+            equip.Stat = 'block';
+        } else {
+            equip.Stat = 'health';
+        }
+    }
+    var Eff = Effect(gameResource, equip);
+    var Cos = Cost(gameResource, equip);
+    var Res = Eff / Cos;
+    var Status = 'white';
+    var Wall = false;
+
+    //white - Upgrade is not available
+    //yellow - Upgrade is not affordable
+    //orange - Upgrade is affordable, but will lower stats
+    //red - Yes, do it now!
+    if (!game.upgrades[equip.Upgrade].locked) {
+        //Evaluating upgrade!
+        var CanAfford = canAffordTwoLevel(game.upgrades[equip.Upgrade]);
+        if (equip.Equip) {
+            var NextEff = PrestigeValue(equip.Upgrade);
+            var NextCost = getNextPrestigeCost(equip.Upgrade) * Math.pow(1 - game.portal.Artisanistry.modifier, game.portal.Artisanistry.level);
+            Wall = NextEff / NextCost > Res;
+        }
+
+        if (!CanAfford) {
+            Status = 'yellow';
+        } else {
+            if (!equip.Equip) {
+                //Gymystic is always cool, fuck shield - lol
+                Status = 'red';
+            } else {
+                var CurrEff = gameResource.level * Eff;
+
+                var NeedLevel = Math.ceil(CurrEff / NextEff);
+                var Ratio = gameResource.cost[equip.Resource][1];
+
+                var NeedResource = NextCost * (Math.pow(Ratio, NeedLevel) - 1) / (Ratio - 1);
+
+                if (game.resources[equip.Resource].owned > NeedResource) {
+                    Status = 'red';
+                } else {
+                    Status = 'orange';
+                }
+            }
+        }
+    }
+
+    return {
+        Stat: equip.Stat,
+        Factor: Res,
+        Status: Status,
+        Wall: Wall
+    };
+}
+
+function Effect(gameResource, equip) {
+    if (equip.Equip) {
+        return gameResource[equip.Stat + 'Calculated'];
+    } else {
+        //That be Gym
+        var oldBlock = gameResource.increase.by * gameResource.owned;
+        var Mod = game.upgrades.Gymystic.done ? (game.upgrades.Gymystic.modifier + (0.01 * (game.upgrades.Gymystic.done - 1))) : 1;
+        var newBlock = gameResource.increase.by * (gameResource.owned + 1) * Mod;
+        return newBlock - oldBlock;
+    }
+}
+
+function Cost(gameResource, equip) {
+    var price = parseFloat(getBuildingItemPrice(gameResource, equip.Resource, equip.Equip));
+    if (equip.Equip) price = Math.ceil(price * (Math.pow(1 - game.portal.Artisanistry.modifier, game.portal.Artisanistry.level)));
+    return price;
+}
+
+function PrestigeValue(what) {
+    var name = game.upgrades[what].prestiges;
+    var equipment = game.equipment[name];
+    var stat;
+    if (equipment.blockNow) stat = "block";
+    else stat = (typeof equipment.health !== 'undefined') ? "health" : "attack";
+    var toReturn = Math.round(equipment[stat] * Math.pow(1.19, ((equipment.prestige) * game.global.prestige[stat]) + 1));
+    return toReturn;
+}
+
+function setScienceNeeded() {
+    scienceNeeded = 0;
+    for (var upgrade in upgradeList) {
+        upgrade = upgradeList[upgrade];
+        if (game.upgrades[upgrade].allowed > game.upgrades[upgrade].done) { //If the upgrade is available
+            scienceNeeded += getScienceCostToUpgrade(upgrade);
+        }
+    }
+}
+
+function breedTime(genes) {
+    var trimps = game.resources.trimps;
+
+    if (trimps.owned - trimps.employed < 2 || game.global.challengeActive == "Trapper") {
+        return 0;
+    }
+
+    var potencyMod = trimps.potency;
+    potencyMod = potencyMod * (1 + game.portal.Pheromones.level * game.portal.Pheromones.modifier);
+
+    if (game.unlocks.quickTrimps) {
+        potencyMod *= 2;
+    }
+    if (game.global.brokenPlanet) {
+        potencyMod /= 10;
+    }
+    if (game.jobs.Geneticist.owned > 0) {
+        potencyMod *= Math.pow(.98, game.jobs.Geneticist.owned);
+    }
+
+    var multiplier = 1;
+    if (genes >= 0) {
+        multiplier *= Math.pow(.98, genes);
+    } else {
+        multiplier *= Math.pow((1 / 0.98), -genes);
+    }
+
+    var soldiers = game.portal.Coordinated.level ? game.portal.Coordinated.currentSend : trimps.maxSoldiers;
+    var numerus = (trimps.realMax() - trimps.employed) / (trimps.realMax() - (soldiers + trimps.employed));
+    var base = potencyMod * multiplier + 1;
+
+    return Math.log(numerus) / Math.log(base);
+}
+
 
 ////////////////////////////////////////
 //Main Functions////////////////////////
 ////////////////////////////////////////
 
 function initializeAutoTrimps() {
+    debug('initializeAutoTrimps');
     loadPageVariables();
+}
+
+function easyMode(){
+	if (game.jobs.Farmer.owned > 1000000) {
+		document.getElementById("FarmerRatio").value = 3;
+		document.getElementById("LumberjackRatio").value = 1;
+		document.getElementById("MinerRatio").value = 4;
+	} else if (game.jobs.Farmer.owned > 100000) {
+		document.getElementById("FarmerRatio").value = 3;
+		document.getElementById("LumberjackRatio").value = 3;
+		document.getElementById("MinerRatio").value = 5;
+	} else {
+		document.getElementById("FarmerRatio").value = 1;
+		document.getElementById("LumberjackRatio").value = 1;
+		document.getElementById("MinerRatio").value = 1;
+	}
 }
 
 //Buys all available non-equip upgrades listed in var upgradeList
@@ -350,7 +501,7 @@ function buyStorage() {
     };
     for (var B in Bs) {
         if (game.resources[Bs[B]].owned > game.resources[Bs[B]].max * packMod * 0.9) {
-            // debug('Buying ' + B + '(' + Bs[B] + ') at ' + Math.floor(window.game.resources[Bs[B]].owned / (window.game.resources[Bs[B]].max * packMod * 0.99) * 100) + '%');
+            // debug('Buying ' + B + '(' + Bs[B] + ') at ' + Math.floor(game.resources[Bs[B]].owned / (game.resources[Bs[B]].max * packMod * 0.99) * 100) + '%');
             if (canAffordBuilding(B)) {
                 safeBuyBuilding(B);
             }
@@ -374,18 +525,18 @@ function buyBuildings() {
 
     //Buy non-housing buildings
     if (getPageSetting('chkGym') && !game.buildings.Gym.locked) {
-            safeBuyBuilding('Gym');
+        safeBuyBuilding('Gym');
     }
     if (getPageSetting('chkTribute') && !game.buildings.Tribute.locked) {
-            safeBuyBuilding('Tribute');
+        safeBuyBuilding('Tribute');
     }
     if (getPageSetting('chkNursery') && !game.buildings.Nursery.locked) {
-            safeBuyBuilding('Nursery');
+        safeBuyBuilding('Nursery');
     }
 }
 
 function setTitle() {
-    document.title = '(' + window.game.global.world + ')' + ' Trimps ' + document.getElementById('versionNumber').innerHTML;
+    document.title = '(' + game.global.world + ')' + ' Trimps ' + document.getElementById('versionNumber').innerHTML;
 }
 
 function buyJobs() {
@@ -421,21 +572,14 @@ function buyJobs() {
     }
 
     if (getPageSetting('chkScientist') && !game.jobs.Scientist.locked) {
-        var neededScienceForUpgrades = 0;
-        for (var upgrade in upgradeList) {
-            upgrade = upgradeList[upgrade];
-            if (game.upgrades[upgrade].allowed > game.upgrades[upgrade].done) { //If the upgrade is available
-                neededScienceForUpgrades += getScienceCostToUpgrade(upgrade);
-            }
-        }
-        // debug('Total needed science ' +neededScienceForUpgrades);
-        if (game.resources.science.owned < neededScienceForUpgrades) {
+        // debug('Total needed science ' +scienceNeeded);
+        if (game.resources.science.owned < scienceNeeded) {
             safeBuyJob('Farmer', game.jobs.Farmer.owned * -1);
             safeBuyJob('Lumberjack', game.jobs.Lumberjack.owned * -1);
             safeBuyJob('Miner', game.jobs.Miner.owned * -1);
             safeBuyJob('Scientist', Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed);
         } else {
-        	safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
+            safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
         }
     }
 
@@ -444,6 +588,162 @@ function buyJobs() {
     safeBuyJob('Lumberjack', Math.ceil((lumberjackRatio / totalRatio * totalDistributableWorkers) - game.jobs.Lumberjack.owned));
     safeBuyJob('Miner', Math.ceil((minerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Miner.owned));
 }
+
+function autoLevelEquipment() {
+    var Best = {
+        'healthwood': {
+            Factor: 0,
+            Name: '',
+            Wall: false,
+            Status: 'white'
+        },
+        'healthmetal': {
+            Factor: 0,
+            Name: '',
+            Wall: false,
+            Status: 'white'
+        },
+        'attackmetal': {
+            Factor: 0,
+            Name: '',
+            Wall: false,
+            Status: 'white'
+        },
+        'blockwood': {
+            Factor: 0,
+            Name: '',
+            Wall: false,
+            Status: 'white'
+        }
+    };
+    for (var equipName in equipmentList) {
+        var equip = equipmentList[equipName];
+        // debug('Equip: ' + equip + ' EquipIndex ' + equipName);
+        var gameResource = equip.Equip ? game.equipment[equipName] : game.buildings[equipName];
+        // debug('Game Resource: ' + gameResource);
+        if (!gameResource.locked) {
+            document.getElementById(equipName).style.color = 'white';
+            var evaluation = evaluateEfficiency(equipName);
+            // debug(equipName + ' evaluation ' + evaluation.Status);
+            var BKey = equip.Stat + equip.Resource;
+            // debug(equipName + ' bkey ' + BKey);
+
+            if (Best[BKey].Factor == 0 || Best[BKey].Factor < evaluation.Factor) {
+                Best[BKey].Factor = evaluation.Factor;
+                Best[BKey].Name = equipName;
+                Best[BKey].Wall = evaluation.Wall;
+                Best[BKey].Status = evaluation.Status;
+            }
+
+            document.getElementById(equipName).style.borderColor = evaluation.Status;
+            if (evaluation.Status != 'white' && evaluation.Status != 'yellow') {
+                document.getElementById(equip.Upgrade).style.color = evaluation.Status;
+            }
+            if (evaluation.Status == 'yellow') {
+                document.getElementById(equip.Upgrade).style.color = 'white';
+            }
+            if (evaluation.Wall) {
+                document.getElementById(equipName).style.color = 'yellow';
+            }
+
+            if (
+                evaluation.Status == 'red' &&
+                (
+                    (
+                        getPageSetting('chkBuyPrestigeA') &&
+                        equipmentList[equipName].Stat == 'attack'
+                    ) ||
+                    (
+                        getPageSetting('chkBuyPrestigeH') &&
+                        (
+                            equipmentList[equipName].Stat == 'health' ||
+                            equipmentList[equipName].Stat == 'block'
+                        )
+                    )
+                )
+            ) {
+                var upgrade = equipmentList[equipName].Upgrade;
+                debug('Upgrading ' + upgrade);
+                buyUpgrade(upgrade);
+                // tooltip('hide');
+            }
+        }
+    }
+
+    for (var stat in Best) {
+        if (Best[stat].Name != '') {
+            var DaThing = equipmentList[Best[stat].Name];
+            document.getElementById(Best[stat].Name).style.color = Best[stat].Wall ? 'orange' : 'red';
+            if ((getPageSetting('chkBuyEquipA') && DaThing.Stat == 'attack') || (getPageSetting('chkBuyEquipH') && (DaThing.Stat == 'health' || DaThing.Stat == 'block'))) {
+                if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
+                    debug('Leveling equipment ' + Best[stat].Name);
+                    buyEquipment(Best[stat].Name);
+                    tooltip('hide');
+                }
+            }
+        }
+    }
+}
+
+function manualLabor() {
+    var ManualGather = 'metal';
+    //If you can autofight - set autofight to true
+    if (game.upgrades.Bloodlust.done == 1 && game.global.pauseFight) {
+        pauseFight();
+    }
+    //if we have more than 2 buildings in queue, or our modifier is real fast, build
+    if (game.global.buildingsQueue.length ? (game.global.buildingsQueue[0].startsWith("Trap") ? (game.global.buildingsQueue.length > 1) : true) : false) {
+        // debug('Gathering buildings??');
+        setGather('buildings');
+    }
+    //if we can gather more science in 1 min by ourselves than we currently have, get some science
+    else if (game.resources.science.owned < scienceNeeded) {
+        // debug('Science needed ' + scienceNeeded);
+        setGather('science');
+    } else {
+        var manualResourceList = {
+            'food': 'Farmer',
+            'wood': 'Lumberjack',
+            'metal': 'Miner',
+        };
+        var lowestResource = 'food';
+        var lowestResourceRate = -1;
+        var haveWorkers = true;
+        for (var resource in manualResourceList) {
+            var job = manualResourceList[resource];
+            var currentRate = game.jobs[job].owned * game.jobs[job].modifier;
+            // debug('Current rate for ' + resource + ' is ' + currentRate + ' is hidden? ' + (document.getElementById(resource).style.visibility == 'hidden'));
+            if (document.getElementById(resource).style.visibility != 'hidden') {
+                // debug('INNERLOOP for resource ' +resource);
+                if (currentRate == 0) {
+                    currentRate = game.resources[resource].owned;
+                    // debug('Current rate for ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate);
+                    if ((haveWorkers) || (currentRate < lowestResourceRate)) {
+                        // debug('New Lowest1 ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate+ ' haveworkers ' +haveWorkers);
+                        haveWorkers = false;
+                        lowestResource = resource;
+                        lowestResourceRate = currentRate;
+                    }
+                }
+                if ((currentRate < lowestResourceRate || lowestResourceRate == -1) && haveWorkers) {
+                    // debug('New Lowest2 ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate);
+                    lowestResource = resource;
+                    lowestResourceRate = currentRate;
+                }
+            }
+            // debug('Current Stats ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate+ ' haveworkers ' +haveWorkers);
+        }
+
+        if (game.global.playerGathering != lowestResource && !haveWorkers) {
+        	// debug('Set gather lowestResource');
+            setGather(lowestResource);
+        } else if (game.global.playerGathering != ManualGather) {
+        	// debug('Set gather ManualGather');
+            setGather(ManualGather);
+        }
+    }
+}
+
 
 
 
@@ -460,12 +760,31 @@ initializeAutoTrimps();
 //     game.settings.speed = 2;
 // }, 1000);
 
-setInterval(function() {
+setTimeout(mainLoop, runInterval);
+
+function mainLoop() {
     setTitle();
+    setScienceNeeded();
+
+    easyMode(); //This needs a UI input
+
     if (getPageSetting('chkBuyUpgrades')) buyUpgrades();
     if (getPageSetting('chkBuyStorage')) buyStorage();
     if (getPageSetting('chkBuyBuilding')) buyBuildings();
     if (getPageSetting('chkBuyJobs')) buyJobs();
+    if (getPageSetting('chkManualStorage')) manualLabor();
+    autoLevelEquipment();
+
+    //Manually fight instead of using builtin auto-fight
+    if (game.global.autoBattle) {
+        if (!game.global.pauseFight) {
+            pauseFight(); //Disable autofight
+        }
+    }
+    if (!game.global.fighting && game.global.gridArray.length != 0 && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) || game.global.soldierHealth > 0 || breedTime(0) < 2) {
+        fightManual();
+    }
 
     saveSettings();
-}, runInterval);
+    setTimeout(mainLoop, runInterval);
+}
