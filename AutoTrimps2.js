@@ -321,7 +321,7 @@ function safeBuyJob(jobTitle, amount) {
 
 function getScienceCostToUpgrade(upgrade) {
     var upgradeObj = game.upgrades[upgrade];
-    if (upgradeObj.cost.resources.science != undefined) {
+    if (upgradeObj.cost.resources.science[0] != undefined) {
         return Math.floor(upgradeObj.cost.resources.science[0] * Math.pow(upgradeObj.cost.resources.science[1], (upgradeObj.done)));
     } else {
         return 0;
@@ -573,6 +573,7 @@ function buyUpgrades() {
         if(upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < game.global.lastWarp + 2 : game.buildings.Warpstation.owned >= 20)) continue;
         if ((!game.upgrades.Scientists.done && upgrade != 'Battle') ? (available && upgrade == 'Scientists' && game.upgrades.Scientists.allowed) : (available)) {
             buyUpgrade(upgrade);
+            tooltip("hide");
             //debug('bought upgrade ' + upgrade);
         }
     }
