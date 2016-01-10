@@ -321,7 +321,7 @@ function safeBuyJob(jobTitle, amount) {
 
 function getScienceCostToUpgrade(upgrade) {
     var upgradeObj = game.upgrades[upgrade];
-    if (upgradeObj.cost.resources.science[0] != undefined) {
+    if (upgradeObj.cost.resources.science != undefined ? upgradeObj.cost.resources.science[0] != undefined : false) {
         return Math.floor(upgradeObj.cost.resources.science[0] * Math.pow(upgradeObj.cost.resources.science[1], (upgradeObj.done)));
     } else {
         return 0;
