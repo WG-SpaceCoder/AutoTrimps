@@ -547,11 +547,11 @@ function initializeAutoTrimps() {
 }
 
 function easyMode() {
-    if (game.jobs.Farmer.owned > 1000000) {
+    if (game.resources.trimps.realMax() > 3000000) {
         document.getElementById("FarmerRatio").value = 3;
         document.getElementById("LumberjackRatio").value = 1;
         document.getElementById("MinerRatio").value = 4;
-    } else if (game.jobs.Farmer.owned > 100000) {
+    } else if (game.resources.trimps.realMax() > 300000) {
         document.getElementById("FarmerRatio").value = 3;
         document.getElementById("LumberjackRatio").value = 3;
         document.getElementById("MinerRatio").value = 5;
