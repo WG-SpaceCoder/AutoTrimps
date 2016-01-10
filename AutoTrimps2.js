@@ -776,13 +776,15 @@ function autoLevelEquipment() {
         if (Best[stat].Name != '') {
             var DaThing = equipmentList[Best[stat].Name];
             document.getElementById(Best[stat].Name).style.color = Best[stat].Wall ? 'orange' : 'red';
-            if (getPageSetting('chkBuyEquipA') && DaThing.Stat == 'attack' && !enoughDamage) {
+            //If we're considering an attack item, we want to buy weapons if we don't have enough damage, or if we don't need health (so we default to buying some damage)
+            if (getPageSetting('chkBuyEquipA') && DaThing.Stat == 'attack' && (!enoughDamage || enoughHealth)) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
                     buyEquipment(Best[stat].Name);
                     tooltip('hide');
                 }
             }
+            //If we're considering a health item, buy it if we don't have enough health, otherwise we default to buying damage
             if (getPageSetting('chkBuyEquipH') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealth){
                  if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
@@ -805,7 +807,7 @@ function manualLabor() {
         // debug('Gathering buildings??');
         setGather('buildings');
     }
-    //if we can gather more science in 1 min by ourselves than we currently have, get some science
+    //if we have some upgrades sitting around which we don't have enough science for, gather science
     else if (game.resources.science.owned < scienceNeeded) {
         // debug('Science needed ' + scienceNeeded);
         setGather('science');
@@ -853,6 +855,7 @@ function manualLabor() {
     }
 }
 
+//function written by Belaith
 function autoStance() {
     if(game.global.gridArray.length == 0) return;
     var missingHealth = game.global.soldierHealthMax - game.global.soldierHealth;
@@ -933,6 +936,7 @@ function autoStance() {
     }
 }
 
+//core function written by Belaith
 function autoMap() {
     if (game.global.mapsUnlocked) {
         var obj = {};
