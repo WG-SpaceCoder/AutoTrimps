@@ -1,4 +1,14 @@
- //change settings button to call our version
+    //change settings button to call our version
+        function createClass(name,rules){
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        document.getElementsByTagName('head')[0].appendChild(style);
+        if(!(style.sheet||{}).insertRule) 
+            (style.styleSheet || style.sheet).addRule(name, rules);
+        else
+            style.sheet.insertRule(name+"{"+rules+"}",0);
+    }
+    createClass('.long-shadow',"display: inline-block;	vertical-align: top;	margin-left: 2vw;	margin-right: 2vw;	width: 15.5vw;");
     var settingBtnSrch =document.getElementsByClassName("btn btn-default");
     for (var i = 0; i < settingBtnSrch.length; i++) {
         if (settingBtnSrch[i].getAttribute("onclick") === "toggleSettingsMenu()")
@@ -16,21 +26,33 @@
     //Scripts to be injected. elements can't call tampermonkey scripts for some reason.(assume it's the same for grease)
     var script = document.createElement('script');
     //array to hold the settings. Loading values into them should be done before UI creation.
-    var html="var automationSettings=[0,0,0];\r\n ";
+    var html="var automationSettings=[0,0,0];\r\n var ranstring=''; //cause I'm dumb \r\n";
     //toggles the display of the settings menu.
     html+="function autoToggle()\r\n {if (game.options.displayed)\r\n toggleSettingsMenu();\r\n var item = document.getElementById('autoSettings');\r\n if(item.style.display === 'block')\r\n item.style.display='none';\r\n else item.style.display = 'block'; }\r\n ";
     //overloads the settings menu button to include hiding the auto menu settings.
     html+="function autoPlusSettingsMenu(){\r\n var item = document.getElementById('autoSettings');\r\n if(item.style.display === 'block')\r\n item.style.display='none';\r\n toggleSettingsMenu();}\r\n ";
     //auto button toggle. Used for true/false values.
     html+="function autoToggleSetting(index, elem)\r\n { automationSettings[index] = !automationSettings[index];\r\n elem.setAttribute('class','settingBtn settingBtn' + automationSettings[index]); }\r\n";
-    //Tool tip for entering values 
-    html+="function autoSetValueToolTip(index, text){\r\n var elem = document.getElementById(\"tooltipDiv\");\r\n var tooltipText = 'Type a number below. You can also use shorthand such as 2e5 or 200k. Put -1 for Infinite.';";
+    //Tool tip for entering values
+    html+="function autoSetValueToolTip(index, text)\r\n ";
+    html+="{ranstring=text; console.log(text);\r\n var elem = document.getElementById(\"tooltipDiv\");\r\n ";
+    html+="var tooltipText = 'Type a number below. You can also use shorthand such as 2e5 or 200k. Put -1 for Infinite.';\r\n ";
     html+="tooltipText += '<br/><br/><input id=\"customNumberBox\" style=\"width: 50%\" value=' + prettify(automationSettings[index]) + '></input>';\r\n ";
-    html+="var costText = '<div class=\"maxCenter\"><div class=\"btn btn-info\" onclick=\"autoSetValue( '+index+' , \"'+text+'\" )\">Apply</div><div class=\"btn btn-info\" onclick=\"cancelTooltip()\">Cancel</div></div>';\r\n ";
-    html+="game.global.lockTooltip = true;\r\n elem.style.left = '32.5%';\r\n elem.style.top = '25%';\r\n document.getElementById('tipTitle').textContent = 'Value Input';\r\n document.getElementById('tipText').innerHTML = tooltipText;\r\n ";
-    html+="document.getElementById('tipCost').innerHTML = costText;\r\n elem.style.display = 'block';\r\n var box = document.getElementById('customNumberBox');\r\n try { box.setSelectionRange(0, box.value.length); }\r\n catch (e) { box.select(); }\r\n box.focus(); }";
+    html+="var costText = '<div class=\"maxCenter\"><div class=\"btn btn-info\" onclick=\"autoSetValue('+index+')\">Apply</div><div class=\"btn btn-info\" onclick=\"cancelTooltip()\">Cancel</div></div>';\r\n ";
+    html+="game.global.lockTooltip = true;\r\n ";//
+    html+="elem.style.left = '32.5%';\r\n ";
+    html+=" elem.style.top = '25%';\r\n ";
+    html+=" document.getElementById('tipTitle').textContent = 'Value Input';\r\n ";
+    html+=" document.getElementById('tipText').innerHTML = tooltipText;\r\n ";
+    html+="document.getElementById('tipCost').innerHTML = costText;\r\n ";
+    html+=" elem.style.display = 'block';\r\n ";
+    html+="var box = document.getElementById('customNumberBox');\r\n ";
+    html+="try { box.setSelectionRange(0, box.value.length); }\r\n ";
+    html+=" catch (e) { box.select(); }\r\n ";
+    html+="box.focus(); }";
     //what happens when you hit the Apply button in the tool tip above. (another long(er) one. Soz.)
-    html+="function autoSetValue(index, text){ debug('got here'); var num = 0; unlockTooltip(); tooltip('hide'); var numBox = document.getElementById('customNumberBox');";//
+  
+    html+="function autoSetValue(index){ var num = 0; unlockTooltip(); tooltip('hide'); var numBox = document.getElementById('customNumberBox');";//
     html+="if (numBox){ num = numBox.value.toLowerCase(); if (num.split('e')[1])";
     html+="{ num = num.split('e');     num = Math.floor(parseFloat(num[0]) * (Math.pow(10, parseInt(num[1])))); }";
     html+="else { var letters = num.replace(/[^a-z]/gi, ''); var base = 0;";
@@ -39,23 +61,14 @@
     html+="} if (base) num = Math.round(parseFloat(num.split(letters)[0]) * Math.pow(1000, base));}";
     html+="if (!base) num = parseInt(num);} ";
     html+="} else return;";
-    html+="var txtNum = (num>0)?prettify(num):'Infinite'; automationSettings[index] = num; document.getElementById('autoValue' + index).textContent = text+': '+txtNum; }\r\n ";
+    html+="var txtNum = (num>0)?prettify(num):'Infinite'; automationSettings[index] = num; document.getElementById('autoValue' + index).textContent = ranstring+': '+txtNum; }\r\n ";
 
     //buttons have to call scripts on the page. Those scripts can only access globals on the page as well.
     script.innerHTML = html;
     //inject the scripts
-    (document.head || document.body || document.documentElement || document).appendChild(script);
+   document.body.appendChild(script);
 
-    function createClass(name,rules){
-        var style = document.createElement('style');
-        style.type = 'text/css';
-        document.getElementsByTagName('head')[0].appendChild(style);
-        if(!(style.sheet||{}).insertRule) 
-            (style.styleSheet || style.sheet).addRule(name, rules);
-        else
-            style.sheet.insertRule(name+"{"+rules+"}",0);
-    }
-    createClass('.long-shadow',"display: inline-block;	vertical-align: top;	margin-left: 2vw;	margin-right: 2vw;	width: 15.5vw;");
+
     //test case
     var autoLoopsettings = [{
         name:'George',
@@ -90,7 +103,7 @@
         btn.id='autoValue' + autoItem.index;
         btn.setAttribute('class','btn btn-info');
         btn.setAttribute("onclick","autoSetValueToolTip(" + autoItem.index + ", '"+autoItem.name+"')");	
-        btn.setAttribute("onmouseover",'tooltip(\"' + autoItem.name + '\", \"customText\", event, \"' + autoItem.description + '\")');
+        btn.setAttribute("onmouseover",'tooltip(\"'+autoItem.name+ '\", \"customText\", event, \"' + autoItem.description + '\")');
         btn.setAttribute("onmouseout",'tooltip("hide")');
         btn.textContent=autoItem.name+": "+automationSettings[autoItem.index];
         return btn;
