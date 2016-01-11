@@ -67,16 +67,6 @@
     script.innerHTML = html;
     //inject the scripts
    document.body.appendChild(script);
-
-
-    //test case
-    var autoLoopsettings = [{
-        name:'George',
-        description:'he does things',        
-        index:13
-    }];
-
-
     function autoBuildToggleButton(autoItem)
     {
         var btn = document.createElement("DIV");
@@ -109,8 +99,85 @@
         return btn;
     }
 //this should be contained in a single function with the rest of the interface construction.
-    var containertest=document.createElement("DIV");
+   /* var containertest=document.createElement("DIV");
     containertest.setAttribute('class','long-shadow');
     containertest.appendChild(autoBuildValueButton(autoLoopsettings[0]));//autoBuildValueButton   or  autoBuildToggleButton
     var doit=document.getElementById("autoSettings");
-    doit.appendChild(containertest);
+    doit.appendChild(containertest);*/
+
+      var autoLoopsettings = [{
+        name:'Buy Storage',
+        description:'Will buy storage when resource is almost full',        
+        index:0
+    },{
+        name:'Manual Gather',
+        description:'Will automatically gather resources and trap trimps',        
+        index:1
+    },{
+        name:'Buy Jobs',
+        description:'Buys jobs based on ratios configured',        
+        index:2
+    },{
+        name:'Buy Buildings',
+        description:'Will buy non storage buildings as soon as they are available',        
+        index:3
+    },{
+        name:'Buy Upgrades',
+        description:'autobuy non eqipment Upgrades',        
+        index:4
+    },{
+        name:'Auto Stance',
+        description:'automate setting stance',        
+        index:5
+    },{
+        name:'Buy Armor',
+        description:'Will buy the most efficient armor available',        
+        index:6
+    },{
+        name:'Buy Armor Upgrades',
+        description:'Will buy the most efficient armor upgrade available',        
+        index:7
+    },{
+        name:'Buy Weapons',
+        description:'Will buy the most efficient weapon available',        
+        index:8
+    },{
+        name:'Buy Weapon Upgrades',
+        description:'Will buy the most efficient weapon upgrade available',        
+        index:9
+    }];
+
+
+    buildAutoSettings();
+function buildAutoSettings()
+    {
+        var itter=0;
+        var autoTable= document.createElement("TBODY");
+        var tableRow= document.createElement("TR"); //only need one tr        
+        autoTable.appendChild(tableRow);
+        
+        var tableData= document.createElement("TD");
+        tableRow.appendChild(tableData);
+        tableData.setAttribute("style","vertical-align: top;");        
+        tableData.appendChild(document.createTextNode("Loops"));//Title
+        tableData.appendChild(document.createElement("BR"));         
+        for(itter=0;itter<6;++itter){
+        tableData.appendChild(autoBuildToggleButton(autoLoopsettings[itter]));
+        tableData.appendChild(document.createElement("BR"));
+        }        
+        
+        
+        tableData= document.createElement("TD");
+        tableRow.appendChild(tableData);
+        tableData.setAttribute("style","vertical-align: top;");        
+        tableData.appendChild(document.createTextNode("Equipment"));//Title
+        tableData.appendChild(document.createElement("BR"));         
+        for(itter=6;itter<10;++itter){
+        tableData.appendChild(autoBuildToggleButton(autoLoopsettings[itter]));
+        tableData.appendChild(document.createElement("BR"));
+        }        
+        
+        
+        //last thing to do
+        document.getElementById("autoSettings").appendChild(autoTable);
+    }
