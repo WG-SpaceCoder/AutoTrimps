@@ -163,7 +163,6 @@ function buildAutoSettings()
         tableData.appendChild(document.createElement("BR"));         
         for(itter=0;itter<6;++itter){
         tableData.appendChild(autoBuildToggleButton(autoLoopsettings[itter]));
-        tableData.appendChild(document.createElement("BR"));
         }        
         
         
@@ -174,7 +173,6 @@ function buildAutoSettings()
         tableData.appendChild(document.createElement("BR"));         
         for(itter=6;itter<10;++itter){
         tableData.appendChild(autoBuildToggleButton(autoLoopsettings[itter]));
-        tableData.appendChild(document.createElement("BR"));
         }        
         
         
