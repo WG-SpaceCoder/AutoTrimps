@@ -91,7 +91,7 @@
             automationSettings[autoItem.index]=0;
         }
         btn.id='autoValue' + autoItem.index;
-        btn.setAttribute('class','btn btn-info');
+        btn.setAttribute('class','btn-info');
         btn.setAttribute("onclick","autoSetValueToolTip(" + autoItem.index + ", '"+autoItem.name+"')");	
         btn.setAttribute("onmouseover",'tooltip(\"'+autoItem.name+ '\", \"customText\", event, \"' + autoItem.description + '\")');
         btn.setAttribute("onmouseout",'tooltip("hide")');
@@ -172,7 +172,7 @@ function buildAutoSettings()
         tableData.appendChild(document.createTextNode("Equipment"));//Title
         tableData.appendChild(document.createElement("BR"));         
         for(itter=6;itter<10;++itter){
-        tableData.appendChild(autoBuildToggleButton(autoLoopsettings[itter]));
+        tableData.appendChild(autoBuildValueButton(autoLoopsettings[itter]));
         }        
         
         
