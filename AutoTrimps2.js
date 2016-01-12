@@ -959,6 +959,13 @@ function autoStance() {
 //core function written by Belaith
 function autoMap() {
     if (game.global.mapsUnlocked) {
+        var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
+        var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
+        var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0));
+        var enoughDamage = (baseDamage * 4 > enemyHeath);
+        var shouldDoMaps = !enoughHealth || !enoughDamage;
+        var shouldDoMap = "world";
+        
         var obj = {};
         for (var map in game.global.mapsOwnedArray) {
             if (!game.global.mapsOwnedArray[map].noRecycle) {
@@ -968,15 +975,11 @@ function autoMap() {
         var keysSorted = Object.keys(obj).sort(function(a, b) {
             return obj[b] - obj[a]
         });
-        var highestMap = keysSorted[0];
+        
+        if(keysSorted[0]) var highestMap = keysSorted[0];
+        else shouldDoMap = "create";
+        
 
-        var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
-        var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
-        var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0));
-        var enoughDamage = (baseDamage * 4 > enemyHeath);
-        var shouldDoMaps = !enoughHealth || !enoughDamage;
-
-        var shouldDoMap = "world";
 
         for (var map in game.global.mapsOwnedArray) {
             if (game.global.mapsOwnedArray[map].noRecycle && addSpecials(true, true, game.global.mapsOwnedArray[map]) == 1) {
