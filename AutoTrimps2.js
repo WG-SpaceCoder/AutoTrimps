@@ -975,16 +975,20 @@ function autoMap() {
         var keysSorted = Object.keys(obj).sort(function(a, b) {
             return obj[b] - obj[a]
         });
-        
+        //if there are no non-unique maps, there will be nothing in keysSorted, so set to create a map
         if(keysSorted[0]) var highestMap = keysSorted[0];
         else shouldDoMap = "create";
         
 
-
+        
         for (var map in game.global.mapsOwnedArray) {
-            if (game.global.mapsOwnedArray[map].noRecycle && addSpecials(true, true, game.global.mapsOwnedArray[map]) == 1) {
-                shouldDoMap = game.global.mapsOwnedArray[map].id;
-                break;
+            var theMap = game.global.mapsOwnedArray[map];
+            if (theMap.noRecycle) {
+                if(theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
+                    shouldDoMap = theMap.id;
+                    break;
+                }
+                //other unique maps here
             }
         }
 
