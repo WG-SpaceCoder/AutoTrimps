@@ -182,6 +182,7 @@ function saveSettings() {
 //Grabs the automation settings from the page
 function getPageSetting(setting) {
     // debug('Looking for setting ' + setting);
+    if (!document.getElementById(setting)) return false;
     if (document.getElementById(setting).type == 'checkbox') {
         return document.getElementById(setting).checked;
     } else {
@@ -242,6 +243,7 @@ function safeBuyBuilding(building) {
     for (var b in game.global.buildingsQueue) {
         if (game.global.buildingsQueue[b].includes(building)) return false;
     }
+    
     if (!canAffordBuilding(building)) return false;
     debug('Building ' + building);
     preBuy();
@@ -279,8 +281,15 @@ function highlightHousing() {
         var keysSorted = Object.keys(obj).sort(function(a, b) {
             return obj[a] - obj[b]
         });
-        if(keysSorted[0] == "Gateway" && game.buildings.Gateway.owned >= 35) bestBuilding = keysSorted[1];
-        else bestBuilding = keysSorted[0];
+        //loop through the array and find the first one that isn't limited by max settings
+        for (var best in keysSorted) {
+            var max = getPageSetting('max' + keysSorted[best]);
+            if(max == false) max = -1;
+            if(game.buildings[keysSorted[best]].owned < max || max == -1) {
+                bestBuilding = keysSorted[best];
+                break;
+            }
+        }
         document.getElementById(bestBuilding).style.border = "1px solid #00CC00";
         // document.getElementById(bestBuilding).addEventListener('click', update, false);
     } else {
@@ -292,10 +301,12 @@ function buyFoodEfficientHousing() {
     var houseWorth = game.buildings.House.locked ? 0 : game.buildings.House.increase.by / getBuildingItemPrice(game.buildings.House, "food");
     var hutWorth = game.buildings.Hut.increase.by / getBuildingItemPrice(game.buildings.Hut, "food");
 
-    if (houseWorth > hutWorth && canAffordBuilding('House')) {
+    if (houseWorth > hutWorth && canAffordBuilding('House') && (game.buildings.House.owned < getPageSetting('maxHouse') || getPageSetting('maxHouse') == -1 )) {
         safeBuyBuilding('House');
     } else {
+        if(game.buildings.Hut.owned < getPageSetting('maxHut') || getPageSetting('maxHut') == -1){
         safeBuyBuilding('Hut');
+        }
     }
 }
 
