@@ -144,7 +144,7 @@ function loadPageVariables() {
     //Set all the saved variables
     for (var index in pageSettings) {
         var setting = pageSettings[index];
-        if (localStorage.getItem(setting) != null) {
+        if (localStorage.getItem(setting) !== null) {
             // debug(setting + ' is of type ' + document.getElementById(setting).type);
             var local = localStorage.getItem(setting);
             if (document.getElementById(setting).type == 'checkbox') {
@@ -260,8 +260,8 @@ function highlightHousing() {
     game.global.buyAmt = 1;
     var allHousing = ["Mansion", "Hotel", "Resort", "Gateway", "Collector", "Warpstation"];
     var unlockedHousing = [];
-    for (house in allHousing) {
-        if (game.buildings[allHousing[house]].locked == 0) {
+    for (var house in allHousing) {
+        if (game.buildings[allHousing[house]].locked === 0) {
             unlockedHousing.push(allHousing[house]);
         }
     }
@@ -284,7 +284,7 @@ function highlightHousing() {
         //loop through the array and find the first one that isn't limited by max settings
         for (var best in keysSorted) {
             var max = getPageSetting('max' + keysSorted[best]);
-            if(max == false) max = -1;
+            if(max === false) max = -1;
             if(game.buildings[keysSorted[best]].owned < max || max == -1) {
                 bestBuilding = keysSorted[best];
                 break;
@@ -312,7 +312,7 @@ function buyFoodEfficientHousing() {
 }
 
 function safeBuyJob(jobTitle, amount) {
-    if (amount == undefined) amount = 1;
+    if (amount === undefined) amount = 1;
     if (amount === 0) return false;
     preBuy();
     if (amount < 0) {
@@ -335,7 +335,7 @@ function safeBuyJob(jobTitle, amount) {
 
 function getScienceCostToUpgrade(upgrade) {
     var upgradeObj = game.upgrades[upgrade];
-    if (upgradeObj.cost.resources.science != undefined ? upgradeObj.cost.resources.science[0] != undefined : false) {
+    if (upgradeObj.cost.resources.science !== undefined ? upgradeObj.cost.resources.science[0] !== undefined : false) {
         return Math.floor(upgradeObj.cost.resources.science[0] * Math.pow(upgradeObj.cost.resources.science[1], (upgradeObj.done)));
     } else {
         return 0;
@@ -457,12 +457,12 @@ function breedTime(genes) {
         potencyMod /= 10;
     }
     if (game.jobs.Geneticist.owned > 0) {
-        potencyMod *= Math.pow(.98, game.jobs.Geneticist.owned);
+        potencyMod *= Math.pow(0.98, game.jobs.Geneticist.owned);
     }
 
     var multiplier = 1;
     if (genes >= 0) {
-        multiplier *= Math.pow(.98, genes);
+        multiplier *= Math.pow(0.98, genes);
     } else {
         multiplier *= Math.pow((1 / 0.98), -genes);
     }
@@ -529,7 +529,7 @@ function getBreedTime() {
 
     //Pheromones
     potencyMod += (potencyMod * game.portal.Pheromones.level * game.portal.Pheromones.modifier);
-    if (game.jobs.Geneticist.owned > 0) potencyMod *= Math.pow(.98, game.jobs.Geneticist.owned);
+    if (game.jobs.Geneticist.owned > 0) potencyMod *= Math.pow(0.98, game.jobs.Geneticist.owned);
     if (game.unlocks.quickTrimps) potencyMod *= 2;
     breeding = breeding * potencyMod;
     updatePs(breeding, true);
@@ -616,7 +616,7 @@ function buyBuildings() {
     highlightHousing();
 
     //if housing is highlighted
-    if (bestBuilding != null) {
+    if (bestBuilding !== null) {
         //insert gigastation logic here ###############
         if (!safeBuyBuilding(bestBuilding)) {
             buyFoodEfficientHousing();
@@ -645,7 +645,7 @@ function setTitle() {
 
 function buyJobs() {
     //Implement Ratio thingy
-    if(game.resources.trimps.owned < game.resources.trimps.realMax()*.8) return;
+    if(game.resources.trimps.owned < game.resources.trimps.realMax()*0.8) return;
     var freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
     var totalDistributableWorkers = freeWorkers + game.jobs.Farmer.owned + game.jobs.Miner.owned + game.jobs.Lumberjack.owned;
 
@@ -747,7 +747,7 @@ function autoLevelEquipment() {
             var BKey = equip.Stat + equip.Resource;
             // debug(equipName + ' bkey ' + BKey);
 
-            if (Best[BKey].Factor == 0 || Best[BKey].Factor < evaluation.Factor) {
+            if (Best[BKey].Factor === 0 || Best[BKey].Factor < evaluation.Factor) {
                 Best[BKey].Factor = evaluation.Factor;
                 Best[BKey].Name = equipName;
                 Best[BKey].Wall = evaluation.Wall;
@@ -790,7 +790,7 @@ function autoLevelEquipment() {
     }
 
     for (var stat in Best) {
-        if (Best[stat].Name != '') {
+        if (Best[stat].Name !== '') {
             var DaThing = equipmentList[Best[stat].Name];
             document.getElementById(Best[stat].Name).style.color = Best[stat].Wall ? 'orange' : 'red';
             //If we're considering an attack item, we want to buy weapons if we don't have enough damage, or if we don't need health (so we default to buying some damage)
@@ -843,7 +843,7 @@ function manualLabor() {
             // debug('Current rate for ' + resource + ' is ' + currentRate + ' is hidden? ' + (document.getElementById(resource).style.visibility == 'hidden'));
             if (document.getElementById(resource).style.visibility != 'hidden') {
                 // debug('INNERLOOP for resource ' +resource);
-                if (currentRate == 0) {
+                if (currentRate === 0) {
                     currentRate = game.resources[resource].owned;
                     // debug('Current rate for ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate);
                     if ((haveWorkers) || (currentRate < lowestResourceRate)) {
@@ -874,7 +874,7 @@ function manualLabor() {
 
 //function written by Belaith
 function autoStance() {
-    if(game.global.gridArray.length == 0) return;
+    if(game.global.gridArray.length === 0) return;
     var missingHealth = game.global.soldierHealthMax - game.global.soldierHealth;
     var newSquadRdy = game.resources.trimps.realMax() <= game.resources.trimps.owned + 1;
 
@@ -903,10 +903,11 @@ function autoStance() {
     }
 
     if (!game.global.mapsActive && !game.global.preMapsActive) {
+        var enemy;
         if (typeof game.global.gridArray[game.global.lastClearedCell + 1] === 'undefined') {
-            var enemy = game.global.gridArray[0];
+            enemy = game.global.gridArray[0];
         } else {
-            var enemy = game.global.gridArray[game.global.lastClearedCell + 1];
+            enemy = game.global.gridArray[game.global.lastClearedCell + 1];
         }
         var enemyFast = game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow';
         var enemyHealth = enemy.health;
@@ -1136,7 +1137,7 @@ function mainLoop() {
             pauseFight(); //Disable autofight
         }
     }
-    if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length != 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || breedTime(0) < 2)) {
+    if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || breedTime(0) < 2)) {
         fightManual();
        // debug('triggered fight');
     }
