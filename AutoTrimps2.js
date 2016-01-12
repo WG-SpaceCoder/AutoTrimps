@@ -290,7 +290,9 @@ function highlightHousing() {
                 break;
             }
         }
-        document.getElementById(bestBuilding).style.border = "1px solid #00CC00";
+        if(bestBuilding){
+            document.getElementById(bestBuilding).style.border = "1px solid #00CC00";
+        }
         // document.getElementById(bestBuilding).addEventListener('click', update, false);
     } else {
         bestBuilding = null;
@@ -1137,7 +1139,7 @@ function mainLoop() {
             pauseFight(); //Disable autofight
         }
     }
-    if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || breedTime(0) < 2)) {
+    if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0)) {
         fightManual();
        // debug('triggered fight');
     }
