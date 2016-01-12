@@ -1075,7 +1075,7 @@ function manageGenes() {
     else if (targetBreed < getBreedTime() && !game.jobs.Geneticist.locked && game.jobs.Geneticist.owned > 0) {
         safeBuyJob('Geneticist', -1);
     }
-    else if (targetBreed < getBreedTime() && managePreGenes) {
+    else if (targetBreed < getBreedTime() && managePreGenes && !game.buildings.Nursery.locked) {
         safeBuyBuilding('Nursery');
     }
     
