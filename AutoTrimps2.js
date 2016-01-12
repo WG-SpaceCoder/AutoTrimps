@@ -300,11 +300,12 @@ function highlightHousing() {
 function buyFoodEfficientHousing() {
     var houseWorth = game.buildings.House.locked ? 0 : game.buildings.House.increase.by / getBuildingItemPrice(game.buildings.House, "food");
     var hutWorth = game.buildings.Hut.increase.by / getBuildingItemPrice(game.buildings.Hut, "food");
-
-    if (houseWorth > hutWorth && canAffordBuilding('House') && (game.buildings.House.owned < getPageSetting('maxHouse') || getPageSetting('maxHouse') == -1 )) {
+    var hutAtMax = (game.buildings.Hut.owned >= getPageSetting('maxHut') && getPageSetting('maxHut') != -1);
+    //if hutworth is more, but huts are maxed , still buy up to house max
+    if ((houseWorth > hutWorth || hutAtMax) && canAffordBuilding('House') && (game.buildings.House.owned < getPageSetting('maxHouse') || getPageSetting('maxHouse') == -1 )) {
         safeBuyBuilding('House');
     } else {
-        if(game.buildings.Hut.owned < getPageSetting('maxHut') || getPageSetting('maxHut') == -1){
+        if(!hutAtMax){
         safeBuyBuilding('Hut');
         }
     }
