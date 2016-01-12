@@ -106,11 +106,13 @@ var equipmentList = {
     }
 };
 
-var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'Potency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm', 'Gigastation'];
+var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm', 'Gigastation'];
 var buildingList = ['Hut', 'House', 'Gym', 'Mansion', 'Hotel', 'Resort', 'Gateway', 'Collector', 'Warpstation', 'Tribute', 'Nursery']; //NOTE THAT I REMOVED WORMHOLE TEMPORARILY UNTILL I FIGURE OUT WHAT TO DO WITH IT
 var pageSettings = [];
 var bestBuilding;
 var scienceNeeded;
+//pull from user setting
+var managePreGenes = true;
 
 var baseDamage = 0;
 var baseBlock = 0;
@@ -618,7 +620,9 @@ function buyBuildings() {
     if (getPageSetting('chkTribute') && !game.buildings.Tribute.locked) {
         safeBuyBuilding('Tribute');
     }
-    if (getPageSetting('chkNursery') && !game.buildings.Nursery.locked) {
+    //only buy nurseries if enabled,   and we aren't trying to manage our breed time before geneticists, and they aren't locked
+    //even if we are trying to manage breed timer pre-geneticists, start buying nurseries once geneticists are unlocked AS LONG AS we can afford a geneticist (to prevent nurseries from outpacing geneticists soon after they are unlocked)
+    if (getPageSetting('chkNursery') && (!managePreGenes || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
         safeBuyBuilding('Nursery');
     }
 }
@@ -892,7 +896,7 @@ function autoStance() {
         } else {
             var enemy = game.global.gridArray[game.global.lastClearedCell + 1];
         }
-        var enemyFast = game.badGuys[enemy.name].fast;
+        var enemyFast = game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow';
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.19;
         var dDamage = enemyDamage - baseBlock / 2 > enemyDamage * 0.2 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2;
@@ -904,7 +908,7 @@ function autoStance() {
         } else {
             var enemy = game.global.mapGridArray[game.global.lastClearedMapCell + 1];
         }
-        var enemyFast = game.badGuys[enemy.name].fast;
+        var enemyFast = game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow';
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.19;
         var dDamage = enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0;
@@ -1055,19 +1059,27 @@ function manageGenes() {
     var targetBreed = parseInt(getPageSetting('geneticistTargetBreedTime'));
     //if we need to hire geneticists
     if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked) {
-        //if there's no free worker spots, fire a scientist
+        //if there's no free worker spots, fire a farmer
         if (fWorkers < 1 && canAffordJob('Geneticist', false)) {
             safeBuyJob('Farmer', -1);
-
-            fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
         }
         //hire a geneticist
         safeBuyJob('Geneticist');
     }
-    //if we need to fire geneticists
-    if (targetBreed < getBreedTime() && !game.jobs.Geneticist.locked) {
+//if we need to speed up our breeding
+    //if we have potency upgrades available, buy them. If geneticists are unlocked, or we aren't managing pre-genes, just buy them
+    if ((targetBreed < getBreedTime() || !game.jobs.Geneticist.locked || !managePreGenes) && game.upgrades.Potency.allowed > game.upgrades.Potency.done && canAffordTwoLevel('Potency')) {
+        buyUpgrade('Potency');
+    }
+    //otherwise, if we have some geneticists, start firing them
+    else if (targetBreed < getBreedTime() && !game.jobs.Geneticist.locked && game.jobs.Geneticist.owned > 0) {
         safeBuyJob('Geneticist', -1);
     }
+    else if (targetBreed < getBreedTime() && managePreGenes) {
+        safeBuyBuilding('Nursery');
+    }
+    
+    
 }
 
 
