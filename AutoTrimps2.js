@@ -637,7 +637,9 @@ function buyBuildings() {
     //only buy nurseries if enabled,   and we aren't trying to manage our breed time before geneticists, and they aren't locked
     //even if we are trying to manage breed timer pre-geneticists, start buying nurseries once geneticists are unlocked AS LONG AS we can afford a geneticist (to prevent nurseries from outpacing geneticists soon after they are unlocked)
     if (getPageSetting('chkNursery') && (!managePreGenes || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
+        if(getPageSetting('maxNursery') > game.buildings.Nursery.owned || (getPageSetting('maxNursery') == -1 && getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") && !game.buildings.Warpstation.locked)  ) {
         safeBuyBuilding('Nursery');
+        }
     }
 }
 
@@ -1097,6 +1099,7 @@ function manageGenes() {
     else if (targetBreed < getBreedTime() && !game.jobs.Geneticist.locked && game.jobs.Geneticist.owned > 0) {
         safeBuyJob('Geneticist', -1);
     }
+    //really should be integrated with the buyBuildings routine instead of here, but I think it's mostly harmless here
     else if (targetBreed < getBreedTime() && managePreGenes && !game.buildings.Nursery.locked) {
         safeBuyBuilding('Nursery');
     }
