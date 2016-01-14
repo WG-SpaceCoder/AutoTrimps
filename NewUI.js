@@ -29,7 +29,17 @@ createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to s
 createSetting('FarmerRatio', 'Farmer Ratio', '', 'value', '1');
 createSetting('LumberjackRatio', 'Lumberjack Ratio', '', 'value', '1');
 createSetting('MinerRatio', 'Miner Ratio', '', 'value', '1');
-createSetting('MaxHuts', 'Max Huts', '', 'value', '200');
+createSetting('MaxHut', 'Max Huts', '', 'value', '100');
+createSetting('MaxHouse', 'Max Huts', '', 'value', '100');
+createSetting('MaxMansion', 'MaxMansion', '', 'value', '100');
+createSetting('MaxHotel', 'Max Hotel', '', 'value', '100');
+createSetting('MaxResort', 'Max Resort', '', 'value', '100');
+createSetting('MaxGateway', 'Max Gateway', '', 'value', '100');
+createSetting('MaxCollector', 'Max Collector', '', 'value', '100');
+createSetting('MaxWarpstation', 'Max Warpstation', '', 'value', '-1');
+createSetting('MaxGym', 'Max Gym', '', 'value', '-1');
+createSetting('MaxTribute', 'Max Tribute', '', 'value', '-1');
+createSetting('MaxNursery', 'Max Nursery', '', 'value', '-1');
 // createSetting('', '', '', 'value', '30');
 
 
