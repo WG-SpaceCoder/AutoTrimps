@@ -1,4 +1,6 @@
-var autoTrimpSettings = new Object();
+if (autoTrimpSettings === undefined) {
+    var autoTrimpSettings = new Object();
+}
 
 automationMenuInit();
 
