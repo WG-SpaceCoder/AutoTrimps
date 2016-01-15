@@ -120,14 +120,6 @@ var equipmentList = {
 
 var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm', 'Gigastation'];
 var buildingList = ['Hut', 'House', 'Gym', 'Mansion', 'Hotel', 'Resort', 'Gateway', 'Collector', 'Warpstation', 'Tribute', 'Nursery']; //NOTE THAT I REMOVED WORMHOLE TEMPORARILY UNTILL I FIGURE OUT WHAT TO DO WITH IT
-var pageSettings = [];
-
-
-
-////////////////////////////////////////
-//Page Changes//////////////////////////
-////////////////////////////////////////
-document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" type="checkbox">Buy Upgrades <br>  <input id="chkAutoStance" title="automate setting stance" type="checkbox">Auto Stance</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" type="checkbox">Buy Weapon Upgrades <br><br> Misc Settings <br> <input id="chkTrapTrimps" title="automate trapping trimps" type="checkbox">Trap Trimps<br><input id="geneticistTargetBreedTime" title="Breed time in seconds to shoot for using geneticists" style="width: 20%;color: #000000;font-size: 12px;" value="5">&nbsp;Geneticist Timer<br></td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck<br><br>Ratio<br><input id="FarmerRatio" style="width: 10%; color: #000000;" value="10">&nbsp;Farmer<br><input id="LumberjackRatio" style="width: 10%; color: #000000;" value="10">&nbsp;Lumberjack<br><input id="MinerRatio" style="width: 10%; color: #000000;" value="10">&nbsp;Miner<br><input id="chkScientist" type="checkbox">&nbsp;Scientist<br><input id="chkTrainer" type="checkbox">&nbsp;Trainer<br><input id="chkExplorer" type="checkbox">&nbsp;Explorer<br><input id="chkGym" type="checkbox">&nbsp;Gym<br><input id="chkTribute" type="checkbox">&nbsp;Tribute<br><input id="chkNursery" type="checkbox">&nbsp;Nursery</td> </tr> </tbody> </table></div>';
 
 
 ////////////////////////////////////////
@@ -151,21 +143,12 @@ function saveSettings() {
 //Grabs the automation settings from the page
 
 function getPageSetting(setting) {
-    //debug('Looking for setting ' + setting);
-    var check = autoTrimpSettings.hasOwnProperty(setting);
-    //debug(setting + ': ' + check);
-    if (typeof autoTrimpSettings[setting] === false){
-        //debug('kicked out');
-        return false;
-    }
-    
-    debug('think the settings exists' + setting);
-    if (autoTrimpSettings[setting].type == "boolean") {
-        debug('found a toggle');
+    if (autoTrimpSettings[setting].type == 'boolean') {
+        // debug('found a boolean');
         return autoTrimpSettings[setting].enabled;
-    } else {
-        return autoTrimpSettings[setting].value;
-        debug('found a value');
+    } else if (autoTrimpSettings[setting].type == 'value') {
+        // debug('found a value');
+        return parseInt(autoTrimpSettings[setting].value);
     }
 }
 
@@ -531,17 +514,17 @@ function initializeAutoTrimps() {
 
 function easyMode() {
     if (game.resources.trimps.realMax() > 3000000) {
-        document.getElementById("FarmerRatio").value = 3;
-        document.getElementById("LumberjackRatio").value = 1;
-        document.getElementById("MinerRatio").value = 4;
+        autoTrimpSettings.FarmerRatio.value = 3;
+        autoTrimpSettings.LumberjackRatio.value = 1;
+        autoTrimpSettings.MinerRatio.value = 4;
     } else if (game.resources.trimps.realMax() > 300000) {
-        document.getElementById("FarmerRatio").value = 3;
-        document.getElementById("LumberjackRatio").value = 3;
-        document.getElementById("MinerRatio").value = 5;
+        autoTrimpSettings.FarmerRatio.value = 3;
+        autoTrimpSettings.LumberjackRatio.value = 3;
+        autoTrimpSettings.MinerRatio.value = 5;
     } else {
-        document.getElementById("FarmerRatio").value = 1;
-        document.getElementById("LumberjackRatio").value = 1;
-        document.getElementById("MinerRatio").value = 1;
+        autoTrimpSettings.FarmerRatio.value = 1;
+        autoTrimpSettings.LumberjackRatio.value = 1;
+        autoTrimpSettings.MinerRatio.value = 1;
     }
 }
 
@@ -773,7 +756,7 @@ function autoLevelEquipment() {
                 }
             }
             //If we're considering a health item, buy it if we don't have enough health, otherwise we default to buying damage
-            if (getPageSetting('buyArmor') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealth) {
+            if (getPageSetting('BuyArmor') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealth) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
                     buyEquipment(Best[stat].Name);
