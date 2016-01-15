@@ -6,7 +6,7 @@ Automation for the idle incremental game 'Trimps'
 
 -install greasemonkey/tampermonkey  
 -Open the tampermonkey dashboard and go to utilities
--in the URL box paste https://raw.githubusercontent.com/zininzinin/AutoTrimps/master/user.js and import
+-in the URL box paste https://raw.githubusercontent.com/zininzinin/AutoTrimps/master/user.js and import  
 -go to https://trimps.github.io  
 -profit?  
   
