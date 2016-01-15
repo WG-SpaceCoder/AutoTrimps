@@ -149,13 +149,23 @@ function saveSettings() {
 }
 
 //Grabs the automation settings from the page
+
 function getPageSetting(setting) {
-    // debug('Looking for setting ' + setting);
-    if (!document.getElementById(setting)) return false;
-    if (document.getElementById(setting).type == 'checkbox') {
-        return document.getElementById(setting).checked;
+    //debug('Looking for setting ' + setting);
+    var check = autoTrimpSettings.hasOwnProperty(setting);
+    //debug(setting + ': ' + check);
+    if (typeof autoTrimpSettings[setting] === false){
+        //debug('kicked out');
+        return false;
+    }
+    
+    debug('think the settings exists' + setting);
+    if (autoTrimpSettings[setting].type == "boolean") {
+        debug('found a toggle');
+        return autoTrimpSettings[setting].enabled;
     } else {
-        return document.getElementById(setting).value;
+        return autoTrimpSettings[setting].value;
+        debug('found a value');
     }
 }
 
@@ -588,13 +598,13 @@ function buyBuildings() {
     if (autoTrimpSettings.BuildGyms.enabled && !game.buildings.Gym.locked) {
         safeBuyBuilding('Gym');
     }
-    if (getPageSetting('chkTribute') && !game.buildings.Tribute.locked) {
+    if (getPageSetting('BuildTributes') && !game.buildings.Tribute.locked) {
         safeBuyBuilding('Tribute');
     }
     //only buy nurseries if enabled,   and we aren't trying to manage our breed time before geneticists, and they aren't locked
     //even if we are trying to manage breed timer pre-geneticists, start buying nurseries once geneticists are unlocked AS LONG AS we can afford a geneticist (to prevent nurseries from outpacing geneticists soon after they are unlocked)
-    if (getPageSetting('chkNursery') && (!managePreGenes || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
-        if (getPageSetting('maxNursery') > game.buildings.Nursery.owned || (getPageSetting('maxNursery') == -1 && getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") && !game.buildings.Warpstation.locked)) {
+    if (getPageSetting('BuildNurseries') && (!managePreGenes || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
+        if (getPageSetting('MaxNursery') > game.buildings.Nursery.owned || (getPageSetting('MaxNursery') == -1 && getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") && !game.buildings.Warpstation.locked)) {
             safeBuyBuilding('Nursery');
         }
     }
@@ -622,7 +632,7 @@ function buyJobs() {
 
 
     //Simple buy if you can
-    if (getPageSetting('chkTrainer')) {
+    if (getPageSetting('HireTrainers')) {
         game.global.buyAmt = 1;
         while (canAffordJob('Trainer', false) && !game.jobs.Trainer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
@@ -630,7 +640,7 @@ function buyJobs() {
             safeBuyJob('Trainer');
         }
     }
-    if (getPageSetting('chkExplorer')) {
+    if (getPageSetting('HireExplorers')) {
         game.global.buyAmt = 1;
         while (canAffordJob('Explorer', false) && !game.jobs.Explorer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
@@ -730,11 +740,11 @@ function autoLevelEquipment() {
                 evaluation.Status == 'red' &&
                 (
                     (
-                        getPageSetting('chkBuyPrestigeA') &&
+                        getPageSetting('BuyWeaponUpgrades') &&
                         equipmentList[equipName].Stat == 'attack'
                     ) ||
                     (
-                        getPageSetting('chkBuyPrestigeH') &&
+                        getPageSetting('BuyArmorUpgrades') &&
                         (
                             equipmentList[equipName].Stat == 'health' ||
                             equipmentList[equipName].Stat == 'block'
@@ -755,7 +765,7 @@ function autoLevelEquipment() {
             var DaThing = equipmentList[Best[stat].Name];
             document.getElementById(Best[stat].Name).style.color = Best[stat].Wall ? 'orange' : 'red';
             //If we're considering an attack item, we want to buy weapons if we don't have enough damage, or if we don't need health (so we default to buying some damage)
-            if (getPageSetting('chkBuyEquipA') && DaThing.Stat == 'attack' && (!enoughDamage || enoughHealth)) {
+            if (getPageSetting('BuyWeapons') && DaThing.Stat == 'attack' && (!enoughDamage || enoughHealth)) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
                     buyEquipment(Best[stat].Name);
@@ -763,7 +773,7 @@ function autoLevelEquipment() {
                 }
             }
             //If we're considering a health item, buy it if we don't have enough health, otherwise we default to buying damage
-            if (getPageSetting('chkBuyEquipH') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealth) {
+            if (getPageSetting('buyArmor') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealth) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
                     buyEquipment(Best[stat].Name);
@@ -1037,7 +1047,7 @@ function autoMap() {
 //adjust geneticists to reach desired breed timer
 function manageGenes() {
     var fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
-    var targetBreed = parseInt(getPageSetting('geneticistTargetBreedTime'));
+    var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
     //if we need to hire geneticists
     if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked) {
         //if there's no free worker spots, fire a farmer
@@ -1087,14 +1097,14 @@ function mainLoop() {
 
     easyMode(); //This needs a UI input
 
-    if (getPageSetting('chkBuyUpgrades')) buyUpgrades();
-    if (getPageSetting('chkBuyStorage')) buyStorage();
-    if (getPageSetting('chkBuyBuilding')) buyBuildings();
-    if (getPageSetting('chkBuyJobs')) buyJobs();
-    if (getPageSetting('chkManualStorage')) manualLabor();
-    if (getPageSetting('chkAutoStance')) autoStance();
-    if (getPageSetting('chkAutoProgressMap')) autoMap();
-    if (parseInt(getPageSetting('geneticistTargetBreedTime')) >= 0) manageGenes();
+    if (getPageSetting('BuyUpgrades')) buyUpgrades();
+    if (getPageSetting('BuyStorage')) buyStorage();
+    if (getPageSetting('BuyBuildings')) buyBuildings();
+    if (getPageSetting('BuyJobs')) buyJobs();
+    if (getPageSetting('ManualGather')) manualLabor();
+    if (getPageSetting('AutoStance')) autoStance();
+    if (getPageSetting('RunMapsWhenStuck')) autoMap();
+    if (parseInt(getPageSetting('GeneticistTimer')) >= 0) manageGenes();
 
 
 
