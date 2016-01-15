@@ -514,17 +514,17 @@ function initializeAutoTrimps() {
 
 function easyMode() {
     if (game.resources.trimps.realMax() > 3000000) {
-        autoTrimpSettings.FarmerRatio.value = 3;
-        autoTrimpSettings.LumberjackRatio.value = 1;
-        autoTrimpSettings.MinerRatio.value = 4;
+        autoTrimpSettings.FarmerRatio.value = '3';
+        autoTrimpSettings.LumberjackRatio.value = '1';
+        autoTrimpSettings.MinerRatio.value = '4';
     } else if (game.resources.trimps.realMax() > 300000) {
-        autoTrimpSettings.FarmerRatio.value = 3;
-        autoTrimpSettings.LumberjackRatio.value = 3;
-        autoTrimpSettings.MinerRatio.value = 5;
+        autoTrimpSettings.FarmerRatio.value = '3';
+        autoTrimpSettings.LumberjackRatio.value = '3';
+        autoTrimpSettings.MinerRatio.value = '5';
     } else {
-        autoTrimpSettings.FarmerRatio.value = 1;
-        autoTrimpSettings.LumberjackRatio.value = 1;
-        autoTrimpSettings.MinerRatio.value = 1;
+        autoTrimpSettings.FarmerRatio.value = '1';
+        autoTrimpSettings.LumberjackRatio.value = '1';
+        autoTrimpSettings.MinerRatio.value = '1';
     }
 }
 
