@@ -509,7 +509,7 @@ function getBreedTime() {
 function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/master/NewUI.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/NewUI/NewUI.js')._;
 }
 
 function easyMode() {
@@ -1072,14 +1072,13 @@ initializeAutoTrimps();
 //     game.settings.speed = 2;
 // }, 1000);
 
-setTimeout(mainLoop, runInterval);
+setTimeout(mainLoop, 2000);
 
 function mainLoop() {
     setTitle();
     setScienceNeeded();
 
-    easyMode(); //This needs a UI input
-
+    if (getPageSetting('EasyMode')) easyMode(); //This needs a UI input
     if (getPageSetting('BuyUpgrades')) buyUpgrades();
     if (getPageSetting('BuyStorage')) buyStorage();
     if (getPageSetting('BuyBuildings')) buyBuildings();
