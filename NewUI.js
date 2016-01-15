@@ -23,6 +23,7 @@ createSetting('HireExplorers', 'Hire Explorers', 'Map the planet!!', 'boolean');
 createSetting('BuildGyms', 'Build Gyms', 'Time for a workout', 'boolean');
 createSetting('BuildTributes', 'Build Tributes', 'All praise to the Dragimp', 'boolean');
 createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the throne', 'boolean');
+createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress', 'boolean');
 // createSetting('', '', '', 'boolean');
 //Values
 createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to shoot for using geneticists', 'value', '30');
