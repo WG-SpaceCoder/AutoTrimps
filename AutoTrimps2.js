@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AutoTrimpsV2
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.1
 // @description  try to take over the world!
 // @author       zininzinin, spindrjr, belaith
 // @include        *trimps.github.io*
@@ -14,7 +14,19 @@
 ////////////////////////////////////////
 var runInterval = 10; //How often to loop through logic
 var enableDebug = true; //Spam console?
-var running = false;
+var autoTrimpSettings = new Object();
+var bestBuilding;
+var scienceNeeded;
+//pull from user setting
+var managePreGenes = true;
+
+var baseDamage = 0;
+var baseBlock = 0;
+var baseHealth = 0;
+
+var preBuyAmt = game.global.buyAmt;
+var preBuyFiring = game.global.firing;
+var preBuyTooltip = game.global.lockTooltip;
 
 ////////////////////////////////////////
 //List Variables////////////////////////
@@ -108,25 +120,6 @@ var equipmentList = {
 
 var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm', 'Gigastation'];
 var buildingList = ['Hut', 'House', 'Gym', 'Mansion', 'Hotel', 'Resort', 'Gateway', 'Collector', 'Warpstation', 'Tribute', 'Nursery']; //NOTE THAT I REMOVED WORMHOLE TEMPORARILY UNTILL I FIGURE OUT WHAT TO DO WITH IT
-var pageSettings = [];
-var bestBuilding;
-var scienceNeeded;
-//pull from user setting
-var managePreGenes = true;
-
-var baseDamage = 0;
-var baseBlock = 0;
-var baseHealth = 0;
-
-var preBuyAmt = game.global.buyAmt;
-var preBuyFiring = game.global.firing;
-var preBuyTooltip = game.global.lockTooltip;
-
-
-////////////////////////////////////////
-//Page Changes//////////////////////////
-////////////////////////////////////////
-document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="display: block; font-size: 12px;"> <div id="autoTitleDiv" class="titleDiv"> <div class="row"> <div class="col-xs-4"><span id="autoTitleSpan" class="titleSpan">Automation</span> </div> </div> </div> <br> <div class="autoBox" id="autoHere"> </div> <table style="text-align: left; vertical-align: top; width: 90%;" border="0" cellpadding="0" cellspacing="0"> <tbody> <tr> <td style="vertical-align: top;"> Loops <br> <input id="chkBuyStorage" title="Will buy storage when resource is almost full" type="checkbox">Buy Storage <br> <input id="chkManualStorage" title="Will automatically gather resources and trap trimps" type="checkbox">Manual Gather <br> <input id="chkBuyJobs" title="Buys jobs based on ratios configured" type="checkbox">Buy Jobs <br> <input id="chkBuyBuilding" title="Will buy non storage buildings as soon as they are available" type="checkbox">Buy Buildings <br> <input id="chkBuyUpgrades" title="autobuy non eqipment Upgrades" type="checkbox">Buy Upgrades <br>  <input id="chkAutoStance" title="automate setting stance" type="checkbox">Auto Stance</td> <td style="vertical-align: top;"> Equipment <br> <input id="chkBuyEquipH" title="Will buy the most efficient armor available" type="checkbox">Buy Armor <br> <input id="chkBuyPrestigeH" title="Will buy the most efficient armor upgrade available" type="checkbox">Buy Armor Upgrades <br> <input id="chkBuyEquipA" title="Will buy the most efficient weapon available" type="checkbox">Buy Weapons <br> <input id="chkBuyPrestigeA" title="Will buy the most efficient weapon upgrade available" type="checkbox">Buy Weapon Upgrades <br><br> Misc Settings <br> <input id="chkTrapTrimps" title="automate trapping trimps" type="checkbox">Trap Trimps<br><input id="geneticistTargetBreedTime" title="Breed time in seconds to shoot for using geneticists" style="width: 20%;color: #000000;font-size: 12px;" value="5">&nbsp;Geneticist Timer<br></td> </tr> <tr> <td style="vertical-align: middle; text-align: left;"> <br>Max Buildings to build <br> <input id="maxHut" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hut <br> <input id="maxHouse" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; House <br> <input id="maxMansion" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Mansion <br> <input id="maxHotel" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Hotel <br> <input id="maxResort" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Resort <br> <input id="maxGateway" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Gateway <br> <input id="maxCollector" style="width: 20%;color: #000000;font-size: 12px;" value="100">&nbsp; Collector <br> <input id="maxWarpstation" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Warpstation <br> <input id="maxGym" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Gym <br> <input id="maxTribute" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Tribute <br> <input id="maxNursery" style="width: 20%;color: #000000;font-size: 12px;" value="-1">&nbsp; Nursery <br> <br> </td> <td style="text-align: left; vertical-align: top;"> <br>Maps <br> <input id="chkAutoUniqueMap" title="Auto run unique maps" type="checkbox"> Auto run unique maps <br> <input id="chkAutoProgressMap" title="Runs maps when cannot defeat current level" type="checkbox">Auto map when stuck <br> <input id="maxHitsTillStuck" style="width: 10%; color: #000000;" value="10">&nbsp;Max hits to kill enemy before stuck<br><br>Ratio<br><input id="FarmerRatio" style="width: 10%; color: #000000;" value="10">&nbsp;Farmer<br><input id="LumberjackRatio" style="width: 10%; color: #000000;" value="10">&nbsp;Lumberjack<br><input id="MinerRatio" style="width: 10%; color: #000000;" value="10">&nbsp;Miner<br><input id="chkScientist" type="checkbox">&nbsp;Scientist<br><input id="chkTrainer" type="checkbox">&nbsp;Trainer<br><input id="chkExplorer" type="checkbox">&nbsp;Explorer<br><input id="chkGym" type="checkbox">&nbsp;Gym<br><input id="chkTribute" type="checkbox">&nbsp;Tribute<br><input id="chkNursery" type="checkbox">&nbsp;Nursery</td> </tr> </tbody> </table></div>';
 
 
 ////////////////////////////////////////
@@ -135,58 +128,27 @@ document.getElementById("buyHere").innerHTML += '<div id="autoContainer" style="
 
 //Loads the automation settings from browser cache
 function loadPageVariables() {
-    var temp = document.getElementById("autoContainer").innerHTML.split('input id="');
-    temp.splice(0, 1);
-    for (var i in temp) {
-        pageSettings.push(temp[i].substring(0, temp[i].indexOf('"')));
-    }
-
-    //Set all the saved variables
-    for (var index in pageSettings) {
-        var setting = pageSettings[index];
-        if (localStorage.getItem(setting) !== null) {
-            // debug(setting + ' is of type ' + document.getElementById(setting).type);
-            var local = localStorage.getItem(setting);
-            if (document.getElementById(setting).type == 'checkbox') {
-                local = (local == 'true');
-                if (document.getElementById(setting).checked != local) {
-                    // debug('FIRST Setting ' + setting + ' to ' + local + ' from ' + document.getElementById(setting).checked);
-                    document.getElementById(setting).checked = local;
-                    // debug(setting + ' is set to ' + document.getElementById(setting).checked);
-                }
-            } else {
-                if (document.getElementById(setting).value != localStorage.getItem(setting)) {
-                    // debug('FIRST Setting ' + setting + ' to ' + localStorage.getItem(setting));
-                    document.getElementById(setting).value = localStorage.getItem(setting);
-                    // debug(setting + ' is set to ' + document.getElementById(setting).value);
-                }
-            }
-        }
+    var tmp = JSON.parse(localStorage.getItem('autoTrimpSettings'));
+    if (tmp !== null) {
+        autoTrimpSettings = tmp;
     }
 }
 
 //Saves automation settings to browser cache
 function saveSettings() {
     // debug('Saved');
-    for (var index in pageSettings) {
-        var setting = pageSettings[index];
-        // debug('Setting is ' +setting);
-        if (document.getElementById(setting).type == 'checkbox') {
-            localStorage.setItem(setting, document.getElementById(setting).checked);
-        } else {
-            localStorage.setItem(setting, document.getElementById(setting).value);
-        }
-    }
+    localStorage.setItem('autoTrimpSettings', JSON.stringify(autoTrimpSettings));
 }
 
 //Grabs the automation settings from the page
+
 function getPageSetting(setting) {
-    // debug('Looking for setting ' + setting);
-    if (!document.getElementById(setting)) return false;
-    if (document.getElementById(setting).type == 'checkbox') {
-        return document.getElementById(setting).checked;
-    } else {
-        return document.getElementById(setting).value;
+    if (autoTrimpSettings[setting].type == 'boolean') {
+        // debug('found a boolean');
+        return autoTrimpSettings[setting].enabled;
+    } else if (autoTrimpSettings[setting].type == 'value') {
+        // debug('found a value');
+        return parseInt(autoTrimpSettings[setting].value);
     }
 }
 
@@ -194,19 +156,6 @@ function getPageSetting(setting) {
 function debug(message) {
     if (enableDebug)
         console.log(timeStamp() + ' ' + message);
-}
-
-//Finds an element on the page and does the onClick() function
-function clickButton(id) {
-    debug('Trying to click button: ' + id);
-    if (document.getElementById(id).style.visibility != 'hidden') {
-        document.getElementById(id).click();
-        setTimeout(function() {}, 10);
-        return true;
-    } else {
-        debug('Cannot click button: ' + id);
-        return false;
-    }
 }
 
 //Simply returns a formatted text timestamp
@@ -243,7 +192,7 @@ function safeBuyBuilding(building) {
     for (var b in game.global.buildingsQueue) {
         if (game.global.buildingsQueue[b].includes(building)) return false;
     }
-    
+
     if (!canAffordBuilding(building)) return false;
     debug('Building ' + building);
     preBuy();
@@ -283,14 +232,14 @@ function highlightHousing() {
         });
         //loop through the array and find the first one that isn't limited by max settings
         for (var best in keysSorted) {
-            var max = getPageSetting('max' + keysSorted[best]);
-            if(max === false) max = -1;
-            if(game.buildings[keysSorted[best]].owned < max || max == -1) {
+            var max = autoTrimpSettings['Max' + keysSorted[best]];
+            if (max === false) max = -1;
+            if (game.buildings[keysSorted[best]].owned < max || max == -1) {
                 bestBuilding = keysSorted[best];
                 break;
             }
         }
-        if(bestBuilding){
+        if (bestBuilding) {
             document.getElementById(bestBuilding).style.border = "1px solid #00CC00";
         }
         // document.getElementById(bestBuilding).addEventListener('click', update, false);
@@ -302,13 +251,13 @@ function highlightHousing() {
 function buyFoodEfficientHousing() {
     var houseWorth = game.buildings.House.locked ? 0 : game.buildings.House.increase.by / getBuildingItemPrice(game.buildings.House, "food");
     var hutWorth = game.buildings.Hut.increase.by / getBuildingItemPrice(game.buildings.Hut, "food");
-    var hutAtMax = (game.buildings.Hut.owned >= getPageSetting('maxHut') && getPageSetting('maxHut') != -1);
+    var hutAtMax = (game.buildings.Hut.owned >= autoTrimpSettings.MaxHut.value && autoTrimpSettings.MaxHut.value != -1);
     //if hutworth is more, but huts are maxed , still buy up to house max
-    if ((houseWorth > hutWorth || hutAtMax) && canAffordBuilding('House') && (game.buildings.House.owned < getPageSetting('maxHouse') || getPageSetting('maxHouse') == -1 )) {
+    if ((houseWorth > hutWorth || hutAtMax) && canAffordBuilding('House') && (game.buildings.House.owned < autoTrimpSettings.MaxHouse.value || autoTrimpSettings.MaxHouse.value == -1)) {
         safeBuyBuilding('House');
     } else {
-        if(!hutAtMax){
-        safeBuyBuilding('Hut');
+        if (!hutAtMax) {
+            safeBuyBuilding('Hut');
         }
     }
 }
@@ -560,21 +509,22 @@ function getBreedTime() {
 function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/NewUI/NewUI.js')._;
 }
 
 function easyMode() {
     if (game.resources.trimps.realMax() > 3000000) {
-        document.getElementById("FarmerRatio").value = 3;
-        document.getElementById("LumberjackRatio").value = 1;
-        document.getElementById("MinerRatio").value = 4;
+        autoTrimpSettings.FarmerRatio.value = '3';
+        autoTrimpSettings.LumberjackRatio.value = '1';
+        autoTrimpSettings.MinerRatio.value = '4';
     } else if (game.resources.trimps.realMax() > 300000) {
-        document.getElementById("FarmerRatio").value = 3;
-        document.getElementById("LumberjackRatio").value = 3;
-        document.getElementById("MinerRatio").value = 5;
+        autoTrimpSettings.FarmerRatio.value = '3';
+        autoTrimpSettings.LumberjackRatio.value = '3';
+        autoTrimpSettings.MinerRatio.value = '5';
     } else {
-        document.getElementById("FarmerRatio").value = 1;
-        document.getElementById("LumberjackRatio").value = 1;
-        document.getElementById("MinerRatio").value = 1;
+        autoTrimpSettings.FarmerRatio.value = '1';
+        autoTrimpSettings.LumberjackRatio.value = '1';
+        autoTrimpSettings.MinerRatio.value = '1';
     }
 }
 
@@ -584,9 +534,9 @@ function buyUpgrades() {
         upgrade = upgradeList[upgrade];
         var gameUpgrade = game.upgrades[upgrade];
         var available = (gameUpgrade.allowed > gameUpgrade.done && canAffordTwoLevel(gameUpgrade));
-        if(upgrade == 'Coordination' && !canAffordCoordinationTrimps()) continue;
+        if (upgrade == 'Coordination' && !canAffordCoordinationTrimps()) continue;
         //PULL INITIAL AND DELTA WARPSTATION NUMBERS HERE. 
-        if(upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < game.global.lastWarp + 2 : game.buildings.Warpstation.owned < 20)) continue;
+        if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < game.global.lastWarp + 2 : game.buildings.Warpstation.owned < 20)) continue;
         if ((!game.upgrades.Scientists.done && upgrade != 'Battle') ? (available && upgrade == 'Scientists' && game.upgrades.Scientists.allowed) : (available)) {
             buyUpgrade(upgrade);
             tooltip("hide");
@@ -628,17 +578,17 @@ function buyBuildings() {
     }
 
     //Buy non-housing buildings
-    if (getPageSetting('chkGym') && !game.buildings.Gym.locked) {
+    if (autoTrimpSettings.BuildGyms.enabled && !game.buildings.Gym.locked) {
         safeBuyBuilding('Gym');
     }
-    if (getPageSetting('chkTribute') && !game.buildings.Tribute.locked) {
+    if (getPageSetting('BuildTributes') && !game.buildings.Tribute.locked) {
         safeBuyBuilding('Tribute');
     }
     //only buy nurseries if enabled,   and we aren't trying to manage our breed time before geneticists, and they aren't locked
     //even if we are trying to manage breed timer pre-geneticists, start buying nurseries once geneticists are unlocked AS LONG AS we can afford a geneticist (to prevent nurseries from outpacing geneticists soon after they are unlocked)
-    if (getPageSetting('chkNursery') && (!managePreGenes || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
-        if(getPageSetting('maxNursery') > game.buildings.Nursery.owned || (getPageSetting('maxNursery') == -1 && getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") && !game.buildings.Warpstation.locked)  ) {
-        safeBuyBuilding('Nursery');
+    if (getPageSetting('BuildNurseries') && (!managePreGenes || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
+        if (getPageSetting('MaxNursery') > game.buildings.Nursery.owned || (getPageSetting('MaxNursery') == -1 && getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") && !game.buildings.Warpstation.locked)) {
+            safeBuyBuilding('Nursery');
         }
     }
 }
@@ -649,7 +599,7 @@ function setTitle() {
 
 function buyJobs() {
     //Implement Ratio thingy
-    if(game.resources.trimps.owned < game.resources.trimps.realMax()*0.8) return;
+    if (game.resources.trimps.owned < game.resources.trimps.realMax() * 0.8) return;
     var freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
     var totalDistributableWorkers = freeWorkers + game.jobs.Farmer.owned + game.jobs.Miner.owned + game.jobs.Lumberjack.owned;
 
@@ -657,7 +607,7 @@ function buyJobs() {
     var lumberjackRatio = parseInt(getPageSetting('LumberjackRatio'));
     var minerRatio = parseInt(getPageSetting('MinerRatio'));
     var totalRatio = farmerRatio + lumberjackRatio + minerRatio;
-    var scientistRatio = totalRatio/50;
+    var scientistRatio = totalRatio / 50;
 
 
     // debug('Total farmers to add = ' + Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
@@ -665,7 +615,7 @@ function buyJobs() {
 
 
     //Simple buy if you can
-    if (getPageSetting('chkTrainer')) {
+    if (getPageSetting('HireTrainers')) {
         game.global.buyAmt = 1;
         while (canAffordJob('Trainer', false) && !game.jobs.Trainer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
@@ -673,7 +623,7 @@ function buyJobs() {
             safeBuyJob('Trainer');
         }
     }
-    if (getPageSetting('chkExplorer')) {
+    if (getPageSetting('HireExplorers')) {
         game.global.buyAmt = 1;
         while (canAffordJob('Explorer', false) && !game.jobs.Explorer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
@@ -682,21 +632,21 @@ function buyJobs() {
         }
     }
 
-  /*  if (getPageSetting('chkScientist') && !game.jobs.Scientist.locked) {
-        // debug('Total needed science ' +scienceNeeded);
-        if (game.resources.science.owned < scienceNeeded) {
-            safeBuyJob('Farmer', game.jobs.Farmer.owned * -1);
-            safeBuyJob('Lumberjack', game.jobs.Lumberjack.owned * -1);
-            safeBuyJob('Miner', game.jobs.Miner.owned * -1);
-            safeBuyJob('Scientist', Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed);
-        } else {
-            safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
-        }
-    }  
-    */
+    /*  if (getPageSetting('chkScientist') && !game.jobs.Scientist.locked) {
+          // debug('Total needed science ' +scienceNeeded);
+          if (game.resources.science.owned < scienceNeeded) {
+              safeBuyJob('Farmer', game.jobs.Farmer.owned * -1);
+              safeBuyJob('Lumberjack', game.jobs.Lumberjack.owned * -1);
+              safeBuyJob('Miner', game.jobs.Miner.owned * -1);
+              safeBuyJob('Scientist', Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed);
+          } else {
+              safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
+          }
+      }  
+      */
 
     //if earlier in the game, buy a small amount of scientists
-    if(game.jobs.Farmer.owned < 100000) {
+    if (game.jobs.Farmer.owned < 100000) {
         safeBuyJob('Scientist', Math.floor((scientistRatio / totalRatio * totalDistributableWorkers) - game.jobs.Scientist.owned));
     }
     //once over 100k farmers, fire our scientists and rely on manual gathering of science
@@ -738,7 +688,7 @@ function autoLevelEquipment() {
     var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
     var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0));
     var enoughDamage = (baseDamage * 4 > enemyHeath);
-    
+
     for (var equipName in equipmentList) {
         var equip = equipmentList[equipName];
         // debug('Equip: ' + equip + ' EquipIndex ' + equipName);
@@ -773,11 +723,11 @@ function autoLevelEquipment() {
                 evaluation.Status == 'red' &&
                 (
                     (
-                        getPageSetting('chkBuyPrestigeA') &&
+                        getPageSetting('BuyWeaponUpgrades') &&
                         equipmentList[equipName].Stat == 'attack'
                     ) ||
                     (
-                        getPageSetting('chkBuyPrestigeH') &&
+                        getPageSetting('BuyArmorUpgrades') &&
                         (
                             equipmentList[equipName].Stat == 'health' ||
                             equipmentList[equipName].Stat == 'block'
@@ -798,7 +748,7 @@ function autoLevelEquipment() {
             var DaThing = equipmentList[Best[stat].Name];
             document.getElementById(Best[stat].Name).style.color = Best[stat].Wall ? 'orange' : 'red';
             //If we're considering an attack item, we want to buy weapons if we don't have enough damage, or if we don't need health (so we default to buying some damage)
-            if (getPageSetting('chkBuyEquipA') && DaThing.Stat == 'attack' && (!enoughDamage || enoughHealth)) {
+            if (getPageSetting('BuyWeapons') && DaThing.Stat == 'attack' && (!enoughDamage || enoughHealth)) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
                     buyEquipment(Best[stat].Name);
@@ -806,8 +756,8 @@ function autoLevelEquipment() {
                 }
             }
             //If we're considering a health item, buy it if we don't have enough health, otherwise we default to buying damage
-            if (getPageSetting('chkBuyEquipH') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealth){
-                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
+            if (getPageSetting('BuyArmor') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealth) {
+                if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
                     buyEquipment(Best[stat].Name);
                     tooltip('hide');
@@ -878,7 +828,7 @@ function manualLabor() {
 
 //function written by Belaith
 function autoStance() {
-    if(game.global.gridArray.length === 0) return;
+    if (game.global.gridArray.length === 0) return;
     var missingHealth = game.global.soldierHealthMax - game.global.soldierHealth;
     var newSquadRdy = game.resources.trimps.realMax() <= game.resources.trimps.owned + 1;
 
@@ -967,7 +917,7 @@ function autoMap() {
         var enoughDamage = (baseDamage * 4 > enemyHeath);
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
-        
+
         var obj = {};
         for (var map in game.global.mapsOwnedArray) {
             if (!game.global.mapsOwnedArray[map].noRecycle) {
@@ -978,15 +928,15 @@ function autoMap() {
             return obj[b] - obj[a]
         });
         //if there are no non-unique maps, there will be nothing in keysSorted, so set to create a map
-        if(keysSorted[0]) var highestMap = keysSorted[0];
+        if (keysSorted[0]) var highestMap = keysSorted[0];
         else shouldDoMap = "create";
-        
 
-        
+
+
         for (var map in game.global.mapsOwnedArray) {
             var theMap = game.global.mapsOwnedArray[map];
             if (theMap.noRecycle) {
-                if(theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
+                if (theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
                     shouldDoMap = theMap.id;
                     break;
                 }
@@ -1080,7 +1030,7 @@ function autoMap() {
 //adjust geneticists to reach desired breed timer
 function manageGenes() {
     var fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
-    var targetBreed = parseInt(getPageSetting('geneticistTargetBreedTime'));
+    var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
     //if we need to hire geneticists
     if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked) {
         //if there's no free worker spots, fire a farmer
@@ -1090,7 +1040,7 @@ function manageGenes() {
         //hire a geneticist
         safeBuyJob('Geneticist');
     }
-//if we need to speed up our breeding
+    //if we need to speed up our breeding
     //if we have potency upgrades available, buy them. If geneticists are unlocked, or we aren't managing pre-genes, just buy them
     if ((targetBreed < getBreedTime() || !game.jobs.Geneticist.locked || !managePreGenes) && game.upgrades.Potency.allowed > game.upgrades.Potency.done && canAffordTwoLevel('Potency')) {
         buyUpgrade('Potency');
@@ -1103,8 +1053,8 @@ function manageGenes() {
     else if (targetBreed < getBreedTime() && managePreGenes && !game.buildings.Nursery.locked) {
         safeBuyBuilding('Nursery');
     }
-    
-    
+
+
 }
 
 
@@ -1122,22 +1072,21 @@ initializeAutoTrimps();
 //     game.settings.speed = 2;
 // }, 1000);
 
-setTimeout(mainLoop, runInterval);
+setTimeout(mainLoop, 2000);
 
 function mainLoop() {
     setTitle();
     setScienceNeeded();
 
-    easyMode(); //This needs a UI input
-
-    if (getPageSetting('chkBuyUpgrades')) buyUpgrades();
-    if (getPageSetting('chkBuyStorage')) buyStorage();
-    if (getPageSetting('chkBuyBuilding')) buyBuildings();
-    if (getPageSetting('chkBuyJobs')) buyJobs();
-    if (getPageSetting('chkManualStorage')) manualLabor();
-    if (getPageSetting('chkAutoStance')) autoStance();
-    if (getPageSetting('chkAutoProgressMap')) autoMap();
-    if (parseInt(getPageSetting('geneticistTargetBreedTime')) >= 0) manageGenes();
+    if (getPageSetting('EasyMode')) easyMode(); //This needs a UI input
+    if (getPageSetting('BuyUpgrades')) buyUpgrades();
+    if (getPageSetting('BuyStorage')) buyStorage();
+    if (getPageSetting('BuyBuildings')) buyBuildings();
+    if (getPageSetting('BuyJobs')) buyJobs();
+    if (getPageSetting('ManualGather')) manualLabor();
+    if (getPageSetting('AutoStance')) autoStance();
+    if (getPageSetting('RunMapsWhenStuck')) autoMap();
+    if (parseInt(getPageSetting('GeneticistTimer')) >= 0) manageGenes();
 
 
 
@@ -1151,7 +1100,7 @@ function mainLoop() {
     }
     if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0)) {
         fightManual();
-       // debug('triggered fight');
+        // debug('triggered fight');
     }
 
     saveSettings();

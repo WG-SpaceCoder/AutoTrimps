@@ -1,4 +1,5 @@
 if (autoTrimpSettings === undefined) {
+    console.log('Huh, autoTrimpSettings was undefined in the UI script...')
     var autoTrimpSettings = new Object();
 }
 
@@ -23,6 +24,7 @@ createSetting('HireExplorers', 'Hire Explorers', 'Map the planet!!', 'boolean');
 createSetting('BuildGyms', 'Build Gyms', 'Time for a workout', 'boolean');
 createSetting('BuildTributes', 'Build Tributes', 'All praise to the Dragimp', 'boolean');
 createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the throne', 'boolean');
+createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress', 'boolean');
 // createSetting('', '', '', 'boolean');
 //Values
 createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to shoot for using geneticists', 'value', '30');
@@ -30,7 +32,7 @@ createSetting('FarmerRatio', 'Farmer Ratio', '', 'value', '1');
 createSetting('LumberjackRatio', 'Lumberjack Ratio', '', 'value', '1');
 createSetting('MinerRatio', 'Miner Ratio', '', 'value', '1');
 createSetting('MaxHut', 'Max Huts', '', 'value', '100');
-createSetting('MaxHouse', 'Max Huts', '', 'value', '100');
+createSetting('MaxHouse', 'Max House', '', 'value', '100');
 createSetting('MaxMansion', 'MaxMansion', '', 'value', '100');
 createSetting('MaxHotel', 'Max Hotel', '', 'value', '100');
 createSetting('MaxResort', 'Max Resort', '', 'value', '100');
