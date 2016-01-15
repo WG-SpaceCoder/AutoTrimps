@@ -1077,6 +1077,7 @@ setTimeout(mainLoop, 2000);
 function mainLoop() {
     setTitle();
     setScienceNeeded();
+    updateValueFields();
 
     if (getPageSetting('EasyMode')) easyMode(); //This needs a UI input
     if (getPageSetting('BuyUpgrades')) buyUpgrades();
@@ -1086,7 +1087,7 @@ function mainLoop() {
     if (getPageSetting('ManualGather')) manualLabor();
     if (getPageSetting('AutoStance')) autoStance();
     if (getPageSetting('RunMapsWhenStuck')) autoMap();
-    if (parseInt(getPageSetting('GeneticistTimer')) >= 0) manageGenes();
+    if (getPageSetting('GeneticistTimer') >= 0) manageGenes();
 
 
 
