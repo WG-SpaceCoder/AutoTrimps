@@ -1,4 +1,5 @@
 if (autoTrimpSettings === undefined) {
+    console.log('Huh, autoTrimpSettings was undefined in the UI script...')
     var autoTrimpSettings = new Object();
 }
 
@@ -31,7 +32,7 @@ createSetting('FarmerRatio', 'Farmer Ratio', '', 'value', '1');
 createSetting('LumberjackRatio', 'Lumberjack Ratio', '', 'value', '1');
 createSetting('MinerRatio', 'Miner Ratio', '', 'value', '1');
 createSetting('MaxHut', 'Max Huts', '', 'value', '100');
-createSetting('MaxHouse', 'Max Huts', '', 'value', '100');
+createSetting('MaxHouse', 'Max House', '', 'value', '100');
 createSetting('MaxMansion', 'MaxMansion', '', 'value', '100');
 createSetting('MaxHotel', 'Max Hotel', '', 'value', '100');
 createSetting('MaxResort', 'Max Resort', '', 'value', '100');
