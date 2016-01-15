@@ -536,7 +536,7 @@ function buyUpgrades() {
         var available = (gameUpgrade.allowed > gameUpgrade.done && canAffordTwoLevel(gameUpgrade));
         if (upgrade == 'Coordination' && !canAffordCoordinationTrimps()) continue;
         //PULL INITIAL AND DELTA WARPSTATION NUMBERS HERE. 
-        if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < game.global.lastWarp + 2 : game.buildings.Warpstation.owned < 20)) continue;
+        if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < game.global.lastWarp + getPageSetting('DeltaGigastation') : game.buildings.Warpstation.owned < getPageSetting('FirstGigastation'))) continue;
         if ((!game.upgrades.Scientists.done && upgrade != 'Battle') ? (available && upgrade == 'Scientists' && game.upgrades.Scientists.allowed) : (available)) {
             buyUpgrade(upgrade);
             tooltip("hide");
