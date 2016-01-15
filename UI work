@@ -1,0 +1,197 @@
+
+//Throw the function calls at the top of the script, in the order listed here.
+
+
+automationMenuInit();
+//load function here. var automationSettings=[0,0,0]; Is the variable to store all data.
+//Index has to be manualy set in the objects to avoid order conflicts and corruption of data with new releases down the road.
+buildAutoSettings();
+//The functions(autoBuildToggleButton and autoBuildValueButton) take objects only in format name/description/index
+// so that you don't have to send in arrays for when you need mixed types.
+//an array of test objects
+var autoLoopsettings = [{
+        name:'Buy Storage',
+        description:'Will buy storage when resource is almost full',        
+        index:0
+    },{
+        name:'Manual Gather',
+        description:'Will automatically gather resources and trap trimps',        
+        index:1
+    },{
+        name:'Buy Jobs',
+        description:'Buys jobs based on ratios configured',        
+        index:2
+    },{
+        name:'Buy Buildings',
+        description:'Will buy non storage buildings as soon as they are available',        
+        index:3
+    },{
+        name:'Buy Upgrades',
+        description:'autobuy non eqipment Upgrades',        
+        index:4
+    }];
+    //a test object for demo
+    var randomObject={name:'George',description:'He does things!',index:5};
+    
+    //begin function list 
+    //buildAutoSettings() should be in a place for easy access. Maybe throw at the top?
+    // the rest of them can go to the bottom of the page with no issue.
+function buildAutoSettings()
+    {
+     createClass('.long-shadow',"display: inline-block;	vertical-align: top;	margin-left: 2vw;	margin-right: 2vw;	width: 15.5vw;");
+    
+    //thinking maybe using <div>'s instead might be a better option? Can't seem to figure a way to get value pairs to work.
+        var itter=0;
+        var autoTable= document.createElement("TBODY");
+        var tableRow= document.createElement("TR"); //only need one tr        
+        autoTable.appendChild(tableRow);
+        
+        var tableData= document.createElement("TD");
+        tableRow.appendChild(tableData);
+        tableData.setAttribute("style","vertical-align: top;");        
+        tableData.appendChild(document.createTextNode("Loops"));//Title
+        tableData.appendChild(document.createElement("BR"));         
+        for(itter=0;itter<3;++itter){
+        tableData.appendChild(autoBuildToggleButton(autoLoopsettings[itter]));
+        }        
+        
+        
+        tableData= document.createElement("TD");
+        tableRow.appendChild(tableData);
+        tableData.setAttribute("style","vertical-align: top;");        
+        tableData.appendChild(document.createTextNode("Equipment"));//Title
+        tableData.appendChild(document.createElement("BR"));  
+        //using a for loop to put a bunch of stuff in the container
+        for(itter=3;itter<5;++itter){
+        tableData.appendChild(autoBuildValueButton(autoLoopsettings[itter]));
+        }        
+        
+        //simple demo of current code working
+        tableData= document.createElement("TD"); //new container for a column of options
+        tableRow.appendChild(tableData);
+        tableData.setAttribute("style","vertical-align: top;");        
+        tableData.appendChild(document.createTextNode("Dudes"));//Title
+        tableData.appendChild(document.createElement("BR"));    
+        //just gonna put one this time.
+        tableData.appendChild(autoBuildToggleButton(randomObject));
+        
+        
+        //last thing is to put all our work on to the page.
+        document.getElementById("autoSettings").appendChild(autoTable);
+    }
+//start of stuff to throw at the bottom
+//
+//
+
+    function createClass(name,rules){
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        document.getElementsByTagName('head')[0].appendChild(style);
+        if(!(style.sheet||{}).insertRule) 
+            (style.styleSheet || style.sheet).addRule(name, rules);
+        else
+            style.sheet.insertRule(name+"{"+rules+"}",0);
+    }
+    function automationMenuInit(){
+   
+    var settingBtnSrch =document.getElementsByClassName("btn btn-default");
+    for (var i = 0; i < settingBtnSrch.length; i++) {
+        if (settingBtnSrch[i].getAttribute("onclick") === "toggleSettingsMenu()")
+            settingBtnSrch[i].setAttribute("onclick", "autoPlusSettingsMenu()");
+    }
+    //create the button Automation button
+    var newItem = document.createElement("TD");  
+    newItem.appendChild(document.createTextNode("Automation"));
+    newItem.setAttribute("class", "btn btn-default");
+    newItem.setAttribute("onclick","autoToggle()");			
+    var settingbarRow=document.getElementById("settingsTable").firstElementChild.firstElementChild;
+    settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
+    //create the space to place the automation settings.
+    document.getElementById("settingsRow").innerHTML+= '<div id="autoSettings" style="display: none;"></div>';
+    //Scripts to be injected. elements can't call tampermonkey scripts for some reason.(assume it's the same for grease)
+    var script = document.createElement('script');
+    //array to hold the settings. Loading values into them should be done before UI creation.
+    var html="var automationSettings=[0,0,0];\r\n var ranstring=''; //cause I'm dumb \r\n";
+    //toggles the display of the settings menu.
+    html+="function autoToggle()\r\n {if (game.options.displayed)\r\n toggleSettingsMenu();\r\n var item = document.getElementById('autoSettings');\r\n if(item.style.display === 'block')\r\n item.style.display='none';\r\n else item.style.display = 'block'; }\r\n ";
+    //overloads the settings menu button to include hiding the auto menu settings.
+    html+="function autoPlusSettingsMenu(){\r\n var item = document.getElementById('autoSettings');\r\n if(item.style.display === 'block')\r\n item.style.display='none';\r\n toggleSettingsMenu();}\r\n ";
+    //auto button toggle. Used for true/false values.
+    html+="function autoToggleSetting(index, elem)\r\n { automationSettings[index] = !automationSettings[index];\r\n elem.setAttribute('class','settingBtn settingBtn' + automationSettings[index]); }\r\n";
+    //Tool tip for entering values
+    html+="function autoSetValueToolTip(index, text)\r\n ";
+    html+="{ranstring=text; console.log(text);\r\n var elem = document.getElementById(\"tooltipDiv\");\r\n ";
+    html+="var tooltipText = 'Type a number below. You can also use shorthand such as 2e5 or 200k. Put -1 for Infinite.';\r\n ";
+    html+="tooltipText += '<br/><br/><input id=\"customNumberBox\" style=\"width: 50%\" value=' + prettify(automationSettings[index]) + '></input>';\r\n ";
+    html+="var costText = '<div class=\"maxCenter\"><div class=\"btn btn-info\" onclick=\"autoSetValue('+index+')\">Apply</div><div class=\"btn btn-info\" onclick=\"cancelTooltip()\">Cancel</div></div>';\r\n ";
+    html+="game.global.lockTooltip = true;\r\n ";//
+    html+="elem.style.left = '32.5%';\r\n ";
+    html+=" elem.style.top = '25%';\r\n ";
+    html+=" document.getElementById('tipTitle').textContent = 'Value Input';\r\n ";
+    html+=" document.getElementById('tipText').innerHTML = tooltipText;\r\n ";
+    html+="document.getElementById('tipCost').innerHTML = costText;\r\n ";
+    html+=" elem.style.display = 'block';\r\n ";
+    html+="var box = document.getElementById('customNumberBox');\r\n ";
+    html+="try { box.setSelectionRange(0, box.value.length); }\r\n ";
+    html+=" catch (e) { box.select(); }\r\n ";
+    html+="box.focus(); }";
+    //what happens when you hit the Apply button in the tool tip above. (another long(er) one. Soz.)
+  
+    html+="function autoSetValue(index){ var num = 0; unlockTooltip(); tooltip('hide'); var numBox = document.getElementById('customNumberBox');";//
+    html+="if (numBox){ num = numBox.value.toLowerCase(); if (num.split('e')[1])";
+    html+="{ num = num.split('e');     num = Math.floor(parseFloat(num[0]) * (Math.pow(10, parseInt(num[1])))); }";
+    html+="else { var letters = num.replace(/[^a-z]/gi, ''); var base = 0;";
+    html+="if (letters.length){ var suffices = [ 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc', 'Ud', 'Dd', 'Td', 'Qad', 'Qid', 'Sxd', 'Spd', 'Od', 'Nd', 'V', 'Uv', 'Dv', 'Tv', 'Qav', 'Qiv', 'Sxv', 'Spv', 'Ov', 'Nv', 'Tt'];";
+    html+="for (var x = 0; x < suffices.length; x++){ if (suffices[x].toLowerCase() == letters){ base = x + 1; break; }";
+    html+="} if (base) num = Math.round(parseFloat(num.split(letters)[0]) * Math.pow(1000, base));}";
+    html+="if (!base) num = parseInt(num);} ";
+    html+="} else return;";
+    html+="var txtNum = (num>0)?prettify(num):'Infinite'; automationSettings[index] = num; document.getElementById('autoValue' + index).textContent = ranstring+': '+txtNum; }\r\n ";
+
+    //buttons have to call scripts on the page. Those scripts can only access globals on the page as well.
+    script.innerHTML = html;
+    //inject the scripts
+   document.body.appendChild(script);
+   }
+    function autoBuildToggleButton(autoItem)
+    {
+        var btn = document.createElement("DIV");
+        if(autoItem.index+1>automationSettings.length) {
+            automationSettings.length = autoItem.index+1;
+        }
+        if(automationSettings[autoItem.index]='undefined')automationSettings[autoItem.index]=0;
+        btn.id='autoToggle' + autoItem.index;
+        btn.setAttribute('class','settingBtn settingBtn' + automationSettings[autoItem.index]);
+        btn.setAttribute("onclick","autoToggleSetting(" + autoItem.index + ", this)");	
+        btn.setAttribute("onmouseover",'tooltip(\"' + autoItem.name + '\", \"customText\", event, \"' + autoItem.description + '\")');
+        btn.setAttribute("onmouseout",'tooltip("hide")');
+        btn.textContent=autoItem.name;
+
+        return btn;
+    }
+
+    function autoBuildValueButton(autoItem){
+        var btn = document.createElement("DIV");
+        if(autoItem.index+1>automationSettings.length) {
+            automationSettings.length = autoItem.index+1;
+        }
+        if(automationSettings[autoItem.index]='undefined')automationSettings[autoItem.index]=0;
+        btn.id='autoValue' + autoItem.index;
+        btn.setAttribute('class','btn-info');
+        btn.setAttribute("onclick","autoSetValueToolTip(" + autoItem.index + ", '"+autoItem.name+"')");	
+        btn.setAttribute("onmouseover",'tooltip(\"'+autoItem.name+ '\", \"customText\", event, \"' + autoItem.description + '\")');
+        btn.setAttribute("onmouseout",'tooltip("hide")');
+        btn.textContent=autoItem.name+": "+automationSettings[autoItem.index];
+        return btn;
+    }
+//this should be contained in a single function with the rest of the interface construction.
+   /* var containertest=document.createElement("DIV");
+    containertest.setAttribute('class','long-shadow');
+    containertest.appendChild(autoBuildValueButton(autoLoopsettings[0]));//autoBuildValueButton   or  autoBuildToggleButton
+    var doit=document.getElementById("autoSettings");
+    doit.appendChild(containertest);*/
+
+      
+
+
+
