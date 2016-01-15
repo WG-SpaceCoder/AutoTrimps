@@ -232,7 +232,7 @@ function highlightHousing() {
         });
         //loop through the array and find the first one that isn't limited by max settings
         for (var best in keysSorted) {
-            var max = autoTrimpSettings['Max' + keysSorted[best]];
+            var max = autoTrimpSettings['Max' + keysSorted[best]].value;
             if (max === false) max = -1;
             if (game.buildings[keysSorted[best]].owned < max || max == -1) {
                 bestBuilding = keysSorted[best];
