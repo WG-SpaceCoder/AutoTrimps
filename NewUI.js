@@ -190,3 +190,11 @@ function autoSetValue(id) {
     autoTrimpSettings[id].value = num;
     document.getElementById(id).textContent = ranstring + ': ' + txtNum;
 }
+
+function updateValueFields(){
+    for (var setting in autoTrimpSettings) {
+        if (autoTrimpSettings[setting].type == 'value') {
+            document.getElementById(autoTrimpSettings[setting].id).textContent = autoTrimpSettings[setting].name + ': ' + prettify(autoTrimpSettings[setting].value);
+        }
+    }
+}
