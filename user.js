@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         AutoTrimps
-// @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  try to take over the world!
-// @author       zininzinin, spindrjr
+// @namespace    https://github.com/zininzinin/AutoTrimps
+// @version      2.1
+// @description  Automate all the trimps!
+// @author       zininzinin, spindrjr, Ishkaru
 // @include        *trimps.github.io*
 // @grant        none
 // ==/UserScript==
