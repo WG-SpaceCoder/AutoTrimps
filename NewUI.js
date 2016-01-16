@@ -236,6 +236,6 @@ function updateCustomStats(){
     var timeThisPortal = new Date().getTime() - game.global.portalTime;
 	timeThisPortal /= 3600000;
 	var resToUse = game.resources.helium.owned;
-    var heHr = 	Math.floor(game.resources.helium.owned / timeThisPortal);
-    document.getElementById('customHeHour').innerHTML = heHr;
+    var heHr = 	prettify(Math.floor(game.resources.helium.owned / timeThisPortal));
+    document.getElementById('customHeHour').innerHTML = heHr + "/Hr";
 }
