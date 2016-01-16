@@ -195,11 +195,13 @@ function safeBuyBuilding(building) {
     for (var b in game.global.buildingsQueue) {
         if (game.global.buildingsQueue[b].includes(building)) return false;
     }
-
-    if (!canAffordBuilding(building)) return false;
-    debug('Building ' + building);
     preBuy();
     game.global.buyAmt = 1;
+    if (!canAffordBuilding(building)) {
+        postBuy();
+        return false;
+    }
+    debug('Building ' + building);
     game.global.firing = false;
     buyBuilding(building);
     postBuy();
@@ -543,7 +545,7 @@ function buyUpgrades() {
         if (upgrade == 'Shieldblock' && !getPageSetting('BuyShieldblock')) continue;
         if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < game.global.lastWarp + getPageSetting('DeltaGigastation') : game.buildings.Warpstation.owned < getPageSetting('FirstGigastation'))) continue;
         if ((!game.upgrades.Scientists.done && upgrade != 'Battle') ? (available && upgrade == 'Scientists' && game.upgrades.Scientists.allowed) : (available)) {
-            buyUpgrade(upgrade);
+            buyUpgrade(upgrade, true);
             tooltip("hide");
             //debug('bought upgrade ' + upgrade);
         }
@@ -736,7 +738,8 @@ function autoLevelEquipment() {
             }
         }
     }
-
+    preBuy();
+    game.global.buyAmt = 1;
     for (var stat in Best) {
         if (Best[stat].Name !== '') {
             var DaThing = equipmentList[Best[stat].Name];
@@ -759,6 +762,7 @@ function autoLevelEquipment() {
             }
         }
     }
+    postBuy();
 }
 
 function manualLabor() {
