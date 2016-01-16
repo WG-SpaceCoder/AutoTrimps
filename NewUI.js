@@ -69,7 +69,7 @@ function automationMenuInit() {
     newContainer.setAttribute("id", "autoMapBtnContainer");
     var abutton = document.createElement("SPAN");
     abutton.appendChild(document.createTextNode("Auto Maps"));
-    if(autoTrimpSettings.RunMapsWhenStuck.enabled) abutton.setAttribute("class", "btn fightBtn btn-success");
+    abutton.setAttribute("class", "btn fightBtn btn-success");
     else abutton.setAttribute("class", "btn fightBtn btn-danger");
     abutton.setAttribute("id", "autoMapBtn");
     abutton.setAttribute("onClick", "settingChanged('RunMapsWhenStuck')");
