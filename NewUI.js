@@ -70,7 +70,6 @@ function automationMenuInit() {
     var abutton = document.createElement("SPAN");
     abutton.appendChild(document.createTextNode("Auto Maps"));
     abutton.setAttribute("class", "btn fightBtn btn-success");
-    else abutton.setAttribute("class", "btn fightBtn btn-danger");
     abutton.setAttribute("id", "autoMapBtn");
     abutton.setAttribute("onClick", "settingChanged('RunMapsWhenStuck')");
     var fightButtonCol = document.getElementById("battleBtnsColumn");
