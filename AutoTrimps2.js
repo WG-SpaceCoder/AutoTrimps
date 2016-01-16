@@ -517,6 +517,7 @@ function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
     javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/master/NewUI.js')._;
+    updateCustomButtons();
 }
 
 function easyMode() {
@@ -603,7 +604,10 @@ function buyBuildings() {
 function setTitle() {
     document.title = '(' + game.global.world + ')' + ' Trimps ' + document.getElementById('versionNumber').innerHTML;
     //for the dummies like me who always forget to turn automaps back on after portaling
-    if(getPageSetting('RunUniqueMaps') && !game.upgrades.Battle.done) autoTrimpSettings.RunMapsWhenStuck.enabled = true;
+    if(getPageSetting('RunUniqueMaps') && !game.upgrades.Battle.done) {
+        autoTrimpSettings.RunMapsWhenStuck.enabled = true;
+        updateCustomButtons();
+    }
 }
 
 function buyJobs() {
