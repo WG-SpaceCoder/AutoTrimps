@@ -197,7 +197,8 @@ function autoSetValue(id) {
 function updateValueFields(){
     for (var setting in autoTrimpSettings) {
         if (autoTrimpSettings[setting].type == 'value') {
-            document.getElementById(autoTrimpSettings[setting].id).textContent = autoTrimpSettings[setting].name + ': ' + ((autoTrimpSettings[setting].value > 0) ? prettify(autoTrimpSettings[setting].value) : 'Infinite');
+            var elem = document.getElementById(autoTrimpSettings[setting].id);
+            if(elem != null) elem.textContent = autoTrimpSettings[setting].name + ': ' + ((autoTrimpSettings[setting].value > 0) ? prettify(autoTrimpSettings[setting].value) : 'Infinite');
         }
     }
 }
