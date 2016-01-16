@@ -17,8 +17,8 @@ var enableDebug = true; //Spam console?
 var autoTrimpSettings = new Object();
 var bestBuilding;
 var scienceNeeded;
-//pull from user setting
-var managePreGenes = true;
+
+
 
 var baseDamage = 0;
 var baseBlock = 0;
@@ -118,7 +118,7 @@ var equipmentList = {
     }
 };
 
-var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm', 'Gigastation'];
+var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm', 'Gigastation', 'Shieldblock'];
 var buildingList = ['Hut', 'House', 'Gym', 'Mansion', 'Hotel', 'Resort', 'Gateway', 'Collector', 'Warpstation', 'Tribute', 'Nursery']; //NOTE THAT I REMOVED WORMHOLE TEMPORARILY UNTILL I FIGURE OUT WHAT TO DO WITH IT
 
 
@@ -143,6 +143,9 @@ function saveSettings() {
 //Grabs the automation settings from the page
 
 function getPageSetting(setting) {
+    if (autoTrimpSettings.hasOwnProperty(setting) == false) {
+        return false;
+    }
     if (autoTrimpSettings[setting].type == 'boolean') {
         // debug('found a boolean');
         return autoTrimpSettings[setting].enabled;
@@ -232,7 +235,7 @@ function highlightHousing() {
         });
         //loop through the array and find the first one that isn't limited by max settings
         for (var best in keysSorted) {
-            var max = autoTrimpSettings['Max' + keysSorted[best]].value;
+            var max = getPageSetting('Max' + keysSorted[best]);
             if (max === false) max = -1;
             if (game.buildings[keysSorted[best]].owned < max || max == -1) {
                 bestBuilding = keysSorted[best];
@@ -535,8 +538,8 @@ function buyUpgrades() {
         var gameUpgrade = game.upgrades[upgrade];
         var available = (gameUpgrade.allowed > gameUpgrade.done && canAffordTwoLevel(gameUpgrade));
         if (upgrade == 'Coordination' && !canAffordCoordinationTrimps()) continue;
-        //PULL INITIAL AND DELTA WARPSTATION NUMBERS HERE. 
-        if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < game.global.lastWarp + 2 : game.buildings.Warpstation.owned < 20)) continue;
+        if (upgrade == 'Shieldblock' && !getPageSetting('BuyShieldblock')) continue;
+        if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < game.global.lastWarp + getPageSetting('DeltaGigastation') : game.buildings.Warpstation.owned < getPageSetting('FirstGigastation'))) continue;
         if ((!game.upgrades.Scientists.done && upgrade != 'Battle') ? (available && upgrade == 'Scientists' && game.upgrades.Scientists.allowed) : (available)) {
             buyUpgrade(upgrade);
             tooltip("hide");
@@ -586,7 +589,7 @@ function buyBuildings() {
     }
     //only buy nurseries if enabled,   and we aren't trying to manage our breed time before geneticists, and they aren't locked
     //even if we are trying to manage breed timer pre-geneticists, start buying nurseries once geneticists are unlocked AS LONG AS we can afford a geneticist (to prevent nurseries from outpacing geneticists soon after they are unlocked)
-    if (getPageSetting('BuildNurseries') && (!managePreGenes || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
+    if (getPageSetting('BuildNurseries') && (!getPageSetting('ManageBreedtimer') || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
         if (getPageSetting('MaxNursery') > game.buildings.Nursery.owned || (getPageSetting('MaxNursery') == -1 && getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") && !game.buildings.Warpstation.locked)) {
             safeBuyBuilding('Nursery');
         }
@@ -935,12 +938,34 @@ function autoMap() {
 
         for (var map in game.global.mapsOwnedArray) {
             var theMap = game.global.mapsOwnedArray[map];
-            if (theMap.noRecycle) {
+            if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
                 if (theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
                     shouldDoMap = theMap.id;
                     break;
                 }
-                //other unique maps here
+                if (theMap.name == 'Dimension of Anger' && document.getElementById("portalBtn").style.display == "none") {
+                    var doaDifficulty = Math.ceil(theMap.difficulty / 2);
+                    if(game.global.challengeActive = "Mapocalypse" && game.global.world < 20 + doaDifficulty) continue; 
+                    shouldDoMap = theMap.id;
+                    break;
+                }
+                //run the prison only if we are 'cleared' to run level 80 + 1 level per 200% difficulty. Could do more accurate calc if needed
+                if(theMap.name == 'The Prison' && game.global.challengeActive == ("Electricity" || "Mapocalypse")) {
+                    var prisonDifficulty = Math.ceil(theMap.difficulty / 2);
+                    if(game.global.world >= 80 + prisonDifficulty) {
+                        shouldDoMap = theMap.id;
+                        break;
+                    }
+                }
+                if(theMap.name == 'The Block' && !game.upgrades.Shieldblock.done && (game.global.challengeActive == ("Scientist I" || "Scientist II" || "Scientist III" || "Trimp") || getPageSetting('BuyShieldblock'))) {
+                    shouldDoMap = theMap.id;
+                    break;
+                }
+                if(theMap.name == 'Trimple of Doom' && game.global.challengeActive == "Meditate") {
+                    shouldDoMap = theMap.id;
+                    break;
+                }
+                //other unique maps here - bionic wonderland?
             }
         }
 
@@ -1030,6 +1055,13 @@ function autoMap() {
 //adjust geneticists to reach desired breed timer
 function manageGenes() {
     var fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+    if(getPageSetting('ManageBreedtimer')) {
+        if(game.global.challengeActive == 'Electricity') autoTrimpSettings.GeneticistTimer.value = '3';
+        if(game.global.challengeActive == 'Nom') {
+            if(game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '10';
+            else autoTrimpSettings.GeneticistTimer.value = '30';
+        }
+    }
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
     //if we need to hire geneticists
     if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked) {
@@ -1041,8 +1073,8 @@ function manageGenes() {
         safeBuyJob('Geneticist');
     }
     //if we need to speed up our breeding
-    //if we have potency upgrades available, buy them. If geneticists are unlocked, or we aren't managing pre-genes, just buy them
-    if ((targetBreed < getBreedTime() || !game.jobs.Geneticist.locked || !managePreGenes) && game.upgrades.Potency.allowed > game.upgrades.Potency.done && canAffordTwoLevel('Potency')) {
+    //if we have potency upgrades available, buy them. If geneticists are unlocked, or we aren't managing the breed timer, just buy them
+    if ((targetBreed < getBreedTime() || !game.jobs.Geneticist.locked || !getPageSetting('ManageBreedtimer')) && game.upgrades.Potency.allowed > game.upgrades.Potency.done && canAffordTwoLevel('Potency')) {
         buyUpgrade('Potency');
     }
     //otherwise, if we have some geneticists, start firing them
@@ -1050,7 +1082,7 @@ function manageGenes() {
         safeBuyJob('Geneticist', -1);
     }
     //really should be integrated with the buyBuildings routine instead of here, but I think it's mostly harmless here
-    else if (targetBreed < getBreedTime() && managePreGenes && !game.buildings.Nursery.locked) {
+    else if (targetBreed < getBreedTime() && getPageSetting('ManageBreedtimer') && !game.buildings.Nursery.locked) {
         safeBuyBuilding('Nursery');
     }
 
