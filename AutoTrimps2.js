@@ -1121,8 +1121,8 @@ function mainLoop() {
     if (getPageSetting('RunMapsWhenStuck')) autoMap();
     if (getPageSetting('GeneticistTimer') >= 0) manageGenes();
 
-
-
+    //auto-close breaking the world textbox
+    if(document.getElementById('extraGridInfo').style.display == 'block') restoreGrid();
     autoLevelEquipment();
 
     //Manually fight instead of using builtin auto-fight
