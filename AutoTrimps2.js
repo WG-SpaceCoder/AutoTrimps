@@ -118,7 +118,7 @@ var equipmentList = {
     }
 };
 
-var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm', 'Gigastation'];
+var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm', 'Gigastation', 'Shieldblock'];
 var buildingList = ['Hut', 'House', 'Gym', 'Mansion', 'Hotel', 'Resort', 'Gateway', 'Collector', 'Warpstation', 'Tribute', 'Nursery']; //NOTE THAT I REMOVED WORMHOLE TEMPORARILY UNTILL I FIGURE OUT WHAT TO DO WITH IT
 
 
@@ -538,7 +538,7 @@ function buyUpgrades() {
         var gameUpgrade = game.upgrades[upgrade];
         var available = (gameUpgrade.allowed > gameUpgrade.done && canAffordTwoLevel(gameUpgrade));
         if (upgrade == 'Coordination' && !canAffordCoordinationTrimps()) continue;
-        //PULL INITIAL AND DELTA WARPSTATION NUMBERS HERE. 
+        if (upgrade == 'Shieldblock' && !getPageSetting(BuyShieldblock)) continue;
         if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < game.global.lastWarp + getPageSetting('DeltaGigastation') : game.buildings.Warpstation.owned < getPageSetting('FirstGigastation'))) continue;
         if ((!game.upgrades.Scientists.done && upgrade != 'Battle') ? (available && upgrade == 'Scientists' && game.upgrades.Scientists.allowed) : (available)) {
             buyUpgrade(upgrade);
@@ -957,9 +957,8 @@ function autoMap() {
                         break;
                     }
                 }
-                if(theMap.name == 'The Block' && (game.global.challengeActive == ("Scientist I" || "Scientist II" || "Scientist III" || "Trimp") || getPageSetting('BuyShieldblock'))) {
+                if(theMap.name == 'The Block' && !game.upgrades.Shieldblock.done && (game.global.challengeActive == ("Scientist I" || "Scientist II" || "Scientist III" || "Trimp") || getPageSetting('BuyShieldblock'))) {
                     shouldDoMap = theMap.id;
-                    debug('want to run the block id: ' + theMap.id + shouldDoMap);
                     break;
                 }
                 if(theMap.name == 'Trimple of Doom' && game.global.challengeActive == "Meditate") {
