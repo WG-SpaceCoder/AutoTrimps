@@ -957,8 +957,9 @@ function autoMap() {
                         break;
                     }
                 }
-                if(theMap.name == 'The Block' && (game.global.challengeActive == ("Scientist I" || "Scientist II" || "Scientist III" || "Trimp")) || getPageSetting('BuyShieldblock')) {
+                if(theMap.name == 'The Block' && (game.global.challengeActive == ("Scientist I" || "Scientist II" || "Scientist III" || "Trimp") || getPageSetting('BuyShieldblock'))) {
                     shouldDoMap = theMap.id;
+                    debug('want to run the block id: ' + theMap.id + shouldDoMap);
                     break;
                 }
                 if(theMap.name == 'Trimple of Doom' && game.global.challengeActive == "Meditate") {
