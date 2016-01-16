@@ -741,7 +741,7 @@ function autoLevelEquipment() {
                 var upgrade = equipmentList[equipName].Upgrade;
                 debug('Upgrading ' + upgrade);
                 buyUpgrade(upgrade);
-                // tooltip('hide');
+                cancelTooltip();
             }
         }
     }
