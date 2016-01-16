@@ -2,7 +2,10 @@
 Automation for the idle incremental game 'Trimps'  
   
 ~Installation~  
-<b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b>
+<b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
+If you encounter a non-functional script or error in the console after changing to a recent v2 UI version, please try wiping your settings by typing the following into the console (open console with CTRL-Shift-J in chrome, CTRL-shift-k in firefox):<br>
+localStorage.removeItem('autoTrimpSettings') <br>
+Then refresh page/reload script and choose your settings again.
 
 -install greasemonkey/tampermonkey  
 -Open the tampermonkey dashboard and go to utilities
