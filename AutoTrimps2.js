@@ -626,7 +626,7 @@ function buyJobs() {
             safeBuyJob('Trainer');
         }
     }
-    if (getPageSetting('HireExplorers')) {
+    if (game.jobs.Explorer.owned < getPageSetting('MaxExplorers')) {
         game.global.buyAmt = 1;
         while (canAffordJob('Explorer', false) && !game.jobs.Explorer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
@@ -1121,9 +1121,10 @@ function mainLoop() {
     if (getPageSetting('RunMapsWhenStuck')) autoMap();
     if (getPageSetting('GeneticistTimer') >= 0) manageGenes();
 
-
-
+    //auto-close breaking the world textbox
+    if(document.getElementById('extraGridInfo').style.display == 'block') restoreGrid();
     autoLevelEquipment();
+    updateCustomStats();
 
     //Manually fight instead of using builtin auto-fight
     if (game.global.autoBattle) {

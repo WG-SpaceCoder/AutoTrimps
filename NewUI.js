@@ -18,10 +18,9 @@ createSetting('BuyWeapons', 'Buy Weapons', 'Will buy the most efficient weapon a
 createSetting('BuyWeaponUpgrades', 'Buy Weapon Upgrades', 'Will buy the most efficient weapon upgrade available', 'boolean');
 createSetting('BuyShieldblock', 'Buy Shield Block', 'Will buy the shield block upgrade', 'boolean');
 createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps', 'boolean');
-createSetting('RunMapsWhenStuck', 'Run Maps When Stuck', 'Functionality has changed and needs a new description :D', 'boolean');
+createSetting('RunMapsWhenStuck', 'Auto Maps', 'Automatically run maps to progress', 'boolean');
 createSetting('HireScientists', 'Hire Scientists', 'We are nerds and we like to party', 'boolean');
 createSetting('HireTrainers', 'Hire Trainers', 'Fist bump me bro', 'boolean');
-createSetting('HireExplorers', 'Hire Explorers', 'Map the planet!!', 'boolean');
 createSetting('BuildGyms', 'Build Gyms', 'Time for a workout', 'boolean');
 createSetting('BuildTributes', 'Build Tributes', 'All praise to the Dragimp', 'boolean');
 createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the throne', 'boolean');
@@ -33,6 +32,7 @@ createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to s
 createSetting('FarmerRatio', 'Farmer Ratio', '', 'value', '1');
 createSetting('LumberjackRatio', 'Lumberjack Ratio', '', 'value', '1');
 createSetting('MinerRatio', 'Miner Ratio', '', 'value', '1');
+createSetting('MaxExplorers', 'Max Explorers', 'Map the planet!!', 'value', '150');
 createSetting('MaxHut', 'Max Huts', '', 'value', '50');
 createSetting('MaxHouse', 'Max House', '', 'value', '50');
 createSetting('MaxMansion', 'MaxMansion', '', 'value', '50');
@@ -62,6 +62,29 @@ function automationMenuInit() {
     newItem.setAttribute("onclick", "autoToggle()");
     var settingbarRow = document.getElementById("settingsTable").firstElementChild.firstElementChild;
     settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
+    //create automaps button
+    var newContainer = document.createElement("DIV");
+    newContainer.setAttribute("class", "battleSideBtnContainer");
+    newContainer.setAttribute("style", "display: block;");
+    newContainer.setAttribute("id", "autoMapBtnContainer");
+    var abutton = document.createElement("SPAN");
+    abutton.appendChild(document.createTextNode("Auto Maps"));
+    if(autoTrimpSettings.RunMapsWhenStuck.enabled) abutton.setAttribute("class", "btn fightBtn btn-success");
+    else abutton.setAttribute("class", "btn fightBtn btn-danger");
+    abutton.setAttribute("id", "autoMapBtn");
+    abutton.setAttribute("onClick", "settingChanged('RunMapsWhenStuck')");
+    var fightButtonCol = document.getElementById("battleBtnsColumn");
+    newContainer.appendChild(abutton);
+    fightButtonCol.appendChild(newContainer);
+    
+    //create Helium per hour
+    var heHour = document.createElement("SPAN");
+    heHour.setAttribute("class", "ownedArea");
+    heHour.setAttribute("style", "display: block; opacity: 1; color:white;");
+    heHour.setAttribute("id", "customHeHour");
+    gameHe = document.getElementById('helium');
+    gameHe.appendChild(heHour);
+    
     //create the space to place the automation settings.
     document.getElementById("settingsRow").innerHTML += '<div id="autoSettings" style="display: none;margin-bottom: 2vw;margin-top: 2vw;"></div>';
     //Scripts to be injected. elements can't call tampermonkey scripts for some reason.(assume it's the same for grease)
@@ -129,6 +152,7 @@ function settingChanged(id) {
     if (autoTrimpSettings[id].type == 'boolean') {
         autoTrimpSettings[id].enabled = !autoTrimpSettings[id].enabled;
         document.getElementById(id).setAttribute('class', 'settingBtn settingBtn' + autoTrimpSettings[id].enabled);
+        updateCustomButtons();
     }
 }
 
@@ -201,4 +225,17 @@ function updateValueFields(){
             if(elem != null) elem.textContent = autoTrimpSettings[setting].name + ': ' + ((autoTrimpSettings[setting].value > 0) ? prettify(autoTrimpSettings[setting].value) : 'Infinite');
         }
     }
+}
+
+function updateCustomButtons(){
+    if(autoTrimpSettings.RunMapsWhenStuck.enabled)  document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-success"); 
+    else document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-danger");
+}
+
+function updateCustomStats(){
+    var timeThisPortal = new Date().getTime() - game.global.portalTime;
+	timeThisPortal /= 3600000;
+	var resToUse = game.resources.helium.owned;
+    var heHr = 	prettify(Math.floor(game.resources.helium.owned / timeThisPortal));
+    document.getElementById('customHeHour').innerHTML = heHr + "/Hr";
 }
