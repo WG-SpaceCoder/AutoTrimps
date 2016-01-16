@@ -16,6 +16,7 @@ createSetting('BuyArmor', 'Buy Armor', 'Will buy the most efficient armor availa
 createSetting('BuyArmorUpgrades', 'Buy Armor Upgrades', 'Will buy the most efficient armor upgrade available', 'boolean');
 createSetting('BuyWeapons', 'Buy Weapons', 'Will buy the most efficient weapon available', 'boolean');
 createSetting('BuyWeaponUpgrades', 'Buy Weapon Upgrades', 'Will buy the most efficient weapon upgrade available', 'boolean');
+createSetting('BuyShieldblock', 'Buy Shield Block', 'Will buy the shield block upgrade', 'boolean');
 createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps', 'boolean');
 createSetting('RunMapsWhenStuck', 'Run Maps When Stuck', 'Functionality has changed and needs a new description :D', 'boolean');
 createSetting('HireScientists', 'Hire Scientists', 'We are nerds and we like to party', 'boolean');
