@@ -209,6 +209,7 @@ function safeBuyBuilding(building) {
 
 //Outlines the most efficient housing based on gems (credits to Belaith)
 function highlightHousing() {
+    var oldBuy = game.global.buyAmt;
     game.global.buyAmt = 1;
     var allHousing = ["Mansion", "Hotel", "Resort", "Gateway", "Collector", "Warpstation"];
     var unlockedHousing = [];
@@ -249,6 +250,7 @@ function highlightHousing() {
     } else {
         bestBuilding = null;
     }
+game.global.buyAmt = oldBuy;
 }
 
 function buyFoodEfficientHousing() {
@@ -611,6 +613,7 @@ function buyJobs() {
     var minerRatio = parseInt(getPageSetting('MinerRatio'));
     var totalRatio = farmerRatio + lumberjackRatio + minerRatio;
     var scientistRatio = totalRatio / 50;
+    var oldBuy = game.global.buyAmt;
 
 
     // debug('Total farmers to add = ' + Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
@@ -634,19 +637,7 @@ function buyJobs() {
             safeBuyJob('Explorer');
         }
     }
-
-    /*  if (getPageSetting('chkScientist') && !game.jobs.Scientist.locked) {
-          // debug('Total needed science ' +scienceNeeded);
-          if (game.resources.science.owned < scienceNeeded) {
-              safeBuyJob('Farmer', game.jobs.Farmer.owned * -1);
-              safeBuyJob('Lumberjack', game.jobs.Lumberjack.owned * -1);
-              safeBuyJob('Miner', game.jobs.Miner.owned * -1);
-              safeBuyJob('Scientist', Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed);
-          } else {
-              safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
-          }
-      }  
-      */
+game.global.buyAmt = oldBuy;
 
     //if earlier in the game, buy a small amount of scientists
     if (game.jobs.Farmer.owned < 100000) {
@@ -945,7 +936,7 @@ function autoMap() {
                 }
                 if (theMap.name == 'Dimension of Anger' && document.getElementById("portalBtn").style.display == "none") {
                     var doaDifficulty = Math.ceil(theMap.difficulty / 2);
-                    if(game.global.challengeActive = "Mapocalypse" && game.global.world < 20 + doaDifficulty) continue; 
+                    if(game.global.challengeActive == "Mapocalypse" && game.global.world < 20 + doaDifficulty) continue; 
                     shouldDoMap = theMap.id;
                     break;
                 }
@@ -1061,6 +1052,7 @@ function manageGenes() {
             if(game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '10';
             else autoTrimpSettings.GeneticistTimer.value = '30';
         }
+        else autoTrimpSettings.GeneticistTimer.value = '30';
     }
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
     //if we need to hire geneticists
