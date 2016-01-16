@@ -143,7 +143,10 @@ function saveSettings() {
 //Grabs the automation settings from the page
 
 function getPageSetting(setting) {
-    if (autoTrimpSettings.hasOwnProperty(setting) == false) return false;
+    if (autoTrimpSettings.hasOwnProperty(setting) == false) {
+        debug('no such setting, returning false');
+        return false;
+    }
     if (autoTrimpSettings[setting].type == 'boolean') {
         // debug('found a boolean');
         return autoTrimpSettings[setting].enabled;
