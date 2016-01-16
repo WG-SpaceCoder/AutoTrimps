@@ -143,6 +143,7 @@ function saveSettings() {
 //Grabs the automation settings from the page
 
 function getPageSetting(setting) {
+    if (autoTrimpSettings.hasOwnProperty(setting) == false) return false;
     if (autoTrimpSettings[setting].type == 'boolean') {
         // debug('found a boolean');
         return autoTrimpSettings[setting].enabled;
@@ -232,7 +233,7 @@ function highlightHousing() {
         });
         //loop through the array and find the first one that isn't limited by max settings
         for (var best in keysSorted) {
-            var max = autoTrimpSettings['Max' + keysSorted[best]].value;
+            var max = getPageSetting('Max' + keysSorted[best]).value;
             if (max === false) max = -1;
             if (game.buildings[keysSorted[best]].owned < max || max == -1) {
                 bestBuilding = keysSorted[best];
