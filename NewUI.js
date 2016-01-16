@@ -18,10 +18,9 @@ createSetting('BuyWeapons', 'Buy Weapons', 'Will buy the most efficient weapon a
 createSetting('BuyWeaponUpgrades', 'Buy Weapon Upgrades', 'Will buy the most efficient weapon upgrade available', 'boolean');
 createSetting('BuyShieldblock', 'Buy Shield Block', 'Will buy the shield block upgrade', 'boolean');
 createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps', 'boolean');
-createSetting('RunMapsWhenStuck', 'Run Maps When Stuck', 'Functionality has changed and needs a new description :D', 'boolean');
+createSetting('RunMapsWhenStuck', 'Auto Maps', 'Automatically run maps to progress', 'boolean');
 createSetting('HireScientists', 'Hire Scientists', 'We are nerds and we like to party', 'boolean');
 createSetting('HireTrainers', 'Hire Trainers', 'Fist bump me bro', 'boolean');
-createSetting('HireExplorers', 'Hire Explorers', 'Map the planet!!', 'boolean');
 createSetting('BuildGyms', 'Build Gyms', 'Time for a workout', 'boolean');
 createSetting('BuildTributes', 'Build Tributes', 'All praise to the Dragimp', 'boolean');
 createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the throne', 'boolean');
@@ -33,6 +32,7 @@ createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to s
 createSetting('FarmerRatio', 'Farmer Ratio', '', 'value', '1');
 createSetting('LumberjackRatio', 'Lumberjack Ratio', '', 'value', '1');
 createSetting('MinerRatio', 'Miner Ratio', '', 'value', '1');
+createSetting('MaxExplorers', 'Max Explorers', 'Map the planet!!', 'value', '150');
 createSetting('MaxHut', 'Max Huts', '', 'value', '50');
 createSetting('MaxHouse', 'Max House', '', 'value', '50');
 createSetting('MaxMansion', 'MaxMansion', '', 'value', '50');
