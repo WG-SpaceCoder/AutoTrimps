@@ -62,6 +62,22 @@ function automationMenuInit() {
     newItem.setAttribute("onclick", "autoToggle()");
     var settingbarRow = document.getElementById("settingsTable").firstElementChild.firstElementChild;
     settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
+    //create automaps button
+    var newContainer = document.createElement("DIV");
+    newContainer.setAttribute("class", "battleSideBtnContainer");
+    newContainer.setAttribute("style", "display: block;");
+    newContainer.setAttribute("id", "autoMapBtnContainer");
+    var abutton = document.createElement("SPAN");
+    abutton.appendChild(document.createTextNode("Auto Maps"));
+    if(autoTrimpSettings.RunMapsWhenStuck.enabled) abutton.setAttribute("class", "btn fightBtn btn-success");
+    else abutton.setAttribute("class", "btn fightBtn btn-danger");
+    abutton.setAttribute("id", "autoMapBtn");
+    abutton.addAttribute("onClick", "settingChanged('RunMapsWhenStuck')");
+    var fightButtonCol = document.getElementById("battleBtnsColumn");
+    newContainer.appendChild(abutton);
+    fightButtonCol.appendChild(newContainer);
+    
+    
     //create the space to place the automation settings.
     document.getElementById("settingsRow").innerHTML += '<div id="autoSettings" style="display: none;margin-bottom: 2vw;margin-top: 2vw;"></div>';
     //Scripts to be injected. elements can't call tampermonkey scripts for some reason.(assume it's the same for grease)
@@ -129,6 +145,7 @@ function settingChanged(id) {
     if (autoTrimpSettings[id].type == 'boolean') {
         autoTrimpSettings[id].enabled = !autoTrimpSettings[id].enabled;
         document.getElementById(id).setAttribute('class', 'settingBtn settingBtn' + autoTrimpSettings[id].enabled);
+        updateCustomButtons();
     }
 }
 
@@ -201,4 +218,9 @@ function updateValueFields(){
             if(elem != null) elem.textContent = autoTrimpSettings[setting].name + ': ' + ((autoTrimpSettings[setting].value > 0) ? prettify(autoTrimpSettings[setting].value) : 'Infinite');
         }
     }
+}
+
+function updateCustomButtons(){
+    if(autoTrimpSettings.RunMapsWhenStuck.enabled)  document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-success"); 
+    else document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-danger");
 }
