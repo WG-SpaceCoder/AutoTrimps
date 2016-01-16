@@ -17,8 +17,8 @@ var enableDebug = true; //Spam console?
 var autoTrimpSettings = new Object();
 var bestBuilding;
 var scienceNeeded;
-//pull from user setting
-var managePreGenes = true;
+
+
 
 var baseDamage = 0;
 var baseBlock = 0;
@@ -589,7 +589,7 @@ function buyBuildings() {
     }
     //only buy nurseries if enabled,   and we aren't trying to manage our breed time before geneticists, and they aren't locked
     //even if we are trying to manage breed timer pre-geneticists, start buying nurseries once geneticists are unlocked AS LONG AS we can afford a geneticist (to prevent nurseries from outpacing geneticists soon after they are unlocked)
-    if (getPageSetting('BuildNurseries') && (!managePreGenes || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
+    if (getPageSetting('BuildNurseries') && (!getPageSetting('ManageBreedtimer') || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
         if (getPageSetting('MaxNursery') > game.buildings.Nursery.owned || (getPageSetting('MaxNursery') == -1 && getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") && !game.buildings.Warpstation.locked)) {
             safeBuyBuilding('Nursery');
         }
@@ -1033,6 +1033,13 @@ function autoMap() {
 //adjust geneticists to reach desired breed timer
 function manageGenes() {
     var fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+    if(getPageSetting('ManageBreedtimer')) {
+        if(game.global.challengeActive == 'Electricity') autoTrimpSettings.GeneticistTimer.value = '3';
+        if(game.global.challengeActive == 'Nom') {
+            if(game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '10';
+            else autoTrimpSettings.GeneticistTimer.value = '30';
+        }
+    }
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
     //if we need to hire geneticists
     if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked) {
@@ -1044,8 +1051,8 @@ function manageGenes() {
         safeBuyJob('Geneticist');
     }
     //if we need to speed up our breeding
-    //if we have potency upgrades available, buy them. If geneticists are unlocked, or we aren't managing pre-genes, just buy them
-    if ((targetBreed < getBreedTime() || !game.jobs.Geneticist.locked || !managePreGenes) && game.upgrades.Potency.allowed > game.upgrades.Potency.done && canAffordTwoLevel('Potency')) {
+    //if we have potency upgrades available, buy them. If geneticists are unlocked, or we aren't managing the breed timer, just buy them
+    if ((targetBreed < getBreedTime() || !game.jobs.Geneticist.locked || !getPageSetting('ManageBreedtimer')) && game.upgrades.Potency.allowed > game.upgrades.Potency.done && canAffordTwoLevel('Potency')) {
         buyUpgrade('Potency');
     }
     //otherwise, if we have some geneticists, start firing them
@@ -1053,7 +1060,7 @@ function manageGenes() {
         safeBuyJob('Geneticist', -1);
     }
     //really should be integrated with the buyBuildings routine instead of here, but I think it's mostly harmless here
-    else if (targetBreed < getBreedTime() && managePreGenes && !game.buildings.Nursery.locked) {
+    else if (targetBreed < getBreedTime() && getPageSetting('ManageBreedtimer') && !game.buildings.Nursery.locked) {
         safeBuyBuilding('Nursery');
     }
 
