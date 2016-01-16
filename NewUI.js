@@ -72,7 +72,7 @@ function automationMenuInit() {
     if(autoTrimpSettings.RunMapsWhenStuck.enabled) abutton.setAttribute("class", "btn fightBtn btn-success");
     else abutton.setAttribute("class", "btn fightBtn btn-danger");
     abutton.setAttribute("id", "autoMapBtn");
-    abutton.addAttribute("onClick", "settingChanged('RunMapsWhenStuck')");
+    abutton.setAttribute("onClick", "settingChanged('RunMapsWhenStuck')");
     var fightButtonCol = document.getElementById("battleBtnsColumn");
     newContainer.appendChild(abutton);
     fightButtonCol.appendChild(newContainer);
