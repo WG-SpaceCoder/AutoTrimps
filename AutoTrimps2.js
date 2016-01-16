@@ -1124,6 +1124,7 @@ function mainLoop() {
     //auto-close breaking the world textbox
     if(document.getElementById('extraGridInfo').style.display == 'block') restoreGrid();
     autoLevelEquipment();
+    updateCustomStats();
 
     //Manually fight instead of using builtin auto-fight
     if (game.global.autoBattle) {
