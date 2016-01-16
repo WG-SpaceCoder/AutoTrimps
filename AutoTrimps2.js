@@ -1052,7 +1052,7 @@ function manageGenes() {
     var fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
     if(getPageSetting('ManageBreedtimer')) {
         if(game.global.challengeActive == 'Electricity') autoTrimpSettings.GeneticistTimer.value = '3';
-        if(game.global.challengeActive == 'Nom') {
+        else if(game.global.challengeActive == 'Nom') {
             if(game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '10';
             else autoTrimpSettings.GeneticistTimer.value = '30';
         }
