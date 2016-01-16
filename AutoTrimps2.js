@@ -626,7 +626,7 @@ function buyJobs() {
             safeBuyJob('Trainer');
         }
     }
-    if (getPageSetting('HireExplorers')) {
+    if (game.jobs.Explorer.owned < getPageSetting('MaxExplorers')) {
         game.global.buyAmt = 1;
         while (canAffordJob('Explorer', false) && !game.jobs.Explorer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
