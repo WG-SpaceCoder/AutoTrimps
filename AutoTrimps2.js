@@ -517,7 +517,6 @@ function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
     javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/master/NewUI.js')._;
-    updateCustomButtons();
 }
 
 function easyMode() {
@@ -1127,6 +1126,7 @@ function mainLoop() {
     if(document.getElementById('extraGridInfo').style.display == 'block') restoreGrid();
     autoLevelEquipment();
     updateCustomStats();
+    updateCustomButtons();
 
     //Manually fight instead of using builtin auto-fight
     if (game.global.autoBattle) {
