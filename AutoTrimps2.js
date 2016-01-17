@@ -595,7 +595,7 @@ function buyBuildings() {
     //only buy nurseries if enabled,   and we aren't trying to manage our breed time before geneticists, and they aren't locked
     //even if we are trying to manage breed timer pre-geneticists, start buying nurseries once geneticists are unlocked AS LONG AS we can afford a geneticist (to prevent nurseries from outpacing geneticists soon after they are unlocked)
     if (getPageSetting('BuildNurseries') && (!getPageSetting('ManageBreedtimer') || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
-        if ((getPageSetting('MaxNursery') > game.buildings.Nursery.owned || (getPageSetting('MaxNursery') == -1) && (getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") || game.buildings.Warpstation.locked)) {
+        if ((getPageSetting('MaxNursery') > game.buildings.Nursery.owned || getPageSetting('MaxNursery') == -1) && (getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") || game.buildings.Warpstation.locked)) {
             safeBuyBuilding('Nursery');
         }
     }
