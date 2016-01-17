@@ -236,6 +236,7 @@ function highlightHousing() {
         var keysSorted = Object.keys(obj).sort(function(a, b) {
             return obj[a] - obj[b]
         });
+        bestBuilding = null;
         //loop through the array and find the first one that isn't limited by max settings
         for (var best in keysSorted) {
             var max = getPageSetting('Max' + keysSorted[best]);
@@ -594,7 +595,7 @@ function buyBuildings() {
     //only buy nurseries if enabled,   and we aren't trying to manage our breed time before geneticists, and they aren't locked
     //even if we are trying to manage breed timer pre-geneticists, start buying nurseries once geneticists are unlocked AS LONG AS we can afford a geneticist (to prevent nurseries from outpacing geneticists soon after they are unlocked)
     if (getPageSetting('BuildNurseries') && (!getPageSetting('ManageBreedtimer') || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
-        if (getPageSetting('MaxNursery') > game.buildings.Nursery.owned || (getPageSetting('MaxNursery') == -1 && getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") && !game.buildings.Warpstation.locked)) {
+        if ((getPageSetting('MaxNursery') > game.buildings.Nursery.owned || (getPageSetting('MaxNursery') == -1) && (getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") || game.buildings.Warpstation.locked)) {
             safeBuyBuilding('Nursery');
         }
     }
@@ -619,7 +620,7 @@ function buyJobs() {
     var lumberjackRatio = parseInt(getPageSetting('LumberjackRatio'));
     var minerRatio = parseInt(getPageSetting('MinerRatio'));
     var totalRatio = farmerRatio + lumberjackRatio + minerRatio;
-    var scientistRatio = totalRatio / 50;
+    var scientistRatio = totalRatio / 25;
     var oldBuy = game.global.buyAmt;
 
 
