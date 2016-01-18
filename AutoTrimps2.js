@@ -921,6 +921,8 @@ function autoMap() {
         var enoughDamage = (baseDamage * 4 > enemyHeath);
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
+        //if we are prestige mapping, force equip first mode
+        if(prestigeSelect.value != "Off" && game.options.menu.mapLoot != 1) game.options.menu.mapLoot = 1;
 
         var obj = {};
         for (var map in game.global.mapsOwnedArray) {
@@ -970,7 +972,8 @@ function autoMap() {
             }
         }
 
-        if (shouldDoMaps) {
+        //map if we don't have health/dmg or if we are prestige mapping, and our set item has a new prestige available AND our highest map level is equal to our world level (otherwise it will prestige map and not get the prestige we are after!)
+        if (shouldDoMaps || (prestigeSelect.value != "Off" && game.mapUnlocks[prestiges[prestigeSelect.value].prestige].last <= game.global.world - 5 && game.global.world == game.global.mapsOwnedArray[highestMap].level)) {
             if (shouldDoMap == "world") {
                 if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
                     shouldDoMap = game.global.mapsOwnedArray[highestMap].id;
@@ -1037,6 +1040,11 @@ function autoMap() {
 
                 while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
                     lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
+                }
+                //prioritize size over difficulty? Not sure. high Helium that just wants prestige = yes.
+                //Really just trying to prevent prestige mapping from getting stuck
+                while (difficultyAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+                    difficultyAdvMapsRange.value = difficultyAdvMapsRange.value - 1;
                 }
 
                 if (updateMapCost(true) > game.resources.fragments.owned) {
