@@ -922,7 +922,7 @@ function autoMap() {
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
         //if we are prestige mapping, force equip first mode
-        if(prestigeSelect.value != "Off" && game.options.menu.mapLoot != 1) game.options.menu.mapLoot = 1;
+        if(prestigeSelect.value != "Off" && game.options.menu.mapLoot.enabled != 1) game.options.menu.mapLoot.enabled = 1;
 
         var obj = {};
         for (var map in game.global.mapsOwnedArray) {
