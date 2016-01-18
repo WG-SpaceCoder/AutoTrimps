@@ -925,9 +925,9 @@ function autoMap() {
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
         //if we are prestige mapping, force equip first mode
-        if(prestigeSelect.value != "Off" && game.options.menu.mapLoot.enabled != 1) game.options.menu.mapLoot.enabled = 1;
+        if(autoTrimpSettings.Prestige.selected != "Off" && game.options.menu.mapLoot.enabled != 1) game.options.menu.mapLoot.enabled = 1;
         //if player has selected arbalest or gambeson but doesn't have them unlocked, just unselect it for them! It's magic!
-        if(prestigeSelect.selectedIndex > 11 && game.global.slowDone == false) prestigeSelect.selectedIndex = 11;
+        if(document.getElementById('Prestige').selectedIndex > 11 && game.global.slowDone == false) document.getElementById('Prestige').selectedIndex = 11;
 
         var obj = {};
         for (var map in game.global.mapsOwnedArray) {
@@ -978,7 +978,7 @@ function autoMap() {
         }
 
         //map if we don't have health/dmg or if we are prestige mapping, and our set item has a new prestige available 
-        if (shouldDoMaps || (prestigeSelect.value != "Off" && game.mapUnlocks[prestiges[prestigeSelect.value].prestige].last <= game.global.world - 5)) {
+        if (shouldDoMaps || (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5)) {
             if (shouldDoMap == "world") {
                 if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
                     shouldDoMap = game.global.mapsOwnedArray[highestMap].id;
@@ -994,7 +994,7 @@ function autoMap() {
         if (!game.global.preMapsActive) {
             if (game.global.mapsActive) {
                 if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle) {
-                    var targetPrestige = prestiges[prestigeSelect.value].prestige;
+                    var targetPrestige = autoTrimpSettings.Prestige.selected;
                     if (!game.global.repeatMap) {
                         repeatClicked();
                     }
