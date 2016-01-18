@@ -921,6 +921,10 @@ function autoMap() {
         var enoughDamage = (baseDamage * 4 > enemyHeath);
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
+        //if we are prestige mapping, force equip first mode
+        if(prestigeSelect.value != "Off" && game.options.menu.mapLoot.enabled != 1) game.options.menu.mapLoot.enabled = 1;
+        //if player has selected arbalest or gambeson but doesn't have them unlocked, just unselect it for them! It's magic!
+        if(prestigeSelect.selectedIndex > 11 && game.global.slowDone == false) prestigeSelect.selectedIndex = 11;
 
         var obj = {};
         for (var map in game.global.mapsOwnedArray) {
@@ -970,11 +974,15 @@ function autoMap() {
             }
         }
 
-        if (shouldDoMaps) {
+        //map if we don't have health/dmg or if we are prestige mapping, and our set item has a new prestige available 
+        if (shouldDoMaps || (prestigeSelect.value != "Off" && game.mapUnlocks[prestiges[prestigeSelect.value].prestige].last <= game.global.world - 5)) {
             if (shouldDoMap == "world") {
                 if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
                     shouldDoMap = game.global.mapsOwnedArray[highestMap].id;
                 } else {
+                    //if we aren't here because of needing damage or health, then we must be here because of prestige mapping.
+                    //If we aren't prestige mapping on a max level map, we shouldn't be prestige mapping
+                    if(!shouldDoMaps) shouldDoMap = "world";
                     shouldDoMap = "create";
                 }
             }
@@ -983,7 +991,12 @@ function autoMap() {
         if (!game.global.preMapsActive) {
             if (game.global.mapsActive) {
                 if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle) {
+                    var targetPrestige = prestiges[prestigeSelect.value].prestige;
                     if (!game.global.repeatMap) {
+                        repeatClicked();
+                    }
+                    //if we aren't here for dmg/hp, and we see the prestige we are after on the last cell of this map, and it's the last one available, turn off repeat to avoid an extra map cycle
+                    if (!shouldDoMaps && (game.global.mapGridArray[game.global.mapGridArray.length - 1].special == targetPrestige && game.mapUnlocks[targetPrestige].last == game.global.world - 5 )) {
                         repeatClicked();
                     }
                 } else {
@@ -1014,8 +1027,8 @@ function autoMap() {
                     biomeAdvMapsSelect.value = "Mountain";
                     updateMapCost();
                 } else if (game.global.world < 16) {
-                    sizeAdvMapsRange.value = 0;
-                    adjustMap('size', 0);
+                    sizeAdvMapsRange.value = 9;
+                    adjustMap('size', 9);
                     difficultyAdvMapsRange.value = 0;
                     adjustMap('difficulty', 0);
                     lootAdvMapsRange.value = 0;
@@ -1037,6 +1050,11 @@ function autoMap() {
 
                 while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
                     lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
+                }
+                //prioritize size over difficulty? Not sure. high Helium that just wants prestige = yes.
+                //Really just trying to prevent prestige mapping from getting stuck
+                while (difficultyAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+                    difficultyAdvMapsRange.value = difficultyAdvMapsRange.value - 1;
                 }
 
                 if (updateMapCost(true) > game.resources.fragments.owned) {

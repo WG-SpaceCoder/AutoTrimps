@@ -3,6 +3,34 @@ if (autoTrimpSettings === undefined) {
     var autoTrimpSettings = new Object();
 }
 
+	var prestiges = {
+		'Off': {}, 
+		'Shield': {prestige : 'Supershield'
+		}, 
+		'Dagger': {prestige: 'Dagadder'
+		}, 
+		'Boots': {prestige: 'Bootboost'
+		}, 
+		'Mace': {prestige: 'Megamace'
+		}, 
+		'Helmet': {prestige: 'Hellishmet'
+		}, 
+		'Polearm': {prestige: 'Polierarm'
+		}, 
+		'Pants': {prestige: 'Pantastic'
+		}, 
+		'Battleaxe': {prestige: 'Axeidic'
+		}, 
+		'Shoulderguards': {prestige: 'Smoldershoulder'
+		}, 
+		'Greatsword': {prestige: 'Greatersword'
+		}, 
+		'Breastplate': {prestige: 'Bestplate'
+		}, 
+		'Arbalest': {prestige: 'Harmbalest'
+		}, 
+		'Gambeson': {prestige: 'GambesOP'}};
+
 automationMenuInit();
 
 //Booleans
@@ -46,7 +74,7 @@ createSetting('MaxGym', 'Max Gym', '', 'value', '-1');
 createSetting('MaxTribute', 'Max Tribute', '', 'value', '-1');
 createSetting('MaxNursery', 'Max Nursery', '', 'value', '-1');
 // createSetting('', '', '', 'value', '30');
-
+createDropdown();
 
 function automationMenuInit() {
 
@@ -72,6 +100,8 @@ function automationMenuInit() {
     abutton.setAttribute("class", "btn fightBtn btn-success");
     abutton.setAttribute("id", "autoMapBtn");
     abutton.setAttribute("onClick", "settingChanged('RunMapsWhenStuck')");
+    abutton.setAttribute("onmouseover", 'tooltip(\"Toggle Automapping\", \"customText\", event, \"Toggle automapping on and off.\")');
+    abutton.setAttribute("onmouseout", 'tooltip("hide")');
     var fightButtonCol = document.getElementById("battleBtnsColumn");
     newContainer.appendChild(abutton);
     fightButtonCol.appendChild(newContainer);
@@ -237,4 +267,26 @@ function updateCustomStats(){
 	var resToUse = game.resources.helium.owned;
     var heHr = 	prettify(Math.floor(game.resources.helium.owned / timeThisPortal));
     document.getElementById('customHeHour').innerHTML = heHr + "/Hr";
+}
+
+function createDropdown(){
+
+	var prestige = document.createElement("select");
+	var prestigeParent = document.createElement("DIV");
+	prestigeParent.setAttribute('class', 'optionContainer');
+	prestige.id = "prestigeSelect";
+	prestige.setAttribute("style", "color:black");
+	prestige.setAttribute("class", "settingBtn");
+	prestige.setAttribute("onmouseover", 'tooltip(\"Get Prestiges\", \"customText\", event, \"Acquire prestiges through the selected item (inclusive) as soon as they are available in maps. Forces equip first mode. Automap must be enabled.\")');
+        prestige.setAttribute("onmouseout", 'tooltip("hide")');
+	
+	for (var item in prestiges) {
+		var option = document.createElement("option");
+		option.value = item;
+		option.text = item;
+		prestige.appendChild(option);
+	}
+	
+	prestigeParent.appendChild(prestige);
+	document.getElementById("autoSettings").appendChild(prestigeParent);
 }
