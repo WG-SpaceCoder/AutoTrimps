@@ -3,33 +3,6 @@ if (autoTrimpSettings === undefined) {
     var autoTrimpSettings = new Object();
 }
 
-	var prestiges = {
-		'Off': {}, 
-		'Shield': {prestige : 'Supershield'
-		}, 
-		'Dagger': {prestige: 'Dagadder'
-		}, 
-		'Boots': {prestige: 'Bootboost'
-		}, 
-		'Mace': {prestige: 'Megamace'
-		}, 
-		'Helmet': {prestige: 'Hellishmet'
-		}, 
-		'Polearm': {prestige: 'Polierarm'
-		}, 
-		'Pants': {prestige: 'Pantastic'
-		}, 
-		'Battleaxe': {prestige: 'Axeidic'
-		}, 
-		'Shoulderguards': {prestige: 'Smoldershoulder'
-		}, 
-		'Greatsword': {prestige: 'Greatersword'
-		}, 
-		'Breastplate': {prestige: 'Bestplate'
-		}, 
-		'Arbalest': {prestige: 'Harmbalest'
-		}, 
-		'Gambeson': {prestige: 'GambesOP'}};
 
 automationMenuInit();
 
@@ -74,7 +47,9 @@ createSetting('MaxGym', 'Max Gym', '', 'value', '-1');
 createSetting('MaxTribute', 'Max Tribute', '', 'value', '-1');
 createSetting('MaxNursery', 'Max Nursery', '', 'value', '-1');
 // createSetting('', '', '', 'value', '30');
-createDropdown();
+//Dropdown
+createSetting('Prestige', 'Prestige', 'Acquire prestiges through the selected item (inclusive) as soon as they are available in maps. Forces equip first mode. Automap must be enabled.', 'dropdown', 'Off', ['Off', 'Supershield', 'Dagadder', 'Bootboost', 'Megamace', 'Hellishmet', 'Polierarm', 'Pantastic', 'Axeidic', 'Smoldershoulder', 'Greatersword', 'Bestplate', 'Harmbalest', 'GambesOP']);
+
 
 function automationMenuInit() {
 
@@ -105,7 +80,7 @@ function automationMenuInit() {
     var fightButtonCol = document.getElementById("battleBtnsColumn");
     newContainer.appendChild(abutton);
     fightButtonCol.appendChild(newContainer);
-    
+
     //create Helium per hour
     var heHour = document.createElement("SPAN");
     heHour.setAttribute("class", "ownedArea");
@@ -113,7 +88,7 @@ function automationMenuInit() {
     heHour.setAttribute("id", "customHeHour");
     gameHe = document.getElementById('helium');
     gameHe.appendChild(heHour);
-    
+
     //create the space to place the automation settings.
     document.getElementById("settingsRow").innerHTML += '<div id="autoSettings" style="display: none;margin-bottom: 2vw;margin-top: 2vw;"></div>';
     //Scripts to be injected. elements can't call tampermonkey scripts for some reason.(assume it's the same for grease)
@@ -130,13 +105,12 @@ function automationMenuInit() {
     document.body.appendChild(script);
 }
 
-function createSetting(id, name, description, type, defaultValue) {
+function createSetting(id, name, description, type, defaultValue, list) {
+    var btnParent = document.createElement("DIV");
+    btnParent.setAttribute('class', 'optionContainer');
+    var btn = document.createElement("DIV");
+    btn.id = id;
     if (type == 'boolean') {
-        // <div id="toggleautoSave" class="noselect settingBtn settingBtn1" onclick="toggleSetting(&quot;autoSave&quot;, this)" onmouseover="tooltip(&quot;Auto Saving&quot;, &quot;customText&quot;, event, &quot;Automatically save the game once per minute&quot;)" onmouseout="tooltip(&quot;hide&quot;)">Auto Saving</div>
-        var btnParent = document.createElement("DIV");
-        btnParent.setAttribute('class', 'optionContainer');
-        var btn = document.createElement("DIV");
-        btn.id = id;
         if (autoTrimpSettings[id] === undefined) {
             autoTrimpSettings[id] = {
                 id: id,
@@ -154,10 +128,6 @@ function createSetting(id, name, description, type, defaultValue) {
         btnParent.appendChild(btn)
         document.getElementById("autoSettings").appendChild(btnParent);
     } else if (type == 'value') {
-        var btnParent = document.createElement("DIV");
-        btnParent.setAttribute('class', 'optionContainer');
-        var btn = document.createElement("DIV");
-        btn.id = id;
         if (autoTrimpSettings[id] === undefined) {
             autoTrimpSettings[id] = {
                 id: id,
@@ -174,6 +144,34 @@ function createSetting(id, name, description, type, defaultValue) {
         btn.textContent = name;
         btnParent.appendChild(btn)
         document.getElementById("autoSettings").appendChild(btnParent);
+    } else if (type == 'dropdown') {
+        if (autoTrimpSettings[id] === undefined) {
+            autoTrimpSettings[id] = {
+                id: id,
+                name: name,
+                description: description,
+                type: type,
+                selected: defaultValue,
+                list: list
+            };
+        }
+        var btn = document.createElement("select");
+        btn.id = id;
+        btn.setAttribute("style", "color:black");
+        btn.setAttribute("class", "settingBtn");
+        btn.setAttribute("onmouseover", 'tooltip(\"' + name + '\", \"customText\", event, \"' + description + '\")');
+        btn.setAttribute("onmouseout", 'tooltip("hide")');
+        btn.setAttribute("onchange", 'settingChanged("' + id + '")');
+
+        for (var item in list) {
+            var option = document.createElement("option");
+            option.value = list[item];
+            option.text = list[item];
+            btn.appendChild(option);
+        }
+
+        btnParent.appendChild(btn)
+        document.getElementById("autoSettings").appendChild(btnParent);
     }
 }
 
@@ -182,6 +180,9 @@ function settingChanged(id) {
         autoTrimpSettings[id].enabled = !autoTrimpSettings[id].enabled;
         document.getElementById(id).setAttribute('class', 'settingBtn settingBtn' + autoTrimpSettings[id].enabled);
         updateCustomButtons();
+    }
+    if (autoTrimpSettings[id].type == 'dropdown') {
+    	autoTrimpSettings[id].selected = document.getElementById(id).value;
     }
 }
 
@@ -247,46 +248,24 @@ function autoSetValue(id) {
     document.getElementById(id).textContent = ranstring + ': ' + txtNum;
 }
 
-function updateValueFields(){
+function updateValueFields() {
     for (var setting in autoTrimpSettings) {
         if (autoTrimpSettings[setting].type == 'value') {
             var elem = document.getElementById(autoTrimpSettings[setting].id);
-            if(elem != null) elem.textContent = autoTrimpSettings[setting].name + ': ' + ((autoTrimpSettings[setting].value > 0) ? prettify(autoTrimpSettings[setting].value) : 'Infinite');
+            if (elem != null) elem.textContent = autoTrimpSettings[setting].name + ': ' + ((autoTrimpSettings[setting].value > 0) ? prettify(autoTrimpSettings[setting].value) : 'Infinite');
         }
     }
 }
 
-function updateCustomButtons(){
-    if(autoTrimpSettings.RunMapsWhenStuck.enabled)  document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-success"); 
+function updateCustomButtons() {
+    if (autoTrimpSettings.RunMapsWhenStuck.enabled) document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-success");
     else document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-danger");
 }
 
-function updateCustomStats(){
+function updateCustomStats() {
     var timeThisPortal = new Date().getTime() - game.global.portalTime;
-	timeThisPortal /= 3600000;
-	var resToUse = game.resources.helium.owned;
-    var heHr = 	prettify(Math.floor(game.resources.helium.owned / timeThisPortal));
+    timeThisPortal /= 3600000;
+    var resToUse = game.resources.helium.owned;
+    var heHr = prettify(Math.floor(game.resources.helium.owned / timeThisPortal));
     document.getElementById('customHeHour').innerHTML = heHr + "/Hr";
-}
-
-function createDropdown(){
-
-	var prestige = document.createElement("select");
-	var prestigeParent = document.createElement("DIV");
-	prestigeParent.setAttribute('class', 'optionContainer');
-	prestige.id = "prestigeSelect";
-	prestige.setAttribute("style", "color:black");
-	prestige.setAttribute("class", "settingBtn");
-	prestige.setAttribute("onmouseover", 'tooltip(\"Get Prestiges\", \"customText\", event, \"Acquire prestiges through the selected item (inclusive) as soon as they are available in maps. Forces equip first mode. Automap must be enabled.\")');
-        prestige.setAttribute("onmouseout", 'tooltip("hide")');
-	
-	for (var item in prestiges) {
-		var option = document.createElement("option");
-		option.value = item;
-		option.text = item;
-		prestige.appendChild(option);
-	}
-	
-	prestigeParent.appendChild(prestige);
-	document.getElementById("autoSettings").appendChild(prestigeParent);
 }
