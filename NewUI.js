@@ -169,7 +169,7 @@ function createSetting(id, name, description, type, defaultValue, list) {
             option.text = list[item];
             btn.appendChild(option);
         }
-
+        btn.value = autoTrimpSettings[id].selected;
         btnParent.appendChild(btn)
         document.getElementById("autoSettings").appendChild(btnParent);
     }
