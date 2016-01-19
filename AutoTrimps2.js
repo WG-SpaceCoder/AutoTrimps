@@ -927,8 +927,10 @@ function autoMap() {
         //if we are prestige mapping, force equip first mode
         if(autoTrimpSettings.Prestige.selected != "Off" && game.options.menu.mapLoot.enabled != 1) game.options.menu.mapLoot.enabled = 1;
         //if player has selected arbalest or gambeson but doesn't have them unlocked, just unselect it for them! It's magic!
-        if(document.getElementById('Prestige').selectedIndex > 11 && game.global.slowDone == false) document.getElementById('Prestige').selectedIndex = 11;
-
+        if(document.getElementById('Prestige').selectedIndex > 11 && game.global.slowDone == false) {
+            document.getElementById('Prestige').selectedIndex = 11;
+            autoTrimpSettings.Prestige.selected = "Bestplate";
+        }
         var obj = {};
         for (var map in game.global.mapsOwnedArray) {
             if (!game.global.mapsOwnedArray[map].noRecycle) {
