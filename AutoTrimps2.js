@@ -327,7 +327,7 @@ function evaluateEfficiency(equipName) {
         if (equip.Equip) {
             var NextEff = PrestigeValue(equip.Upgrade);
             var NextCost = getNextPrestigeCost(equip.Upgrade) * Math.pow(1 - game.portal.Artisanistry.modifier, game.portal.Artisanistry.level);
-            Wall = NextEff / NextCost > Res;
+            Wall = (NextEff / NextCost > Res);
         }
 
         if (!CanAfford) {
@@ -352,7 +352,10 @@ function evaluateEfficiency(equipName) {
             }
         }
     }
-
+    //wall (don't buy any more equipment, buy prestige first) is true if the limit equipment option is on and we are past our limit 
+    if (gameResource.level > 10 - gameResource.prestige && getPageSetting('LimitEquipment')) {
+        Wall = true;
+    }
     return {
         Stat: equip.Stat,
         Factor: Res,
