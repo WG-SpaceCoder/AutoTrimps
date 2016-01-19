@@ -327,7 +327,7 @@ function evaluateEfficiency(equipName) {
         if (equip.Equip) {
             var NextEff = PrestigeValue(equip.Upgrade);
             var NextCost = getNextPrestigeCost(equip.Upgrade) * Math.pow(1 - game.portal.Artisanistry.modifier, game.portal.Artisanistry.level);
-            Wall = NextEff / NextCost > Res;
+            Wall = (NextEff / NextCost > Res);
         }
 
         if (!CanAfford) {
@@ -352,7 +352,10 @@ function evaluateEfficiency(equipName) {
             }
         }
     }
-
+    //wall (don't buy any more equipment, buy prestige first) is true if the limit equipment option is on and we are past our limit 
+    if (gameResource.level > 10 - gameResource.prestige && getPageSetting('LimitEquipment')) {
+        Wall = true;
+    }
     return {
         Stat: equip.Stat,
         Factor: Res,
@@ -646,7 +649,7 @@ function buyJobs() {
         }
     }
 game.global.buyAmt = oldBuy;
-
+if (getPageSetting('HireScientists')) {
     //if earlier in the game, buy a small amount of scientists
     if (game.jobs.Farmer.owned < 250000) {
         var buyScientists = Math.floor((scientistRatio / totalRatio * totalDistributableWorkers) - game.jobs.Scientist.owned);
@@ -656,6 +659,7 @@ game.global.buyAmt = oldBuy;
     }
     //once over 100k farmers, fire our scientists and rely on manual gathering of science
     else if (game.jobs.Scientist.owned > 0) safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
+}
     //Distribute Farmer/Lumberjack/Miner
     safeBuyJob('Farmer', Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
     safeBuyJob('Lumberjack', Math.floor((lumberjackRatio / totalRatio * totalDistributableWorkers) - game.jobs.Lumberjack.owned));
