@@ -1025,8 +1025,9 @@ function autoMap() {
                 }
             } else if (!game.global.mapsActive) {
                 if (shouldDoMap != "world") {
-                    if (!game.global.switchToMaps) {
-                        mapsClicked();
+                    //if shouldFarm, don't switch until after megafarming
+                    if (!game.global.switchToMaps && (shouldFarm && game.global.lastClearedCell > 79 || !shouldFarm)) {
+                         mapsClicked();
                     }
                 }
             }
