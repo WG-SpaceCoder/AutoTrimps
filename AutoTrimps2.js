@@ -931,7 +931,7 @@ function autoMap() {
         var shouldDoMap = "world";
         
         //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 16
-        shouldFarm = shouldFarm ? getEnemyMaxAttack(game.global.world) / baseDamage > 100 : getEnemyMaxAttack(game.global.world) / baseDamage > 150
+        shouldFarm = shouldFarm ? getEnemyMaxHealth(game.global.world) / baseDamage > 10 : getEnemyMaxHealth(game.global.world) / baseDamage > 15
         
         //if we are at max map bonus, and we don't need to farm, don't do maps
         if(game.global.mapBonus == 10 && !shouldFarm) shouldDoMaps = false;
