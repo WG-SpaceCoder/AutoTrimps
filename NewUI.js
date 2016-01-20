@@ -26,7 +26,7 @@ createSetting('HireTrainers', 'Hire Trainers', 'Fist bump me bro', 'boolean');
 createSetting('BuildGyms', 'Build Gyms', 'Time for a workout', 'boolean');
 createSetting('BuildTributes', 'Build Tributes', 'All praise to the Dragimp', 'boolean');
 createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the throne', 'boolean');
-createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress', 'boolean');
+createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress. Just worker ratios right now.', 'boolean');
 createSetting('ManageBreedtimer', 'Manage Breed Timer', 'Automatically manage the breed timer. EFFECTIVELY LOCKS THE BREED TIMER', 'boolean');
 // createSetting('', '', '', 'boolean');
 //Values
