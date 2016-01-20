@@ -791,7 +791,7 @@ function manualLabor() {
         setGather('buildings');
     }
     //if we have some upgrades sitting around which we don't have enough science for, gather science
-    else if (game.resources.science.owned < scienceNeeded && document.getElementById('scienceCollectBtn').style.display != 'block') {
+    else if (game.resources.science.owned < scienceNeeded && document.getElementById('scienceCollectBtn').style.display == 'block') {
         // debug('Science needed ' + scienceNeeded);
         setGather('science');
     } else {
@@ -832,9 +832,11 @@ function manualLabor() {
             // debug('Set gather lowestResource');
             setGather(lowestResource);
         } else if (game.global.playerGathering != ManualGather && game.global.turkimpTimer > 0) {
-            // debug('Set gather ManualGather');
+            //debug('Set gather ManualGather');
             setGather(ManualGather);
-        } else  if (document.getElementById('scienceCollectBtn').style.display != 'block')setGather('science');
+        } else  if (document.getElementById('scienceCollectBtn').style.display == 'block' && game.global.turkimpTimer < 1) {
+            setGather('science');
+        }
         
     }
 }
