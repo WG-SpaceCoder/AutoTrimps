@@ -17,6 +17,7 @@ var enableDebug = true; //Spam console?
 var autoTrimpSettings = new Object();
 var bestBuilding;
 var scienceNeeded;
+var shouldFarm = false;
 
 
 
@@ -928,6 +929,12 @@ function autoMap() {
         var enoughDamage = (baseDamage * 4 > enemyHeath);
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
+        
+        //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 16
+        shouldFarm = shouldFarm ? getEnemyMaxHealth(game.global.world) / baseDamage > 10 : getEnemyMaxHealth(game.global.world) / baseDamage > 15
+        
+        //if we are at max map bonus, and we don't need to farm, don't do maps
+        if(game.global.mapBonus == 10 && !shouldFarm) shouldDoMaps = false;
         //if we are prestige mapping, force equip first mode
         if(autoTrimpSettings.Prestige.selected != "Off" && game.options.menu.mapLoot.enabled != 1) game.options.menu.mapLoot.enabled = 1;
         //if player has selected arbalest or gambeson but doesn't have them unlocked, just unselect it for them! It's magic!
@@ -996,11 +1003,13 @@ function autoMap() {
                 }
             }
         }
-
+        //repeat button management
         if (!game.global.preMapsActive) {
             if (game.global.mapsActive) {
-                if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle) {
+                //if we are doing the right map, and it's not a norecycle (unique) map, and we aren't going to hit max map bonus
+                if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle && (game.global.mapBonus < 9 || shouldFarm)) {
                     var targetPrestige = autoTrimpSettings.Prestige.selected;
+                    //make sure repeat map is on
                     if (!game.global.repeatMap) {
                         repeatClicked();
                     }
@@ -1009,6 +1018,7 @@ function autoMap() {
                         repeatClicked();
                     }
                 } else {
+                    //otherwise, make sure repeat map is off
                     if (game.global.repeatMap) {
                         repeatClicked();
                     }
@@ -1146,10 +1156,32 @@ function mainLoop() {
     if (getPageSetting('BuyBuildings')) buyBuildings();
     if (getPageSetting('BuyJobs')) buyJobs();
     if (getPageSetting('ManualGather')) manualLabor();
-    if (getPageSetting('AutoStance')) autoStance();
     if (getPageSetting('RunMapsWhenStuck')) autoMap();
     if (getPageSetting('GeneticistTimer') >= 0) manageGenes();
-
+    if (getPageSetting('AutoStance')) autoStance();
+    //if autostance is not on, we should do base calculations here so stuff like automaps still works
+    else {
+        baseDamage = game.global.soldierCurrentAttack * 2 * (1 + (game.global.achievementBonus / 100)) * ((game.global.antiStacks * game.portal.Anticipation.level * game.portal.Anticipation.modifier) + 1) * (1 + (game.global.roboTrimpLevel * 0.2));
+        if (game.global.formation == 2) {
+            baseDamage /= 4;
+        } else if (game.global.formation != "0") {
+            baseDamage *= 2;
+        }
+        //baseBlock
+        baseBlock = game.global.soldierCurrentBlock;
+        if (game.global.formation == 3) {
+            baseBlock /= 4;
+        } else if (game.global.formation != "0") {
+            baseBlock *= 2;
+        }
+        //baseHealth
+        baseHealth = game.global.soldierHealthMax;
+        if (game.global.formation == 1) {
+            baseHealth /= 4;
+        } else if (game.global.formation != "0") {
+            baseHealth *= 2;
+        }
+    }
     //auto-close breaking the world textbox
     if(document.getElementById('extraGridInfo').style.display == 'block') restoreGrid();
     autoLevelEquipment();
@@ -1162,7 +1194,8 @@ function mainLoop() {
             pauseFight(); //Disable autofight
         }
     }
-    if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0)) {
+    lowLevelFight = game.resources.trimps.maxSoldiers < (game.resources.trimps.owned - game.resources.trimps.employed) * 0.5 && game.global.world < 5;
+    if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || lowLevelFight )) {
         fightManual();
         // debug('triggered fight');
     }
