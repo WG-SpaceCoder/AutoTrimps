@@ -786,12 +786,12 @@ function manualLabor() {
         pauseFight();
     }
     //if we have more than 2 buildings in queue, or our modifier is real fast, build
-    if (game.global.buildingsQueue.length ? (game.global.buildingsQueue[0].startsWith("Trap") ? (game.global.buildingsQueue.length > 1) : true) : false) {
+    if (game.global.buildingsQueue.length ? (game.global.buildingsQueue[0].startsWith("Trap") ? true : (game.global.buildingsQueue.length > 1 || game.global.playerModifier > 1000)) : false) {
         // debug('Gathering buildings??');
         setGather('buildings');
     }
     //if we have some upgrades sitting around which we don't have enough science for, gather science
-    else if (game.resources.science.owned < scienceNeeded) {
+    else if (game.resources.science.owned < scienceNeeded && document.getElementById('scienceCollectBtn').style.display == 'block') {
         // debug('Science needed ' + scienceNeeded);
         setGather('science');
     } else {
@@ -831,10 +831,13 @@ function manualLabor() {
         if (game.global.playerGathering != lowestResource && !haveWorkers) {
             // debug('Set gather lowestResource');
             setGather(lowestResource);
-        } else if (game.global.playerGathering != ManualGather) {
-            // debug('Set gather ManualGather');
+        } else if (game.global.playerGathering != ManualGather && game.global.turkimpTimer > 0) {
+            //debug('Set gather ManualGather');
             setGather(ManualGather);
+        } else  if (document.getElementById('scienceCollectBtn').style.display == 'block' && game.global.turkimpTimer < 1) {
+            setGather('science');
         }
+        
     }
 }
 
@@ -1095,7 +1098,8 @@ function autoMap() {
 function manageGenes() {
     var fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
     if(getPageSetting('ManageBreedtimer')) {
-        if(game.global.challengeActive == 'Electricity') autoTrimpSettings.GeneticistTimer.value = '3';
+        if(game.portal.Anticipation.level == 0) autoTrimpSettings.GeneticistTimer.value = '0';
+        else if(game.global.challengeActive == 'Electricity') autoTrimpSettings.GeneticistTimer.value = '3';
         else if(game.global.challengeActive == 'Nom') {
             if(game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '10';
             else autoTrimpSettings.GeneticistTimer.value = '30';
