@@ -831,10 +831,10 @@ function manualLabor() {
         if (game.global.playerGathering != lowestResource && !haveWorkers) {
             // debug('Set gather lowestResource');
             setGather(lowestResource);
-        } else if (game.global.playerGathering != ManualGather && game.global.turkimpTimer > 0) {
+        } else if (game.global.playerGathering != 'metal' && game.global.turkimpTimer > 0) {
             //debug('Set gather ManualGather');
-            setGather(ManualGather);
-        } else  if (document.getElementById('scienceCollectBtn').style.display == 'block' && game.global.turkimpTimer < 1) {
+            setGather('metal');
+        } else  if (document.getElementById('scienceCollectBtn').style.display == 'block' && game.global.turkimpTimer < 1 && haveWorkers) {
             setGather('science');
         }
         
