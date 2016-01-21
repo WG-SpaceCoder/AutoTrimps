@@ -1100,12 +1100,9 @@ function manageGenes() {
     var fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
     if(getPageSetting('ManageBreedtimer')) {
         if(game.portal.Anticipation.level == 0) autoTrimpSettings.GeneticistTimer.value = '0';
-        else if(game.global.challengeActive == 'Electricity') autoTrimpSettings.GeneticistTimer.value = '3';
-        else if(game.global.challengeActive == 'Nom') {
-            if(game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '10';
-            else autoTrimpSettings.GeneticistTimer.value = '30';
-        }
-        else autoTrimpSettings.GeneticistTimer.value = '30';
+        else if(game.global.challengeActive == 'Electricity' || 'Mapocalypse') autoTrimpSettings.GeneticistTimer.value = '3.5';
+        else if(game.global.challengeActive == 'Nom') autoTrimpSettings.GeneticistTimer.value = '10.5';
+        else autoTrimpSettings.GeneticistTimer.value = '30.5';
     }
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
     //if we need to hire geneticists
