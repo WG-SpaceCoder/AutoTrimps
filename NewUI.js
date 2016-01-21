@@ -8,8 +8,8 @@ automationMenuInit();
 
 //Booleans
 createSetting('BuyStorage', 'Buy Storage', 'Will buy storage when resource is almost full', 'boolean');
-createSetting('ManualGather', 'Auto Gather', 'Will automatically gather resources and fight. MAY NOT WORK WELL AT THE START OF A GAME WITH LOW SCIENCE LEVEL.', 'boolean');
-createSetting('AutoFight', 'Auto Fight', 'Will automatically run fighting', 'boolean');
+createSetting('ManualGather', 'Auto Gather', 'Will automatically gather resources and build. MAY NOT WORK WELL AT THE START OF A GAME WITH LOW SCIENCE LEVEL.', 'boolean');
+createSetting('AutoFight', 'Auto Fight', 'Will automatically handle fighting', 'boolean');
 createSetting('BuyJobs', 'Buy Jobs', 'Buys jobs based on ratios configured', 'boolean');
 createSetting('BuyBuildings', 'Buy Buildings', 'Will buy non storage buildings as soon as they are available', 'boolean');
 createSetting('BuyUpgrades', 'Buy Upgrades', 'autobuy non eqipment Upgrades', 'boolean');
