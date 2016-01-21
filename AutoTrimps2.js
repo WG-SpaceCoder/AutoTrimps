@@ -787,7 +787,7 @@ function manualLabor() {
         pauseFight();
     }
     //if we have more than 2 buildings in queue, or (our modifier is real fast and trapstorm is off), build
-    if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || (game.global.playerModifier > 1000 && game.global.trapBuildToggled == false))) : false) {
+    if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || (game.global.playerModifier > 1000 && game.global.trapBuildToggled == false)) : false) {
         // debug('Gathering buildings??');
         setGather('buildings');
     }
