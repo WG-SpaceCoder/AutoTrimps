@@ -1101,7 +1101,7 @@ function manageGenes() {
     if(getPageSetting('ManageBreedtimer')) {
         if(game.portal.Anticipation.level == 0) autoTrimpSettings.GeneticistTimer.value = '0';
         else if(game.global.challengeActive == ('Electricity' || 'Mapocalypse')) autoTrimpSettings.GeneticistTimer.value = '3.5';
-        else if(game.global.challengeActive == 'Nom') autoTrimpSettings.GeneticistTimer.value = '10.5';
+        else if(game.global.challengeActive == 'Nom') autoTrimpSettings.GeneticistTimer.value = '11';
         else autoTrimpSettings.GeneticistTimer.value = '30.5';
     }
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
