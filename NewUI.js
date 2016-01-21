@@ -23,7 +23,6 @@ createSetting('BuyShieldblock', 'Buy Shield Block', 'Will buy the shield block u
 createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps', 'boolean');
 createSetting('RunMapsWhenStuck', 'Auto Maps', 'Automatically run maps to progress', 'boolean');
 createSetting('HireScientists', 'Hire Scientists', 'We are nerds and we like to party', 'boolean');
-createSetting('HireTrainers', 'Hire Trainers', 'Fist bump me bro', 'boolean');
 createSetting('BuildGyms', 'Build Gyms', 'Time for a workout', 'boolean');
 createSetting('BuildTributes', 'Build Tributes', 'All praise to the Dragimp', 'boolean');
 createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the throne', 'boolean');
@@ -36,6 +35,7 @@ createSetting('FarmerRatio', 'Farmer Ratio', '', 'value', '1');
 createSetting('LumberjackRatio', 'Lumberjack Ratio', '', 'value', '1');
 createSetting('MinerRatio', 'Miner Ratio', '', 'value', '1');
 createSetting('MaxExplorers', 'Max Explorers', 'Map the planet!!', 'value', '150');
+createSetting('MaxTrainers', 'Max Trainers', 'Fist bump me bro', 'value', -1);
 createSetting('MaxHut', 'Max Huts', '', 'value', '50');
 createSetting('MaxHouse', 'Max House', '', 'value', '50');
 createSetting('MaxMansion', 'MaxMansion', '', 'value', '50');
