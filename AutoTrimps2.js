@@ -634,7 +634,7 @@ function buyJobs() {
 
 
     //Simple buy if you can
-    if (getPageSetting('HireTrainers')) {
+    if (getPageSetting('MaxTrainers') > game.jobs.Trainer.owned || getPageSetting('MaxTrainers') == -1) {
         game.global.buyAmt = 1;
         while (canAffordJob('Trainer', false) && !game.jobs.Trainer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
@@ -642,7 +642,7 @@ function buyJobs() {
             safeBuyJob('Trainer');
         }
     }
-    if (game.jobs.Explorer.owned < getPageSetting('MaxExplorers')) {
+    if (game.jobs.Explorer.owned < getPageSetting('MaxExplorers') || getPageSetting('MaxExplorers') == -1) {
         game.global.buyAmt = 1;
         while (canAffordJob('Explorer', false) && !game.jobs.Explorer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
