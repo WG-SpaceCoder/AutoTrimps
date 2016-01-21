@@ -8,7 +8,8 @@ automationMenuInit();
 
 //Booleans
 createSetting('BuyStorage', 'Buy Storage', 'Will buy storage when resource is almost full', 'boolean');
-createSetting('ManualGather', 'Manual Gather', 'Will automatically gather resources and fight. MAY NOT WORK WELL AT THE START OF A GAME WITH LOW SCIENCE LEVEL.', 'boolean');
+createSetting('ManualGather', 'Auto Gather', 'Will automatically gather resources and fight. MAY NOT WORK WELL AT THE START OF A GAME WITH LOW SCIENCE LEVEL.', 'boolean');
+createSetting('AutoFight', 'Auto Fight', 'Will automatically run fighting', 'boolean');
 createSetting('BuyJobs', 'Buy Jobs', 'Buys jobs based on ratios configured', 'boolean');
 createSetting('BuyBuildings', 'Buy Buildings', 'Will buy non storage buildings as soon as they are available', 'boolean');
 createSetting('BuyUpgrades', 'Buy Upgrades', 'autobuy non eqipment Upgrades', 'boolean');
@@ -244,7 +245,7 @@ function autoSetValue(id) {
             if (!base) num = parseInt(num);
         }
     } else return;
-    var txtNum = (num > 0) ? prettify(num) : 'Infinite';
+    var txtNum = (num > -1) ? prettify(num) : 'Infinite';
     autoTrimpSettings[id].value = num;
     document.getElementById(id).textContent = ranstring + ': ' + txtNum;
 }
@@ -253,7 +254,7 @@ function updateValueFields() {
     for (var setting in autoTrimpSettings) {
         if (autoTrimpSettings[setting].type == 'value') {
             var elem = document.getElementById(autoTrimpSettings[setting].id);
-            if (elem != null) elem.textContent = autoTrimpSettings[setting].name + ': ' + ((autoTrimpSettings[setting].value > 0) ? prettify(autoTrimpSettings[setting].value) : 'Infinite');
+            if (elem != null) elem.textContent = autoTrimpSettings[setting].name + ': ' + ((autoTrimpSettings[setting].value > -1) ? prettify(autoTrimpSettings[setting].value) : 'Infinite');
         }
     }
 }
