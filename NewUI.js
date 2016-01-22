@@ -8,7 +8,8 @@ automationMenuInit();
 
 //Booleans
 createSetting('BuyStorage', 'Buy Storage', 'Will buy storage when resource is almost full', 'boolean');
-createSetting('ManualGather', 'Manual Gather', 'Will automatically gather resources and fight. MAY NOT WORK WELL AT THE START OF A GAME WITH LOW SCIENCE LEVEL.', 'boolean');
+createSetting('ManualGather', 'Auto Gather', 'Will automatically gather resources and build. MAY NOT WORK WELL AT THE START OF A GAME WITH LOW SCIENCE LEVEL.', 'boolean');
+createSetting('AutoFight', 'Better Auto Fight', 'Will automatically handle fighting.', 'boolean');
 createSetting('BuyJobs', 'Buy Jobs', 'Buys jobs based on ratios configured', 'boolean');
 createSetting('BuyBuildings', 'Buy Buildings', 'Will buy non storage buildings as soon as they are available', 'boolean');
 createSetting('BuyUpgrades', 'Buy Upgrades', 'autobuy non eqipment Upgrades', 'boolean');
@@ -22,7 +23,6 @@ createSetting('BuyShieldblock', 'Buy Shield Block', 'Will buy the shield block u
 createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps', 'boolean');
 createSetting('RunMapsWhenStuck', 'Auto Maps', 'Automatically run maps to progress', 'boolean');
 createSetting('HireScientists', 'Hire Scientists', 'We are nerds and we like to party', 'boolean');
-createSetting('HireTrainers', 'Hire Trainers', 'Fist bump me bro', 'boolean');
 createSetting('BuildGyms', 'Build Gyms', 'Time for a workout', 'boolean');
 createSetting('BuildTributes', 'Build Tributes', 'All praise to the Dragimp', 'boolean');
 createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the throne', 'boolean');
@@ -35,6 +35,7 @@ createSetting('FarmerRatio', 'Farmer Ratio', '', 'value', '1');
 createSetting('LumberjackRatio', 'Lumberjack Ratio', '', 'value', '1');
 createSetting('MinerRatio', 'Miner Ratio', '', 'value', '1');
 createSetting('MaxExplorers', 'Max Explorers', 'Map the planet!!', 'value', '150');
+createSetting('MaxTrainers', 'Max Trainers', 'Fist bump me bro', 'value', -1);
 createSetting('MaxHut', 'Max Huts', '', 'value', '50');
 createSetting('MaxHouse', 'Max House', '', 'value', '50');
 createSetting('MaxMansion', 'MaxMansion', '', 'value', '50');
@@ -244,7 +245,7 @@ function autoSetValue(id) {
             if (!base) num = parseInt(num);
         }
     } else return;
-    var txtNum = (num > 0) ? prettify(num) : 'Infinite';
+    var txtNum = (num > -1) ? prettify(num) : 'Infinite';
     autoTrimpSettings[id].value = num;
     document.getElementById(id).textContent = ranstring + ': ' + txtNum;
 }
@@ -253,7 +254,7 @@ function updateValueFields() {
     for (var setting in autoTrimpSettings) {
         if (autoTrimpSettings[setting].type == 'value') {
             var elem = document.getElementById(autoTrimpSettings[setting].id);
-            if (elem != null) elem.textContent = autoTrimpSettings[setting].name + ': ' + ((autoTrimpSettings[setting].value > 0) ? prettify(autoTrimpSettings[setting].value) : 'Infinite');
+            if (elem != null) elem.textContent = autoTrimpSettings[setting].name + ': ' + ((autoTrimpSettings[setting].value > -1) ? prettify(autoTrimpSettings[setting].value) : 'Infinite');
         }
     }
 }

@@ -522,6 +522,7 @@ function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
     javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/master/NewUI.js')._;
+   // javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/master/Graphs.js')._;
 }
 
 function easyMode() {
@@ -608,8 +609,8 @@ function buyBuildings() {
 function setTitle() {
     document.title = '(' + game.global.world + ')' + ' Trimps ' + document.getElementById('versionNumber').innerHTML;
     //for the dummies like me who always forget to turn automaps back on after portaling
-    if(getPageSetting('RunUniqueMaps') && !game.upgrades.Battle.done) {
-        autoTrimpSettings.RunMapsWhenStuck.enabled = true;
+    if(getPageSetting('RunUniqueMaps') && !game.upgrades.Battle.done && autoTrimpSettings.RunMapsWhenStuck.enabled == false) {
+        settingChanged("RunMapsWhenStuck");
         updateCustomButtons();
     }
 }
@@ -633,7 +634,7 @@ function buyJobs() {
 
 
     //Simple buy if you can
-    if (getPageSetting('HireTrainers')) {
+    if (getPageSetting('MaxTrainers') > game.jobs.Trainer.owned || getPageSetting('MaxTrainers') == -1) {
         game.global.buyAmt = 1;
         while (canAffordJob('Trainer', false) && !game.jobs.Trainer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
@@ -641,7 +642,7 @@ function buyJobs() {
             safeBuyJob('Trainer');
         }
     }
-    if (game.jobs.Explorer.owned < getPageSetting('MaxExplorers')) {
+    if (game.jobs.Explorer.owned < getPageSetting('MaxExplorers') || getPageSetting('MaxExplorers') == -1) {
         game.global.buyAmt = 1;
         while (canAffordJob('Explorer', false) && !game.jobs.Explorer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
@@ -781,12 +782,9 @@ function autoLevelEquipment() {
 
 function manualLabor() {
     var ManualGather = 'metal';
-    //If you can autofight - set autofight to true
-    if (game.upgrades.Bloodlust.done == 1 && game.global.pauseFight) {
-        pauseFight();
-    }
-    //if we have more than 2 buildings in queue, or our modifier is real fast, build
-    if (game.global.buildingsQueue.length ? (game.global.buildingsQueue[0].startsWith("Trap") ? true : (game.global.buildingsQueue.length > 1 || game.global.playerModifier > 1000)) : false) {
+
+    //if we have more than 2 buildings in queue, or (our modifier is real fast and trapstorm is off), build
+    if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || (game.global.playerModifier > 1000 && game.global.trapBuildToggled == false)) : false) {
         // debug('Gathering buildings??');
         setGather('buildings');
     }
@@ -1099,12 +1097,9 @@ function manageGenes() {
     var fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
     if(getPageSetting('ManageBreedtimer')) {
         if(game.portal.Anticipation.level == 0) autoTrimpSettings.GeneticistTimer.value = '0';
-        else if(game.global.challengeActive == 'Electricity') autoTrimpSettings.GeneticistTimer.value = '3';
-        else if(game.global.challengeActive == 'Nom') {
-            if(game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '10';
-            else autoTrimpSettings.GeneticistTimer.value = '30';
-        }
-        else autoTrimpSettings.GeneticistTimer.value = '30';
+        else if(game.global.challengeActive == ('Electricity' || 'Mapocalypse')) autoTrimpSettings.GeneticistTimer.value = '3.5';
+        else if(game.global.challengeActive == 'Nom') autoTrimpSettings.GeneticistTimer.value = '11';
+        else autoTrimpSettings.GeneticistTimer.value = '30.5';
     }
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
     //if we need to hire geneticists
@@ -1193,16 +1188,18 @@ function mainLoop() {
     updateCustomStats();
     updateCustomButtons();
 
-    //Manually fight instead of using builtin auto-fight
-    if (game.global.autoBattle) {
-        if (!game.global.pauseFight) {
-            pauseFight(); //Disable autofight
+    if (getPageSetting('AutoFight')) {
+        //Manually fight instead of using builtin auto-fight
+        if (game.global.autoBattle) {
+            if (!game.global.pauseFight) {
+                pauseFight(); //Disable autofight
+            }
         }
-    }
-    lowLevelFight = game.resources.trimps.maxSoldiers < (game.resources.trimps.owned - game.resources.trimps.employed) * 0.5 && (game.resources.trimps.owned - game.resources.trimps.employed) > game.resources.trimps.realMax() * 0.1 && game.global.world < 5;
-    if (getPageSetting('ManualGather') && game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || lowLevelFight )) {
-        fightManual();
-        // debug('triggered fight');
+        lowLevelFight = game.resources.trimps.maxSoldiers < (game.resources.trimps.owned - game.resources.trimps.employed) * 0.5 && (game.resources.trimps.owned - game.resources.trimps.employed) > game.resources.trimps.realMax() * 0.1 && game.global.world < 5;
+        if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || lowLevelFight )) {
+            fightManual();
+            // debug('triggered fight');
+        }
     }
 
     saveSettings();
