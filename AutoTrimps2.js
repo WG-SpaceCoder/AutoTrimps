@@ -1119,7 +1119,7 @@ function manageGenes() {
         if(game.portal.Anticipation.level == 0) autoTrimpSettings.GeneticistTimer.value = '0';
         else if(game.global.challengeActive == ('Electricity' || 'Mapocalypse')) autoTrimpSettings.GeneticistTimer.value = '3.5';
         else if(game.global.challengeActive == 'Nom') {
-        	if(shouldFarm) autoTrimpSettings.GeneticistTimer.value = '30';
+        	if(shouldFarm && !game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '30';
         	else autoTrimpSettings.GeneticistTimer.value = '11';
         }
         else autoTrimpSettings.GeneticistTimer.value = '30.5';
