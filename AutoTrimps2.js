@@ -662,8 +662,11 @@ if (getPageSetting('HireScientists') && !game.jobs.Scientist.locked) {
     else if (game.jobs.Scientist.owned > 0) safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
 }
     //Distribute Farmer/Lumberjack/Miner
+    if(!game.jobs.Farmer.locked) 
     safeBuyJob('Farmer', Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
+    if(!game.jobs.Lumberjack.locked) 
     safeBuyJob('Lumberjack', Math.floor((lumberjackRatio / totalRatio * totalDistributableWorkers) - game.jobs.Lumberjack.owned));
+    if(!game.jobs.Miner.locked) 
     safeBuyJob('Miner', Math.floor((minerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Miner.owned));
 }
 
