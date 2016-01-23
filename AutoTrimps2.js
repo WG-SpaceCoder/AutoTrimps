@@ -502,13 +502,12 @@ function getBreedTime() {
     if (!game.global.brokenPlanet) timeRemaining /= 10;
     timeRemaining = Math.floor(timeRemaining) + " Secs";
     var fullBreed = 0;
-    if (game.options.menu.showFullBreed.enabled) {
-        var adjustedMax = (game.portal.Coordinated.level) ? game.portal.Coordinated.currentSend : trimps.maxSoldiers;
-        var totalTime = log10((trimpsMax - trimps.employed) / ((trimpsMax - adjustedMax) - trimps.employed)) / log10(1 + (potencyMod / 10));
-        if (!game.global.brokenPlanet) totalTime /= 10;
-        fullBreed = Math.floor(totalTime) + " Secs";
-        timeRemaining += " / " + fullBreed;
-    }
+    var adjustedMax = (game.portal.Coordinated.level) ? game.portal.Coordinated.currentSend : trimps.maxSoldiers;
+    var totalTime = log10((trimpsMax - trimps.employed) / ((trimpsMax - adjustedMax) - trimps.employed)) / log10(1 + (potencyMod / 10));
+    if (!game.global.brokenPlanet) totalTime /= 10;
+    fullBreed = Math.floor(totalTime) + " Secs";
+    timeRemaining += " / " + fullBreed;
+
     // debug('Time to breed is ' +Math.floor(totalTime));
     return Math.floor(totalTime);
 }
