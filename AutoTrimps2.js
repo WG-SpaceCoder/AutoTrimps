@@ -650,7 +650,7 @@ function buyJobs() {
         }
     }
 game.global.buyAmt = oldBuy;
-if (getPageSetting('HireScientists' && !game.jobs.Scientist.locked)) {
+if (getPageSetting('HireScientists') && !game.jobs.Scientist.locked) {
     //if earlier in the game, buy a small amount of scientists
     if (game.jobs.Farmer.owned < 250000) {
         var buyScientists = Math.floor((scientistRatio / totalRatio * totalDistributableWorkers) - game.jobs.Scientist.owned);
