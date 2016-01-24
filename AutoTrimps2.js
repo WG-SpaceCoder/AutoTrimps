@@ -650,7 +650,7 @@ function buyJobs() {
         }
     }
 game.global.buyAmt = oldBuy;
-if (getPageSetting('HireScientists')) {
+if (getPageSetting('HireScientists') && !game.jobs.Scientist.locked) {
     //if earlier in the game, buy a small amount of scientists
     if (game.jobs.Farmer.owned < 250000) {
         var buyScientists = Math.floor((scientistRatio / totalRatio * totalDistributableWorkers) - game.jobs.Scientist.owned);
@@ -662,8 +662,11 @@ if (getPageSetting('HireScientists')) {
     else if (game.jobs.Scientist.owned > 0) safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
 }
     //Distribute Farmer/Lumberjack/Miner
+    if(!game.jobs.Farmer.locked) 
     safeBuyJob('Farmer', Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
+    if(!game.jobs.Lumberjack.locked) 
     safeBuyJob('Lumberjack', Math.floor((lumberjackRatio / totalRatio * totalDistributableWorkers) - game.jobs.Lumberjack.owned));
+    if(!game.jobs.Miner.locked) 
     safeBuyJob('Miner', Math.floor((minerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Miner.owned));
 }
 
@@ -875,49 +878,67 @@ function autoStance() {
         } else {
             enemy = game.global.gridArray[game.global.lastClearedCell + 1];
         }
-        var enemyFast = game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow';
+        var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow');
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.19;
         var dDamage = enemyDamage - baseBlock / 2 > enemyDamage * 0.2 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2;
+        var dHealth = baseHealth/2;
         var xDamage = enemyDamage - baseBlock > enemyDamage * 0.2 ? enemyDamage - baseBlock : enemyDamage * 0.2;
+        var xHealth = baseHealth;
         var bDamage = enemyDamage - baseBlock * 4 > enemyDamage * 0.1 ? enemyDamage - baseBlock * 4 : enemyDamage * 0.1;
+        var bHealth = baseHealth/2;
     } else if (game.global.mapsActive && !game.global.preMapsActive) {
         if (typeof game.global.mapGridArray[game.global.lastClearedMapCell + 1] === 'undefined') {
             var enemy = game.global.mapGridArray[0];
         } else {
             var enemy = game.global.mapGridArray[game.global.lastClearedMapCell + 1];
         }
-        var enemyFast = game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow';
+        var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow');
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.19;
         var dDamage = enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0;
+        var dHealth = baseHealth/2;
         var xDamage = enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0;
+        var xHealth = baseHealth;
         var bDamage = enemyDamage - baseBlock * 4 > 0 ? enemyDamage - baseBlock * 4 : 0;
+        var bHealth = baseHealth/2;
     }
+    
+    	if (game.global.challengeActive == "Electricity" || game.global.challengeActive == "Mapocalypse") {
+			dDamage+= dHealth * game.global.radioStacks * 0.1;
+			xDamage+= xHealth * game.global.radioStacks * 0.1;
+			bDamage+= bHealth * game.global.radioStacks * 0.1;
+		} else if (game.global.challengeActive == "Nom") {
+			dDamage += dHealth/20;
+			xDamage += xHealth/20;
+			bDamage += bHealth/20;
+		}
 
-    if (!game.global.preMapsActive) {
-        if (!enemyFast && game.upgrades.Dominance.done && enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) && (newSquadRdy || baseHealth / 2 - missingHealth > 0)) {
-            if (game.global.formation != 2) {
-                setFormation(2);
-            }
-        } else if (game.upgrades.Dominance.done && ((newSquadRdy && baseHealth / 2 > dDamage) || baseHealth / 2 - missingHealth > dDamage)) {
-            if (game.global.formation != 2) {
-                setFormation(2);
-            }
-        } else if (game.upgrades.Formations.done && ((newSquadRdy && baseHealth > xDamage) || baseHealth - missingHealth > xDamage)) {
-            if (game.global.formation != "0") {
-                setFormation("0");
-            }
-        } else if (game.upgrades.Barrier.done && ((newSquadRdy && baseHealth / 2 > bDamage) || baseHealth / 2 - missingHealth > bDamage)) {
-            if (game.global.formation != 3) {
-                setFormation(3);
-            }
-        } else {
-            if (game.upgrades.Formations.done && game.global.formation != 1) {
-                setFormation(1);
-            }
-        }
-    }
+	if (!game.global.preMapsActive) {
+		if (!enemyFast && game.upgrades.Dominance.done && enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) && (newSquadRdy || (dHealth - missingHealth > 0 && game.global.challengeActive != 'Nom') || (game.global.challengeActive == 'Nom' && dHealth - missingHealth > dHealth/20))) {
+			if (game.global.formation != 2) {
+				setFormation(2);
+			}
+		} else if (game.upgrades.Dominance.done && ((newSquadRdy && dHealth > dDamage) || dHealth - missingHealth > dDamage)) {
+			if (game.global.formation != 2) {
+				setFormation(2);
+			}
+		} else if (game.upgrades.Formations.done && ((newSquadRdy && xHealth > xDamage) || xHealth - missingHealth > xDamage)) {
+			if (game.global.formation != "0") {
+				setFormation("0");
+			}
+		} else if (game.upgrades.Barrier.done && ((newSquadRdy && bHealth > bDamage) || bHealth - missingHealth > bDamage)) {
+			if (game.global.formation != 3) {
+				setFormation(3);
+			}
+		} else if (game.upgrades.Formations.done) {
+			if (game.global.formation != 1) {
+				setFormation(1);
+			}
+		} else {
+			setFormation("0");
+		}
+	}
 }
 
 //core function written by Belaith
@@ -1097,7 +1118,12 @@ function manageGenes() {
     if(getPageSetting('ManageBreedtimer')) {
         if(game.portal.Anticipation.level == 0) autoTrimpSettings.GeneticistTimer.value = '0';
         else if(game.global.challengeActive == ('Electricity' || 'Mapocalypse')) autoTrimpSettings.GeneticistTimer.value = '3.5';
-        else if(game.global.challengeActive == 'Nom') autoTrimpSettings.GeneticistTimer.value = '11';
+        else if(game.global.challengeActive == 'Nom') {
+        	//intent of below if is to push through past megafarming with 30 anti stacks if we need to farm, 
+        	//but raising to 30 antistacks often turns shouldfarm off. Would need a separate shouldFarmNom variable that approximates at 10 stacks? Don't care enough to do now
+        	//if(shouldFarm && !game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '30';
+        	autoTrimpSettings.GeneticistTimer.value = '11';
+        }
         else autoTrimpSettings.GeneticistTimer.value = '30.5';
     }
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
