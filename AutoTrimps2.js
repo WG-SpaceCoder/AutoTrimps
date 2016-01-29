@@ -911,7 +911,7 @@ function autoStance() {
 			dDamage+= dHealth * game.global.radioStacks * 0.1;
 			xDamage+= xHealth * game.global.radioStacks * 0.1;
 			bDamage+= bHealth * game.global.radioStacks * 0.1;
-		} else if (game.global.challengeActive == "Nom") {
+		} else if (game.global.challengeActive == "Nom" || game.global.challengeActive == "Toxicity") {
 			dDamage += dHealth/20;
 			xDamage += xHealth/20;
 			bDamage += bHealth/20;
@@ -922,6 +922,7 @@ function autoStance() {
 			if(xHealth > baseBlock)
 			xDamage = enemyDamage*5 - baseBlock > 0 ? enemyDamage - baseBlock : 0;
 		}
+
 
 	if (!game.global.preMapsActive) {
 		if (!enemyFast && game.upgrades.Dominance.done && enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) && (newSquadRdy || (dHealth - missingHealth > 0 && game.global.challengeActive != 'Nom') || (game.global.challengeActive == 'Nom' && dHealth - missingHealth > dHealth/20))) {
