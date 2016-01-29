@@ -494,6 +494,9 @@ function getBreedTime() {
     potencyMod += (potencyMod * game.portal.Pheromones.level * game.portal.Pheromones.modifier);
     if (game.jobs.Geneticist.owned > 0) potencyMod *= Math.pow(0.98, game.jobs.Geneticist.owned);
     if (game.unlocks.quickTrimps) potencyMod *= 2;
+    if (game.global.challengeActive == "Toxicity" && game.challenges.Toxicity.stacks > 0){
+	potencyMod *= Math.pow(game.challenges.Toxicity.stackMult, game.challenges.Toxicity.stacks);
+	}
     breeding = breeding * potencyMod;
     updatePs(breeding, true);
 
@@ -913,6 +916,12 @@ function autoStance() {
 			xDamage += xHealth/20;
 			bDamage += bHealth/20;
 		}
+		else if (game.global.challengeActive == "Crushed") {
+			if(dHealth > baseBlock /2)
+			dDamage = enemyDamage*5 - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0;
+			if(xHealth > baseBlock)
+			xDamage = enemyDamage*5 - baseBlock > 0 ? enemyDamage - baseBlock : 0;
+		}
 
 	if (!game.global.preMapsActive) {
 		if (!enemyFast && game.upgrades.Dominance.done && enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) && (newSquadRdy || (dHealth - missingHealth > 0 && game.global.challengeActive != 'Nom') || (game.global.challengeActive == 'Nom' && dHealth - missingHealth > dHealth/20))) {
@@ -992,7 +1001,7 @@ function autoMap() {
                     break;
                 }
                 //run the prison only if we are 'cleared' to run level 80 + 1 level per 200% difficulty. Could do more accurate calc if needed
-                if(theMap.name == 'The Prison' && game.global.challengeActive == ("Electricity" || "Mapocalypse")) {
+                if(theMap.name == 'The Prison' && (game.global.challengeActive == "Electricity" || game.global.challengeActive == "Mapocalypse")) {
                     var prisonDifficulty = Math.ceil(theMap.difficulty / 2);
                     if(game.global.world >= 80 + prisonDifficulty) {
                         shouldDoMap = theMap.id;
@@ -1007,7 +1016,14 @@ function autoMap() {
                     shouldDoMap = theMap.id;
                     break;
                 }
-                //other unique maps here - bionic wonderland?
+                if(theMap.name == 'Bionic Wonderland' && game.global.challengeActive == "Crushed" ) {
+                	var wonderlandDifficulty = Math.ceil(theMap.difficulty / 2);
+                	if(game.global.world >= 125 + prisonDifficulty) {
+                        shouldDoMap = theMap.id;
+                        break;
+                    }
+                }
+                //other unique maps here
             }
         }
 
