@@ -1019,7 +1019,7 @@ function autoMap() {
                 }
                 if(theMap.name == 'Bionic Wonderland' && game.global.challengeActive == "Crushed" ) {
                 	var wonderlandDifficulty = Math.ceil(theMap.difficulty / 2);
-                	if(game.global.world >= 125 + prisonDifficulty) {
+                	if(game.global.world >= 125 + wonderlandDifficulty) {
                         shouldDoMap = theMap.id;
                         break;
                     }
