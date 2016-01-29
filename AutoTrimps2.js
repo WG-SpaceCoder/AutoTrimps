@@ -918,9 +918,9 @@ function autoStance() {
 		}
 		else if (game.global.challengeActive == "Crushed") {
 			if(dHealth > baseBlock /2)
-			dDamage = enemyDamage*5 - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0;
+			dDamage = enemyDamage*5 - baseBlock / 2 > 0 ? enemyDamage*5 - baseBlock / 2 : 0;
 			if(xHealth > baseBlock)
-			xDamage = enemyDamage*5 - baseBlock > 0 ? enemyDamage - baseBlock : 0;
+			xDamage = enemyDamage*5 - baseBlock > 0 ? enemyDamage*5 - baseBlock : 0;
 		}
 
 
