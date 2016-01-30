@@ -701,7 +701,13 @@ function autoLevelEquipment() {
         }
     };
     var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
+    //enemyHeath sic but too lazy to change
     var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
+    if(game.global.challengeActive == "Toxicity") {
+    	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
+    	//enemyDamage *= 2;
+    	enemyHeath *= 2;
+    }
     var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0));
     var enoughDamage = (baseDamage * 4 > enemyHeath);
 
@@ -956,6 +962,12 @@ function autoMap() {
     if (game.global.mapsUnlocked) {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
         var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
+        if(game.global.challengeActive == "Toxicity") {
+    	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
+    	//enemyDamage *= 2;
+    	enemyHeath *= 2;
+    	}
+    	
         var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0));
         var enoughDamage = (baseDamage * 4 > enemyHeath);
         var shouldDoMaps = !enoughHealth || !enoughDamage;
