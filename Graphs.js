@@ -38,6 +38,7 @@ document.getElementById('graphParent').appendChild(btn);
 
 function autoToggleGraph() {
     if (game.options.displayed) toggleSettingsMenu();
+    if (document.getElementById('autoSettings').style.display === 'block') document.getElementById('autoSettings').style.display = 'none';
     var item = document.getElementById('graphParent');
     if (item.style.display === 'block') item.style.display = 'none';
     else {
