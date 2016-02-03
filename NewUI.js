@@ -44,7 +44,7 @@ createSetting('MaxResort', 'Max Resort', '', 'value', '50');
 createSetting('MaxGateway', 'Max Gateway', '', 'value', '25');
 createSetting('MaxCollector', 'Max Collector', '', 'value', '-1');
 createSetting('FirstGigastation', 'First Gigastation', 'How many warpstations to buy before your first gigastation', 'value', '20');
-createSetting('DeltaGigastation', 'Delta Gigastation', 'How many extra warpstations to buy for each gigastation', 'value', '2');
+createSetting('DeltaGigastation', 'Delta Gigastation', 'How many extra warpstations to buy for each gigastation. Supports fractional values. For example 2.5 will buy +2/+3/+2/+3...', 'value', '2');
 createSetting('MaxGym', 'Max Gym', '', 'value', '-1');
 createSetting('MaxTribute', 'Max Tribute', '', 'value', '-1');
 createSetting('MaxNursery', 'Max Nursery', '', 'value', '-1');
