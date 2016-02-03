@@ -551,7 +551,7 @@ function buyUpgrades() {
         var available = (gameUpgrade.allowed > gameUpgrade.done && canAffordTwoLevel(gameUpgrade));
         if (upgrade == 'Coordination' && !canAffordCoordinationTrimps()) continue;
         if (upgrade == 'Shieldblock' && !getPageSetting('BuyShieldblock')) continue;
-        if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < game.global.lastWarp + getPageSetting('DeltaGigastation') : game.buildings.Warpstation.owned < getPageSetting('FirstGigastation'))) continue;
+        if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < (Math.floor(game.upgrades.Gigastation.done * getPageSetting('DeltaGigastation')) + getPageSetting('FirstGigastation')) : game.buildings.Warpstation.owned < getPageSetting('FirstGigastation'))) continue;
         if ((!game.upgrades.Scientists.done && upgrade != 'Battle') ? (available && upgrade == 'Scientists' && game.upgrades.Scientists.allowed) : (available)) {
             buyUpgrade(upgrade, true);
             tooltip("hide");
