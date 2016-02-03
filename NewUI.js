@@ -242,7 +242,7 @@ function autoSetValue(id) {
                 }
                 if (base) num = Math.round(parseFloat(num.split(letters)[0]) * Math.pow(1000, base));
             }
-            if (!base) num = parseInt(num);
+            if (!base) num = parseFloat(num);
         }
     } else return;
     var txtNum = (num > -1) ? prettify(num) : 'Infinite';
