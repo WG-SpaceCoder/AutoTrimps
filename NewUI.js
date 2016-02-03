@@ -98,7 +98,7 @@ function automationMenuInit() {
     //array to hold the settings. Loading values into them should be done before UI creation.
     var html = "var automationSettings=[0,0,0];\r\n var ranstring=''; //cause I'm dumb \r\n";
     //toggles the display of the settings menu.
-    html += "function autoToggle()\r\n {if (game.options.displayed)\r\n toggleSettingsMenu();\r\n var item = document.getElementById('autoSettings');\r\n if(item.style.display === 'block')\r\n item.style.display='none';\r\n else item.style.display = 'block'; }\r\n ";
+    html += "function autoToggle()\r\n {if (game.options.displayed)\r\n toggleSettingsMenu();\r\n if (document.getElementById('graphParent').style.display === 'block')\r\n document.getElementById('graphParent').style.display = 'none';\r\n var item = document.getElementById('autoSettings');\r\n if(item.style.display === 'block')\r\n item.style.display='none';\r\n else item.style.display = 'block'; }\r\n ";
     //overloads the settings menu button to include hiding the auto menu settings.
     html += "function autoPlusSettingsMenu(){\r\n var item = document.getElementById('autoSettings');\r\n if(item.style.display === 'block')\r\n item.style.display='none';\r\n toggleSettingsMenu();}\r\n ";
 
