@@ -152,7 +152,7 @@ function getPageSetting(setting) {
         return autoTrimpSettings[setting].enabled;
     } else if (autoTrimpSettings[setting].type == 'value') {
         // debug('found a value');
-        return parseInt(autoTrimpSettings[setting].value);
+        return parseFloat(autoTrimpSettings[setting].value);
     }
 }
 
