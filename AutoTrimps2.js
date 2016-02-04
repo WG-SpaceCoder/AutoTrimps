@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.1
 // @description  try to take over the world!
-// @author       zininzinin, spindrjr, belaith
+// @author       zininzinin, spindrjr, belaith, ishakaru
 // @include        *trimps.github.io*
 // @grant        none
 // ==/UserScript==
