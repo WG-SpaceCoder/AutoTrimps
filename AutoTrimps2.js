@@ -523,7 +523,7 @@ function getBreedTime() {
 function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/master/NewUI.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
     javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/master/Graphs.js')._;
 }
 
@@ -958,6 +958,8 @@ function autoStance() {
 }
 
 //core function written by Belaith
+var doPrison = false;
+var doWonderland = false;
 function autoMap() {
     if (game.global.mapsUnlocked) {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
@@ -1016,6 +1018,7 @@ function autoMap() {
                 //run the prison only if we are 'cleared' to run level 80 + 1 level per 200% difficulty. Could do more accurate calc if needed
                 if(theMap.name == 'The Prison' && (game.global.challengeActive == "Electricity" || game.global.challengeActive == "Mapocalypse")) {
                     var prisonDifficulty = Math.ceil(theMap.difficulty / 2);
+                    doPrison = true;
                     if(game.global.world >= 80 + prisonDifficulty) {
                         shouldDoMap = theMap.id;
                         break;
@@ -1031,6 +1034,7 @@ function autoMap() {
                 }
                 if(theMap.name == 'Bionic Wonderland' && game.global.challengeActive == "Crushed" ) {
                 	var wonderlandDifficulty = Math.ceil(theMap.difficulty / 2);
+                	doWonderland = true;
                 	if(game.global.world >= 125 + wonderlandDifficulty) {
                         shouldDoMap = theMap.id;
                         break;
@@ -1141,6 +1145,61 @@ function autoMap() {
     }
 }
 
+
+var lastHelium = 0;
+function autoPortal() {
+	switch (autoTrimpSettings.AutoPortal.selected) {
+		case "Helium Per Hour":
+			var timeThisPortal = new Date().getTime() - game.global.portalTime;
+    			timeThisPortal /= 3600000;
+    			var myHelium = Math.floor(game.resources.helium.owned / timeThisPortal);
+    			if(myHelium < lastHelium) {
+				doPortal();
+    			}
+			break;
+		case "Balance":
+			if(game.global.world > 40 && !game.global.challengeActive)
+				doPortal('Balance');
+			break;
+		case "Electricity":
+			if(doPrison && !game.global.challengeActive) {
+				doPortal('Electricity');
+				doPrison = false;
+			}
+			break;
+		case "Crushed":
+			if(doWonderland && !game.global.challengeActive) {
+				doPortal('Crushed');
+				doWonderland = false;
+			}
+			break;
+		case "Nom":
+			if(game.global.world > 145 && !game.global.challengeActive)
+				doPortal('Nom');
+			break;
+		case "Toxicity":
+			if(game.global.world > 165 && !game.global.challengeActive)
+				doPortal('Toxicity');
+			break;
+		case "Custom":
+			if(game.global.world > getPageSetting('CustomAutoPortal') && !game.global.challengeActive)
+				doPortal();
+			break;
+		default:
+			break;
+			
+	}
+	
+}
+
+function doPortal(challenge) {
+	portalClicked();
+	if(challenge) selectChallenge(challenge);
+    	activateClicked();
+    	activatePortal();
+    	lastHelium = 0;
+}
+
 //adjust geneticists to reach desired breed timer
 function manageGenes() {
     var fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
@@ -1213,6 +1272,7 @@ function mainLoop() {
     if (getPageSetting('RunMapsWhenStuck')) autoMap();
     if (getPageSetting('GeneticistTimer') >= 0) manageGenes();
     if (getPageSetting('AutoStance')) autoStance();
+    if (autoTrimpSettings.AutoPortal.selected != "Off") autoPortal();
     //if autostance is not on, we should do base calculations here so stuff like automaps still works
     else {
         baseDamage = game.global.soldierCurrentAttack * 2 * (1 + (game.global.achievementBonus / 100)) * ((game.global.antiStacks * game.portal.Anticipation.level * game.portal.Anticipation.modifier) + 1) * (1 + (game.global.roboTrimpLevel * 0.2));
