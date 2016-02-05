@@ -524,7 +524,7 @@ function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
     javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/master/Graphs.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
 }
 
 function easyMode() {
