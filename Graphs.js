@@ -2,7 +2,7 @@
 var head = document.getElementsByTagName('head')[0];
 var script = document.createElement('script');
 script.type = 'text/javascript';
-script.src = 'https://github.highcharts.com/highcharts.src.js';
+script.src = 'https://code.highcharts.com/highcharts.js';
 head.appendChild(script);
 
 //Create the graph button and div
