@@ -1160,18 +1160,22 @@ function autoPortal() {
 	    			timeThisPortal /= 3600000;
 	    			var myHelium = Math.floor(game.resources.helium.owned / timeThisPortal);
 	    			if(myHelium < lastHelium) {
+	    				gatherInfo();
 					doPortal();
 	    			}
 	    			else lastHelium = myHelium;
 			}
 			break;
 		case "Balance":
-			if(game.global.world > 40 && !game.global.challengeActive)
+			if(game.global.world > 40 && !game.global.challengeActive) {
+				gatherInfo();
 				doPortal('Balance');
+			}
 			break;
 		case "Electricity":
 			//if doPrison is true, autoMaps sent us in there because of electricity
 			if(doPrison && !game.global.challengeActive) {
+				gatherInfo();
 				doPortal('Electricity');
 				doPrison = false;
 			}
@@ -1179,21 +1183,28 @@ function autoPortal() {
 		case "Crushed":
 			//if doWonderland is true, autoMaps sent us in there because of crushed
 			if(doWonderland && !game.global.challengeActive) {
+				gatherInfo();
 				doPortal('Crushed');
 				doWonderland = false;
 			}
 			break;
 		case "Nom":
-			if(game.global.world > 145 && !game.global.challengeActive)
+			if(game.global.world > 145 && !game.global.challengeActive) {
+				gatherInfo();
 				doPortal('Nom');
+			}
 			break;
 		case "Toxicity":
-			if(game.global.world > 165 && !game.global.challengeActive)
+			if(game.global.world > 165 && !game.global.challengeActive) {
+				gatherInfo();
 				doPortal('Toxicity');
+			}
 			break;
 		case "Custom":
-			if(game.global.world > getPageSetting('CustomAutoPortal') && !game.global.challengeActive)
+			if(game.global.world > getPageSetting('CustomAutoPortal') && !game.global.challengeActive) {
+				gatherInfo();
 				doPortal();
+			}
 			break;
 		default:
 			break;
