@@ -31,10 +31,18 @@ for (var item in graphList) {
 }
 document.getElementById('graphParent').appendChild(btn);
 
+var btn2 = document.createElement("button");
+var t = document.createTextNode("Clear Data");
+btn2.appendChild(t);
+btn2.setAttribute("onclick", "clearData()");
+document.getElementById('graphParent').appendChild(btn2);
 
 
 
 
+function clearData() {
+    while(allSaveData[0].totalPortals < game.global.totalPortals) allSaveData.shift();
+}
 
 
 function autoToggleGraph() {
@@ -232,4 +240,4 @@ if (tmpGraphData !== null) {
 }
 
 
-setTimeout(gatherInfo, 1000);
+setTimeout(gatherInfo, 5000);
