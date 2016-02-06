@@ -709,7 +709,7 @@ function autoLevelEquipment() {
     	//enemyDamage *= 2;
     	enemyHeath *= 2;
     }
-    var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0));
+    var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
     var enoughDamage = (baseDamage * 4 > enemyHeath);
 
     for (var equipName in equipmentList) {
@@ -972,7 +972,7 @@ function autoMap() {
     	enemyHeath *= 2;
     	}
     	
-        var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0));
+        var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
         var enoughDamage = (baseDamage * 4 > enemyHeath);
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
