@@ -35,6 +35,7 @@ var btn2 = document.createElement("button");
 var t = document.createTextNode("Clear Data");
 btn2.appendChild(t);
 btn2.setAttribute("onclick", "clearData()");
+btn2.setAttribute("style", "color:black");
 document.getElementById('graphParent').appendChild(btn2);
 
 
