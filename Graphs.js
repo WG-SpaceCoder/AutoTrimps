@@ -53,7 +53,7 @@ function autoPlusGraphMenu() {
     if (item.style.display === 'block') item.style.display = 'none';
     toggleSettingsMenu();
 }
-
+var chart1;
 function setGraph(title, xTitle, yTitle, valueSuffix, series) {
     chart1 = new Highcharts.Chart({
         chart: {
