@@ -4,8 +4,7 @@ var script = document.createElement('script');
 script.type = 'text/javascript';
 script.src = 'https://github.highcharts.com/highcharts.js';
 head.appendChild(script);
-script.src = "https://code.highcharts.com/modules/exporting.js";
-head.appendChild(script);
+
 
 //Create the graph button and div
 var newItem = document.createElement("TD");
