@@ -482,7 +482,7 @@ function getEnemyMaxHealth(zone) {
     return Math.floor(amt);
 }
 
-function getBreedTime() {
+function getBreedTime(remaining) {
     var trimps = game.resources.trimps;
     var breeding = trimps.owned - trimps.employed;
     var trimpsMax = trimps.realMax();
@@ -503,7 +503,8 @@ function getBreedTime() {
 
     var timeRemaining = log10((trimpsMax - trimps.employed) / (trimps.owned - trimps.employed)) / log10(1 + (potencyMod / 10));
     if (!game.global.brokenPlanet) timeRemaining /= 10;
-    timeRemaining = Math.floor(timeRemaining) + " Secs";
+    timeRemaining = Math.floor(timeRemaining);
+    if(remaining) return timeRemaining;
     var fullBreed = 0;
     var adjustedMax = (game.portal.Coordinated.level) ? game.portal.Coordinated.currentSend : trimps.maxSoldiers;
     var totalTime = log10((trimpsMax - trimps.employed) / ((trimpsMax - adjustedMax) - trimps.employed)) / log10(1 + (potencyMod / 10));
@@ -958,6 +959,7 @@ function autoStance() {
 }
 
 //core function written by Belaith
+//prison/wonderland flags for use in autoPortal function
 var doPrison = false;
 var doWonderland = false;
 function autoMap() {
@@ -1147,27 +1149,35 @@ function autoMap() {
 
 
 var lastHelium = 0;
+var lastZone = 0;
 function autoPortal() {
 	switch (autoTrimpSettings.AutoPortal.selected) {
+		//portal if we have lower He/hr than the previous zone
 		case "Helium Per Hour":
-			var timeThisPortal = new Date().getTime() - game.global.portalTime;
-    			timeThisPortal /= 3600000;
-    			var myHelium = Math.floor(game.resources.helium.owned / timeThisPortal);
-    			if(myHelium < lastHelium) {
-				doPortal();
-    			}
+			if(game.global.world > lastZone) {
+				lastZone = game.global.world;
+				var timeThisPortal = new Date().getTime() - game.global.portalTime;
+	    			timeThisPortal /= 3600000;
+	    			var myHelium = Math.floor(game.resources.helium.owned / timeThisPortal);
+	    			if(myHelium < lastHelium) {
+					doPortal();
+	    			}
+	    			else lastHelium = myHelium;
+			}
 			break;
 		case "Balance":
 			if(game.global.world > 40 && !game.global.challengeActive)
 				doPortal('Balance');
 			break;
 		case "Electricity":
+			//if doPrison is true, autoMaps sent us in there because of electricity
 			if(doPrison && !game.global.challengeActive) {
 				doPortal('Electricity');
 				doPrison = false;
 			}
 			break;
 		case "Crushed":
+			//if doWonderland is true, autoMaps sent us in there because of crushed
 			if(doWonderland && !game.global.challengeActive) {
 				doPortal('Crushed');
 				doWonderland = false;
@@ -1198,6 +1208,7 @@ function doPortal(challenge) {
     	activateClicked();
     	activatePortal();
     	lastHelium = 0;
+    	lastZone = 0;
 }
 
 //adjust geneticists to reach desired breed timer
@@ -1217,6 +1228,7 @@ function manageGenes() {
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
     //if we need to hire geneticists
     if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked) {
+    	//insert 10% of total food limit here? or cost vs tribute?
         //if there's no free worker spots, fire a farmer
         if (fWorkers < 1 && canAffordJob('Geneticist', false)) {
             safeBuyJob('Farmer', -1);
@@ -1230,7 +1242,7 @@ function manageGenes() {
         buyUpgrade('Potency');
     }
     //otherwise, if we have some geneticists, start firing them
-    else if (targetBreed < getBreedTime() && !game.jobs.Geneticist.locked && game.jobs.Geneticist.owned > 0) {
+    else if ((targetBreed < getBreedTime() || targetBreed < getBreedTime(true)) && !game.jobs.Geneticist.locked && game.jobs.Geneticist.owned > 0) {
         safeBuyJob('Geneticist', -1);
     }
     //really should be integrated with the buyBuildings routine instead of here, but I think it's mostly harmless here
