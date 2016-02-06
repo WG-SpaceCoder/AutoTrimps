@@ -279,12 +279,12 @@ function safeBuyJob(jobTitle, amount) {
         game.global.firing = true;
         amount = Math.abs(amount);
     } else {
-        game.global.firing = false;
-    }
-    game.global.buyAmt = amount;
-    if (!canAffordJob(jobTitle, false)) {
-        postBuy();
-        return false;
+            game.global.firing = false;
+	    game.global.buyAmt = amount;
+	    if (!canAffordJob(jobTitle, false)) {
+	        postBuy();
+	        return false;
+	    }
     }
     //debug((game.global.firing ? 'Firing ' : 'Hiring ') + game.global.buyAmt + ' ' + jobTitle);
     buyJob(jobTitle);
@@ -1238,7 +1238,7 @@ function manageGenes() {
     }
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
     //if we need to hire geneticists
-    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked) {
+    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked && targetBreed > getBreedTime(true)) {
     	//insert 10% of total food limit here? or cost vs tribute?
         //if there's no free worker spots, fire a farmer
         if (fWorkers < 1 && canAffordJob('Geneticist', false)) {
