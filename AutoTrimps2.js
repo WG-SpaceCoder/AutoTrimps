@@ -993,7 +993,7 @@ function autoMap() {
         
 
         //If on toxicity and reached the last cell, calculate if max tox stacks will give us better He/hr (assumes max agility)
-        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell == 98 && game.challenges.Toxicity.stacks < 1500 && getToxStacks && heliumGrowing && game.global.world > 60) {
+        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell == 98 && game.challenges.Toxicity.stacks < 1500 && heliumGrowing && game.global.world > 60) {
 		    shouldDoMaps = true;
 		    //force abandon army
 		    if(!game.global.mapsActive && !game.global.preMapsActive) {
