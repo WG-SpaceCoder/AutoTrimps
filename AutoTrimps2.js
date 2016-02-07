@@ -1013,7 +1013,7 @@ function autoMap() {
 	    	}
 	    	else {
 	    		getToxStacks = false;
-	    		startToxStacks = true;
+	    		startToxStacking = true;
 	    		debug('ending tox stacking');
 	    	}
         }
@@ -1230,9 +1230,10 @@ function watchHelium (init) {
 	}
 	if(strikes > 2) heliumGrowing = false;
 	heliumWatch = he;
-}
 
-setTimeout(watchHelium, 15000);
+}
+	setInterval(watchHelium, 15000);
+
 
 
 var lastHelium = 0;
