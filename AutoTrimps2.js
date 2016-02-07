@@ -995,7 +995,7 @@ function autoMap() {
         
         if(game.global.world > stackZone) getToxStacks = true;
         //If on toxicity and reached the last cell, calculate if max tox stacks will give us better He/hr (assumes max agility)
-        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell == 98 && game.challenges.Toxicity.stacks < 1500 && getToxStacks && calculateNextHeliumHour(true) > calculateNextHeliumHour()) {
+        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell == 98 && game.challenges.Toxicity.stacks < 1500 && getToxStacks && heliumGrowing) {
 	    	if(startToxStacking) {
 	    		watchHelium(true);
 	    		stackZone = game.global.world;
@@ -1232,7 +1232,7 @@ function watchHelium (init) {
 	heliumWatch = he;
 
 }
-	setInterval(watchHelium, 15000);
+	setInterval(watchHelium, 10000);
 
 
 
