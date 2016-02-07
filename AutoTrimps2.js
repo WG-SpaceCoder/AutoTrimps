@@ -998,7 +998,14 @@ function autoMap() {
 	    	var heliumNow = Math.floor((game.resources.helium.owned + calculateHelium()) / timeThisPortal);
 	    	//helium per hour with max tox stacks
 	    	var heliumStacked = Math.floor((game.resources.helium.owned + calculateHelium(true)) / (timeThisPortal + (1500 - game.challenges.Toxicity.stacks) / 2));
-	    	if(heliumStacked > heliumNow) shouldDoMaps = true;
+	    	if(heliumStacked > heliumNow) {
+		    	shouldDoMaps = true;
+		    	//force abandon army
+		    	if(!game.global.mapsActive && !game.global.preMapsActive) {
+		    		mapsClicked();
+		    		mapsClicked();
+		    	}
+	    	}
         }
         
         var obj = {};
