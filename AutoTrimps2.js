@@ -962,6 +962,9 @@ function autoStance() {
 //prison/wonderland flags for use in autoPortal function
 var doPrison = false;
 var doWonderland = false;
+var getToxStacks = false;
+var startToxStacking = true;
+var stackZone = 0;
 function autoMap() {
     if (game.global.mapsUnlocked) {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
@@ -990,21 +993,28 @@ function autoMap() {
             autoTrimpSettings.Prestige.selected = "Bestplate";
         }
         
+        if(game.global.world > stackZone) getToxStacks = true;
         //If on toxicity and reached the last cell, calculate if max tox stacks will give us better He/hr (assumes max agility)
-        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell == 98 && game.challenges.Toxicity.stacks < 1500) {
-        	var timeThisPortal = new Date().getTime() - game.global.portalTime;
-	    	timeThisPortal /= 3600000;
-	    	//current helium per hour if we finish this zone (+/- a few seconds)
-	    	var heliumNow = Math.floor((game.resources.helium.owned + calculateHelium()) / timeThisPortal);
-	    	//helium per hour with max tox stacks
-	    	var heliumStacked = Math.floor((game.resources.helium.owned + calculateHelium(true)) / (timeThisPortal + (1500 - game.challenges.Toxicity.stacks) / 7200000));
-	    	if(heliumStacked > heliumNow) {
+        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell == 98 && game.challenges.Toxicity.stacks < 1500 && getToxStacks && calculateNextHeliumHour(true) > calculateNextHeliumHour()) {
+	    	if(startToxStacking) {
+	    		watchHelium(true);
+	    		stackZone = game.global.world;
+	    		startToxStacking = false;
+	    		debug ('initializing tox stacking');
+	    	}
+	    	if(heliumGrowing) {
+	    		getToxStacks = true;
 		    	shouldDoMaps = true;
 		    	//force abandon army
 		    	if(!game.global.mapsActive && !game.global.preMapsActive) {
 		    		mapsClicked();
 		    		mapsClicked();
 		    	}
+	    	}
+	    	else {
+	    		getToxStacks = false;
+	    		startToxStacks = true;
+	    		debug('ending tox stacking');
 	    	}
         }
         
@@ -1192,6 +1202,37 @@ function calculateHelium (stacks) {
 	amt = Math.floor(amt);
 	return amt;
 }
+
+function calculateNextHeliumHour (stacked) {
+	var timeThisPortal = new Date().getTime() - game.global.portalTime;
+	timeThisPortal /= 3600000;
+	var heliumNow = Math.floor((game.resources.helium.owned + calculateHelium()) / timeThisPortal);
+	if(stacked) heliumNow = Math.floor((game.resources.helium.owned + calculateHelium(true)) / (timeThisPortal + (1500 - game.challenges.Toxicity.stacks) / 7200000));
+	return heliumNow;
+}
+
+var heliumGrowing = true;
+var strikes = 0;
+var heliumWatch= 0;
+function watchHelium (init) {
+	var he = calculateNextHeliumHour();
+	if(init) {
+		heliumGrowing = true;
+		strikes = 0;
+		heliumWatch = he;
+	}
+	if (he > heliumWatch) {
+		heliumGrowing = true;
+		strikes = 0;
+	}
+	else if (he < heliumWatch) {
+	strikes ++;
+	}
+	if(strikes > 2) heliumGrowing = false;
+	heliumWatch = he;
+}
+
+setTimeout(watchHelium, 15000);
 
 
 var lastHelium = 0;
