@@ -997,7 +997,7 @@ function autoMap() {
 	    	//current helium per hour if we finish this zone (+/- a few seconds)
 	    	var heliumNow = Math.floor((game.resources.helium.owned + calculateHelium()) / timeThisPortal);
 	    	//helium per hour with max tox stacks
-	    	var heliumStacked = Math.floor((game.resources.helium.owned + calculateHelium(true)) / (timeThisPortal + (1500 - game.challenges.Toxicity.stacks) / 2));
+	    	var heliumStacked = Math.floor((game.resources.helium.owned + calculateHelium(true)) / (timeThisPortal + (1500 - game.challenges.Toxicity.stacks) / 7200000));
 	    	if(heliumStacked > heliumNow) {
 		    	shouldDoMaps = true;
 		    	//force abandon army
