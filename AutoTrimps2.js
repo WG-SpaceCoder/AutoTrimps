@@ -989,6 +989,18 @@ function autoMap() {
             document.getElementById('Prestige').selectedIndex = 11;
             autoTrimpSettings.Prestige.selected = "Bestplate";
         }
+        
+        //If on toxicity and reached the last cell, calculate if max tox stacks will give us better He/hr (assumes max agility)
+        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell == 98 && game.challenges.Toxicity.stacks < 1500) {
+        	var timeThisPortal = new Date().getTime() - game.global.portalTime;
+	    	timeThisPortal /= 3600000;
+	    	//current helium per hour if we finish this zone (+/- a few seconds)
+	    	var heliumNow = Math.floor((game.resources.helium.owned + calculateHelium()) / timeThisPortal);
+	    	//helium per hour with max tox stacks
+	    	var heliumStacked = Math.floor((game.resources.helium.owned + calculateHelium(true)) / (timeThisPortal + (1500 - game.challenges.Toxicity.stacks) / 2));
+	    	if(heliumStacked > heliumNow) shouldDoMaps = true;
+        }
+        
         var obj = {};
         for (var map in game.global.mapsOwnedArray) {
             if (!game.global.mapsOwnedArray[map].noRecycle) {
@@ -1147,6 +1159,33 @@ function autoMap() {
     }
 }
 
+//calculate helium we will get from the end of this zone. If (stacks), return helium we will get with max tox stacks
+function calculateHelium (stacks) {
+	var world = game.global.world;
+	var level = 100 + ((world - 1) * 100);
+	var amt = 0;
+	var baseAmt;
+	
+	if(world < 59) baseAmt = 1;
+	else baseAmt = 5;
+	
+	level = Math.round((level - 1900) / 100);
+	level *= 1.35;
+	if(level < 0) level = 0;
+	amt += Math.round(baseAmt * Math.pow(1.23, Math.sqrt(level)));
+	amt += Math.round(baseAmt * level);
+	
+	if (game.portal.Looting.level) amt += (amt * game.portal.Looting.level * game.portal.Looting.modifier);
+	
+	if (game.global.challengeActive == "Toxicity"){
+		var toxMult = (game.challenges.Toxicity.lootMult * game.challenges.Toxicity.stacks) / 100;
+		if(toxMult > 2.25 || stacks) toxMult = 2.25;
+		amt *= (1 + toxMult);
+	}
+	amt = Math.floor(amt);
+	return amt;
+}
+
 
 var lastHelium = 0;
 var lastZone = 0;
@@ -1232,7 +1271,7 @@ function manageGenes() {
         	//intent of below if is to push through past megafarming with 30 anti stacks if we need to farm, 
         	//but raising to 30 antistacks often turns shouldfarm off. Would need a separate shouldFarmNom variable that approximates at 10 stacks? Don't care enough to do now
         	//if(shouldFarm && !game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '30';
-        	autoTrimpSettings.GeneticistTimer.value = '16';
+        	autoTrimpSettings.GeneticistTimer.value = '14';
         }
         else autoTrimpSettings.GeneticistTimer.value = '30.5';
     }
