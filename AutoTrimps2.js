@@ -962,9 +962,7 @@ function autoStance() {
 //prison/wonderland flags for use in autoPortal function
 var doPrison = false;
 var doWonderland = false;
-var getToxStacks = false;
-var startToxStacking = true;
-var stackZone = 0;
+
 function autoMap() {
     if (game.global.mapsUnlocked) {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
@@ -993,29 +991,16 @@ function autoMap() {
             autoTrimpSettings.Prestige.selected = "Bestplate";
         }
         
-        if(game.global.world > stackZone) getToxStacks = true;
+
         //If on toxicity and reached the last cell, calculate if max tox stacks will give us better He/hr (assumes max agility)
-        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell == 98 && game.challenges.Toxicity.stacks < 1500 && getToxStacks && heliumGrowing) {
-	    	if(startToxStacking) {
-	    		watchHelium(true);
-	    		stackZone = game.global.world;
-	    		startToxStacking = false;
-	    		debug ('initializing tox stacking');
-	    	}
-	    	if(heliumGrowing) {
-	    		getToxStacks = true;
-		    	shouldDoMaps = true;
-		    	//force abandon army
-		    	if(!game.global.mapsActive && !game.global.preMapsActive) {
-		    		mapsClicked();
-		    		mapsClicked();
-		    	}
-	    	}
-	    	else {
-	    		getToxStacks = false;
-	    		startToxStacking = true;
-	    		debug('ending tox stacking');
-	    	}
+        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell == 98 && game.challenges.Toxicity.stacks < 1500 && getToxStacks && heliumGrowing && game.global.world > 60) {
+		    shouldDoMaps = true;
+		    //force abandon army
+		    if(!game.global.mapsActive && !game.global.preMapsActive) {
+		    	mapsClicked();
+		    	mapsClicked();
+		    }
+
         }
         
         var obj = {};
@@ -1224,11 +1209,15 @@ function watchHelium (init) {
 	if (he > heliumWatch) {
 		heliumGrowing = true;
 		strikes = 0;
+		debug('helium growing! ' + he + ' vs: ' + heliumWatch);
 	}
 	else if (he < heliumWatch) {
 	strikes ++;
 	}
-	if(strikes > 2) heliumGrowing = false;
+	if(strikes > 2) {
+		heliumGrowing = false;
+		debug ('urrrrrrrrr OUT!');
+	}
 	heliumWatch = he;
 
 }
