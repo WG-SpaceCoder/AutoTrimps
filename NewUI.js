@@ -54,6 +54,8 @@ createSetting('Prestige', 'Prestige', 'Acquire prestiges through the selected it
 createSetting('AutoPortal', 'Auto Portal', 'Automatically portal', 'dropdown', 'Off', ['Off', 'Helium Per Hour', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity', 'Custom']);
 createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after clearing this level', 'value', '20');
 
+document.getElementById('Prestige').value = autoTrimpSettings.Prestige.selected;
+document.getElementById('AutoPortal').value = autoTrimpSettings.AutoPortal.selected;
 
 function automationMenuInit() {
 
