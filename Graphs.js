@@ -151,7 +151,7 @@ function gatherInfo() {
 
     // graphData = setColor(graphData);
 
-    setTimeout(gatherInfo, 1000);
+
 }
 
 function setGraphData(graph) {
@@ -241,4 +241,4 @@ if (tmpGraphData !== null) {
 }
 
 
-setTimeout(gatherInfo, 5000);
+setInterval(gatherInfo, 10000);
