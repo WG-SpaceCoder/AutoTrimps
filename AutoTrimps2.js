@@ -280,13 +280,13 @@ function safeBuyJob(jobTitle, amount) {
         amount = Math.abs(amount);
     } else {
             game.global.firing = false;
-	    game.global.buyAmt = amount;
 	    if (!canAffordJob(jobTitle, false)) {
 	        postBuy();
 	        return false;
 	    }
     }
     //debug((game.global.firing ? 'Firing ' : 'Hiring ') + game.global.buyAmt + ' ' + jobTitle);
+    game.global.buyAmt = amount;
     buyJob(jobTitle);
     postBuy();
     tooltip("hide");
