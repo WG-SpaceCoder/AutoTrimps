@@ -993,7 +993,9 @@ function autoMap() {
         
 
         //If on toxicity and reached the last cell, calculate if max tox stacks will give us better He/hr (assumes max agility)
-        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell == 98 && game.challenges.Toxicity.stacks < 1500 && heliumGrowing && game.global.world > 60) {
+        //at looting 54, I have found this only to trigger in lower zones, (20-72 or so) and not been worth it for overall he/hr. Higher looting should trigger it in progressively higher zones, but probably never worth it
+        //leaving it in for now. Manually setting heliumGrowing to true in console should allow it to be used for a maximum total helium gained tox run (for bone trader)
+        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell == 98 && game.challenges.Toxicity.stacks < 1500 && heliumGrowing && game.global.world > 59) {
 		    shouldDoMaps = true;
 		    //force abandon army
 		    if(!game.global.mapsActive && !game.global.preMapsActive) {
@@ -1187,7 +1189,8 @@ function calculateHelium (stacks) {
 	amt = Math.floor(amt);
 	return amt;
 }
-
+//calculate our helium per hour including our helium for the end of this zone, assuming we finish the zone right now (and get that helium right now)
+//if (stacked), calculate with maximum toxicity stacks
 function calculateNextHeliumHour (stacked) {
 	var timeThisPortal = new Date().getTime() - game.global.portalTime;
 	timeThisPortal /= 3600000;
@@ -1196,9 +1199,10 @@ function calculateNextHeliumHour (stacked) {
 	return heliumNow;
 }
 
-var heliumGrowing = true;
+var heliumGrowing = false;
 var strikes = 0;
 var heliumWatch= 0;
+/*
 function watchHelium (init) {
 	var he = calculateNextHeliumHour();
 	if(init) {
@@ -1222,6 +1226,7 @@ function watchHelium (init) {
 
 }
 	setInterval(watchHelium, 10000);
+	*/
 
 
 
