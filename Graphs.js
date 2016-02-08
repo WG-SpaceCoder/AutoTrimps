@@ -10,7 +10,7 @@ head.appendChild(script);
 var newItem = document.createElement("TD");
 newItem.appendChild(document.createTextNode("Graphs"));
 newItem.setAttribute("class", "btn btn-default");
-newItem.setAttribute("onclick", "autoToggleGraph()");
+newItem.setAttribute("onclick", "autoToggleGraph(); gatherInfo();");
 var settingbarRow = document.getElementById("settingsTable").firstElementChild.firstElementChild;
 settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
 document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style="display: none;"><div id="graph" style="margin-bottom: 2vw;margin-top: 2vw;"></div></div>';
