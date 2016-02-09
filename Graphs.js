@@ -2,14 +2,15 @@
 var head = document.getElementsByTagName('head')[0];
 var script = document.createElement('script');
 script.type = 'text/javascript';
-script.src = 'https://code.highcharts.com/highcharts.js';
+script.src = 'https://github.highcharts.com/highcharts.js';
 head.appendChild(script);
+
 
 //Create the graph button and div
 var newItem = document.createElement("TD");
 newItem.appendChild(document.createTextNode("Graphs"));
 newItem.setAttribute("class", "btn btn-default");
-newItem.setAttribute("onclick", "autoToggleGraph()");
+newItem.setAttribute("onclick", "autoToggleGraph(); gatherInfo();");
 var settingbarRow = document.getElementById("settingsTable").firstElementChild.firstElementChild;
 settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
 document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style="display: none;"><div id="graph" style="margin-bottom: 2vw;margin-top: 2vw;"></div></div>';
@@ -22,6 +23,7 @@ btn.setAttribute("style", "color:black");
 btn.setAttribute("class", "settingBtn");
 btn.setAttribute("onmouseover", 'tooltip(\"Graph\", \"customText\", event, \"What graph would you like to display you nerd you?\")');
 btn.setAttribute("onmouseout", 'tooltip("hide")');
+btn.setAttribute("onchange", "setGraphData(document.getElementById('graphSelection').value)");
 for (var item in graphList) {
     var option = document.createElement("option");
     option.value = graphList[item];
@@ -30,10 +32,19 @@ for (var item in graphList) {
 }
 document.getElementById('graphParent').appendChild(btn);
 
+var btn2 = document.createElement("button");
+var t = document.createTextNode("Clear Data");
+btn2.appendChild(t);
+btn2.setAttribute("onclick", "clearData()");
+btn2.setAttribute("style", "color:black");
+document.getElementById('graphParent').appendChild(btn2);
 
 
 
 
+function clearData() {
+    while(allSaveData[0].totalPortals < game.global.totalPortals) allSaveData.shift();
+}
 
 
 function autoToggleGraph() {
@@ -52,7 +63,7 @@ function autoPlusGraphMenu() {
     if (item.style.display === 'block') item.style.display = 'none';
     toggleSettingsMenu();
 }
-
+var chart1;
 function setGraph(title, xTitle, yTitle, valueSuffix, series) {
     chart1 = new Highcharts.Chart({
         chart: {
@@ -141,7 +152,7 @@ function gatherInfo() {
 
     // graphData = setColor(graphData);
 
-    setTimeout(gatherInfo, 1000);
+
 }
 
 function setGraphData(graph) {
@@ -231,4 +242,4 @@ if (tmpGraphData !== null) {
 }
 
 
-setTimeout(gatherInfo, 1000);
+setInterval(gatherInfo, 10000);

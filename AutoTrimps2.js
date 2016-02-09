@@ -279,14 +279,14 @@ function safeBuyJob(jobTitle, amount) {
         game.global.firing = true;
         amount = Math.abs(amount);
     } else {
-        game.global.firing = false;
-    }
-    game.global.buyAmt = amount;
-    if (!canAffordJob(jobTitle, false)) {
-        postBuy();
-        return false;
+            game.global.firing = false;
+	    if (!canAffordJob(jobTitle, false)) {
+	        postBuy();
+	        return false;
+	    }
     }
     //debug((game.global.firing ? 'Firing ' : 'Hiring ') + game.global.buyAmt + ' ' + jobTitle);
+    game.global.buyAmt = amount;
     buyJob(jobTitle);
     postBuy();
     tooltip("hide");
@@ -482,7 +482,7 @@ function getEnemyMaxHealth(zone) {
     return Math.floor(amt);
 }
 
-function getBreedTime() {
+function getBreedTime(remaining) {
     var trimps = game.resources.trimps;
     var breeding = trimps.owned - trimps.employed;
     var trimpsMax = trimps.realMax();
@@ -503,7 +503,8 @@ function getBreedTime() {
 
     var timeRemaining = log10((trimpsMax - trimps.employed) / (trimps.owned - trimps.employed)) / log10(1 + (potencyMod / 10));
     if (!game.global.brokenPlanet) timeRemaining /= 10;
-    timeRemaining = Math.floor(timeRemaining) + " Secs";
+    timeRemaining = Math.floor(timeRemaining);
+    if(remaining) return timeRemaining;
     var fullBreed = 0;
     var adjustedMax = (game.portal.Coordinated.level) ? game.portal.Coordinated.currentSend : trimps.maxSoldiers;
     var totalTime = log10((trimpsMax - trimps.employed) / ((trimpsMax - adjustedMax) - trimps.employed)) / log10(1 + (potencyMod / 10));
@@ -958,6 +959,10 @@ function autoStance() {
 }
 
 //core function written by Belaith
+//prison/wonderland flags for use in autoPortal function
+var doPrison = false;
+var doWonderland = false;
+
 function autoMap() {
     if (game.global.mapsUnlocked) {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
@@ -985,6 +990,21 @@ function autoMap() {
             document.getElementById('Prestige').selectedIndex = 11;
             autoTrimpSettings.Prestige.selected = "Bestplate";
         }
+        
+
+        //If on toxicity and reached the last cell, calculate if max tox stacks will give us better He/hr (assumes max agility)
+        //at looting 54, I have found this only to trigger in lower zones, (20-72 or so) and not been worth it for overall he/hr. Higher looting should trigger it in progressively higher zones, but probably never worth it
+        //leaving it in for now. Manually setting heliumGrowing to true in console should allow it to be used for a maximum total helium gained tox run (for bone trader)
+        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 96 && game.challenges.Toxicity.stacks < 1500 && heliumGrowing && game.global.world > 59) {
+		    shouldDoMaps = true;
+		    //force abandon army
+		    if(!game.global.mapsActive && !game.global.preMapsActive) {
+		    	mapsClicked();
+		    	mapsClicked();
+		    }
+
+        }
+        
         var obj = {};
         for (var map in game.global.mapsOwnedArray) {
             if (!game.global.mapsOwnedArray[map].noRecycle) {
@@ -1016,6 +1036,7 @@ function autoMap() {
                 //run the prison only if we are 'cleared' to run level 80 + 1 level per 200% difficulty. Could do more accurate calc if needed
                 if(theMap.name == 'The Prison' && (game.global.challengeActive == "Electricity" || game.global.challengeActive == "Mapocalypse")) {
                     var prisonDifficulty = Math.ceil(theMap.difficulty / 2);
+                    doPrison = true;
                     if(game.global.world >= 80 + prisonDifficulty) {
                         shouldDoMap = theMap.id;
                         break;
@@ -1031,6 +1052,7 @@ function autoMap() {
                 }
                 if(theMap.name == 'Bionic Wonderland' && game.global.challengeActive == "Crushed" ) {
                 	var wonderlandDifficulty = Math.ceil(theMap.difficulty / 2);
+                	doWonderland = true;
                 	if(game.global.world >= 125 + wonderlandDifficulty) {
                         shouldDoMap = theMap.id;
                         break;
@@ -1141,6 +1163,147 @@ function autoMap() {
     }
 }
 
+//calculate helium we will get from the end of this zone. If (stacks), return helium we will get with max tox stacks
+function calculateHelium (stacks) {
+	var world = game.global.world;
+	var level = 100 + ((world - 1) * 100);
+	var amt = 0;
+	var baseAmt;
+	
+	if(world < 59) baseAmt = 1;
+	else baseAmt = 5;
+	
+	level = Math.round((level - 1900) / 100);
+	level *= 1.35;
+	if(level < 0) level = 0;
+	amt += Math.round(baseAmt * Math.pow(1.23, Math.sqrt(level)));
+	amt += Math.round(baseAmt * level);
+	
+	if (game.portal.Looting.level) amt += (amt * game.portal.Looting.level * game.portal.Looting.modifier);
+	
+	if (game.global.challengeActive == "Toxicity"){
+		var toxMult = (game.challenges.Toxicity.lootMult * game.challenges.Toxicity.stacks) / 100;
+		if(toxMult > 2.25 || stacks) toxMult = 2.25;
+		amt *= (1 + toxMult);
+	}
+	amt = Math.floor(amt);
+	return amt;
+}
+//calculate our helium per hour including our helium for the end of this zone, assuming we finish the zone right now (and get that helium right now)
+//if (stacked), calculate with maximum toxicity stacks
+function calculateNextHeliumHour (stacked) {
+	var timeThisPortal = new Date().getTime() - game.global.portalTime;
+	timeThisPortal /= 3600000;
+	var heliumNow = Math.floor((game.resources.helium.owned + calculateHelium()) / timeThisPortal);
+	if(stacked) heliumNow = Math.floor((game.resources.helium.owned + calculateHelium(true)) / (timeThisPortal + (1500 - game.challenges.Toxicity.stacks) / 7200000));
+	return heliumNow;
+}
+
+var heliumGrowing = false;
+var strikes = 0;
+var heliumWatch= 0;
+/*
+function watchHelium (init) {
+	var he = calculateNextHeliumHour();
+	if(init) {
+		heliumGrowing = true;
+		strikes = 0;
+		heliumWatch = he;
+	}
+	if (he > heliumWatch) {
+		heliumGrowing = true;
+		strikes = 0;
+		debug('helium growing! ' + he + ' vs: ' + heliumWatch);
+	}
+	else if (he < heliumWatch) {
+	strikes ++;
+	}
+	if(strikes > 2) {
+		heliumGrowing = false;
+		debug ('urrrrrrrrr OUT!');
+	}
+	heliumWatch = he;
+
+}
+	setInterval(watchHelium, 10000);
+	*/
+
+
+
+var lastHelium = 0;
+var lastZone = 0;
+function autoPortal() {
+	switch (autoTrimpSettings.AutoPortal.selected) {
+		//portal if we have lower He/hr than the previous zone
+		case "Helium Per Hour":
+			if(game.global.world > lastZone) {
+				lastZone = game.global.world;
+				var timeThisPortal = new Date().getTime() - game.global.portalTime;
+	    			timeThisPortal /= 3600000;
+	    			var myHelium = Math.floor(game.resources.helium.owned / timeThisPortal);
+	    			if(myHelium < lastHelium) {
+	    				gatherInfo();
+					doPortal();
+	    			}
+	    			else lastHelium = myHelium;
+			}
+			break;
+		case "Balance":
+			if(game.global.world > 40 && !game.global.challengeActive) {
+				gatherInfo();
+				doPortal('Balance');
+			}
+			break;
+		case "Electricity":
+			//if doPrison is true, autoMaps sent us in there because of electricity
+			if(doPrison && !game.global.challengeActive) {
+				gatherInfo();
+				doPortal('Electricity');
+				doPrison = false;
+			}
+			break;
+		case "Crushed":
+			//if doWonderland is true, autoMaps sent us in there because of crushed
+			if(doWonderland && !game.global.challengeActive) {
+				gatherInfo();
+				doPortal('Crushed');
+				doWonderland = false;
+			}
+			break;
+		case "Nom":
+			if(game.global.world > 145 && !game.global.challengeActive) {
+				gatherInfo();
+				doPortal('Nom');
+			}
+			break;
+		case "Toxicity":
+			if(game.global.world > 165 && !game.global.challengeActive) {
+				gatherInfo();
+				doPortal('Toxicity');
+			}
+			break;
+		case "Custom":
+			if(game.global.world > getPageSetting('CustomAutoPortal') && !game.global.challengeActive) {
+				gatherInfo();
+				doPortal();
+			}
+			break;
+		default:
+			break;
+			
+	}
+	
+}
+
+function doPortal(challenge) {
+	portalClicked();
+	if(challenge) selectChallenge(challenge);
+    	activateClicked();
+    	activatePortal();
+    	lastHelium = 0;
+    	lastZone = 0;
+}
+
 //adjust geneticists to reach desired breed timer
 function manageGenes() {
     var fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
@@ -1151,13 +1314,16 @@ function manageGenes() {
         	//intent of below if is to push through past megafarming with 30 anti stacks if we need to farm, 
         	//but raising to 30 antistacks often turns shouldfarm off. Would need a separate shouldFarmNom variable that approximates at 10 stacks? Don't care enough to do now
         	//if(shouldFarm && !game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '30';
-        	autoTrimpSettings.GeneticistTimer.value = '11';
+        	autoTrimpSettings.GeneticistTimer.value = '14';
         }
         else autoTrimpSettings.GeneticistTimer.value = '30.5';
     }
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
     //if we need to hire geneticists
-    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked) {
+    //Don't hire geneticists if total breed time remaining is greater than our target breed time
+    //Don't hire geneticists if we have already reached 30 anti stacks (put off further delay to next trimp group)
+    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked && targetBreed > getBreedTime(true) && (game.global.lastBreedTime/1000 + getBreedTime(true) < 30)) {
+    	//insert 10% of total food limit here? or cost vs tribute?
         //if there's no free worker spots, fire a farmer
         if (fWorkers < 1 && canAffordJob('Geneticist', false)) {
             safeBuyJob('Farmer', -1);
@@ -1171,7 +1337,7 @@ function manageGenes() {
         buyUpgrade('Potency');
     }
     //otherwise, if we have some geneticists, start firing them
-    else if (targetBreed < getBreedTime() && !game.jobs.Geneticist.locked && game.jobs.Geneticist.owned > 0) {
+    else if ((targetBreed < getBreedTime() || targetBreed < getBreedTime(true)) && !game.jobs.Geneticist.locked && game.jobs.Geneticist.owned > 0) {
         safeBuyJob('Geneticist', -1);
     }
     //really should be integrated with the buyBuildings routine instead of here, but I think it's mostly harmless here
@@ -1213,6 +1379,7 @@ function mainLoop() {
     if (getPageSetting('RunMapsWhenStuck')) autoMap();
     if (getPageSetting('GeneticistTimer') >= 0) manageGenes();
     if (getPageSetting('AutoStance')) autoStance();
+    if (autoTrimpSettings.AutoPortal.selected != "Off") autoPortal();
     //if autostance is not on, we should do base calculations here so stuff like automaps still works
     else {
         baseDamage = game.global.soldierCurrentAttack * 2 * (1 + (game.global.achievementBonus / 100)) * ((game.global.antiStacks * game.portal.Anticipation.level * game.portal.Anticipation.modifier) + 1) * (1 + (game.global.roboTrimpLevel * 0.2));

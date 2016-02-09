@@ -51,7 +51,11 @@ createSetting('MaxNursery', 'Max Nursery', '', 'value', '-1');
 // createSetting('', '', '', 'value', '30');
 //Dropdown
 createSetting('Prestige', 'Prestige', 'Acquire prestiges through the selected item (inclusive) as soon as they are available in maps. Forces equip first mode. Automap must be enabled.', 'dropdown', 'Off', ['Off', 'Supershield', 'Dagadder', 'Bootboost', 'Megamace', 'Hellishmet', 'Polierarm', 'Pantastic', 'Axeidic', 'Smoldershoulder', 'Greatersword', 'Bestplate', 'Harmbalest', 'GambesOP']);
+createSetting('AutoPortal', 'Auto Portal', 'Automatically portal', 'dropdown', 'Off', ['Off', 'Helium Per Hour', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity', 'Custom']);
+createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after clearing this level', 'value', '20');
 
+document.getElementById('Prestige').value = autoTrimpSettings.Prestige.selected;
+document.getElementById('AutoPortal').value = autoTrimpSettings.AutoPortal.selected;
 
 function automationMenuInit() {
 
@@ -260,8 +264,16 @@ function updateValueFields() {
 }
 
 function updateCustomButtons() {
+    //automaps button
+    
     if (autoTrimpSettings.RunMapsWhenStuck.enabled) document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-success");
     else document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-danger");
+    //auto portal setting, hide until player has cleared zone 81
+    if (game.global.highestLevelCleared >= 80 ) document.getElementById("AutoPortal").style.display = '';
+    else document.getElementById("AutoPortal").style.display = 'none';
+    //custom auto portal value
+    if (autoTrimpSettings.AutoPortal.selected == "Custom") document.getElementById("CustomAutoPortal").style.display = '';
+    else document.getElementById("CustomAutoPortal").style.display = 'none';
 }
 
 function updateCustomStats() {
