@@ -15,7 +15,7 @@ Automation for the idle incremental game 'Trimps'
 
 - Nom and Toxicity breed timer now set at 15 sec when using Manage breed timer option.
 
--On a toxicity run, manually entering the following into the console will force the script to get max toxicity stacks on all zones 60 and above, for a max helium run for bone portal:   heliumGrowing = true
+- On a toxicity run, manually entering the following into the console will force the script to get max toxicity stacks on all zones 60 and above, for a max helium run for bone portal:   heliumGrowing = true
 
 
 -install greasemonkey/tampermonkey  
