@@ -23,6 +23,7 @@ btn.setAttribute("style", "color:black");
 btn.setAttribute("class", "settingBtn");
 btn.setAttribute("onmouseover", 'tooltip(\"Graph\", \"customText\", event, \"What graph would you like to display you nerd you?\")');
 btn.setAttribute("onmouseout", 'tooltip("hide")');
+btn.setAttribute("onchange", "setGraphData(document.getElementById('graphSelection').value)");
 for (var item in graphList) {
     var option = document.createElement("option");
     option.value = graphList[item];
