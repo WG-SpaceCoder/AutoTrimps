@@ -1042,7 +1042,7 @@ function autoMap() {
                         break;
                     }
                 }
-                if(theMap.name == 'The Block' && !game.upgrades.Shieldblock.done && (game.global.challengeActive == ("Scientist I" || "Scientist II" || "Scientist III" || "Trimp") || getPageSetting('BuyShieldblock'))) {
+                if(theMap.name == 'The Block' && !game.upgrades.Shieldblock.done && (game.global.challengeActive == "Scientist I" || game.global.challengeActive == "Scientist II" || game.global.challengeActive == "Scientist III" || game.global.challengeActive == "Trimp" || getPageSetting('BuyShieldblock'))) {
                     shouldDoMap = theMap.id;
                     break;
                 }
