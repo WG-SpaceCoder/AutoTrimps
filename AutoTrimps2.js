@@ -1334,7 +1334,7 @@ function manageGenes() {
     }
     //if we need to speed up our breeding
     //if we have potency upgrades available, buy them. If geneticists are unlocked, or we aren't managing the breed timer, just buy them
-    if ((targetBreed < getBreedTime() || !game.jobs.Geneticist.locked || !getPageSetting('ManageBreedtimer')) && game.upgrades.Potency.allowed > game.upgrades.Potency.done && canAffordTwoLevel('Potency')) {
+    if ((targetBreed < getBreedTime() || !game.jobs.Geneticist.locked || !getPageSetting('ManageBreedtimer')) && game.upgrades.Potency.allowed > game.upgrades.Potency.done && canAffordTwoLevel('Potency') && getPageSetting('BuyUpgrades')) {
         buyUpgrade('Potency');
     }
     //otherwise, if we have some geneticists, start firing them
