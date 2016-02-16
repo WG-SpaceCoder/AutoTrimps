@@ -131,7 +131,7 @@ function pushData() {
         currentTime: new Date().getTime(),
         portalTime: game.global.portalTime,
         resources: game.resources,
-        world: game.global.world
+        world: game.global.world,
         zoneStarted: game.global.zoneStarted;
     });
     localStorage.setItem('allSaveData', JSON.stringify(allSaveData));
