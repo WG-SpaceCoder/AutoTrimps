@@ -182,13 +182,18 @@ function setGraphData(graph) {
                         data: []
                     })
                     currentPortal = allSaveData[i].totalPortals;
+                    //push a 0 to index 0 so that clear times line up with x-axis numbers
+                    graphData[graphData.length -1].data.push(0);
                 }
                 if(currentZone < allSaveData[i].world && currentZone != -1) {
                     graphData[graphData.length - 1].data.push((allSaveData[i].currentTime - allSaveData[i-1].currentTime) / 1000);
                 }
+                
+                //first time through, push 0s to zones we don't have data for. Probably only occurs if script is loaded in the middle of a run where it was previously not loaded (haven't tested this)
+                //this functionality could fix some of the weirdness in graphs from using bone portal?
                 if(currentZone == -1) {
                     var loop = allSaveData[i].world - 1;
-                    while (loop >= 0) {
+                    while (loop > 0) {
                         graphData[graphData.length -1].data.push(0);
                         loop--;
                     }
