@@ -76,7 +76,8 @@ var chart1;
 function setGraph(title, xTitle, yTitle, valueSuffix, series) {
     chart1 = new Highcharts.Chart({
         chart: {
-            renderTo: 'graph'
+            renderTo: 'graph',
+            zoomType: 'xy'
         },
         title: {
             text: title,
@@ -186,7 +187,7 @@ function setGraphData(graph) {
                     graphData[graphData.length -1].data.push(0);
                 }
                 if(currentZone < allSaveData[i].world && currentZone != -1) {
-                    graphData[graphData.length - 1].data.push((allSaveData[i].currentTime - allSaveData[i-1].currentTime) / 1000);
+                    graphData[graphData.length - 1].data.push(Math.round((allSaveData[i].currentTime - allSaveData[i-1].currentTime) / 1000));
                 }
                 
                 //first time through, push 0s to zones we don't have data for. Probably only occurs if script is loaded in the middle of a run where it was previously not loaded (haven't tested this)
