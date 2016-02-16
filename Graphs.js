@@ -172,18 +172,18 @@ function setGraphData(graph) {
                         data: []
                     })
                     currentPortal = allSaveData[i].totalPortals;
-                    if(currentZone < allSaveData[i].world && currentZone != -1) {
-                        graphData[graphData.length - 1].data.push((allSaveData[i].currentTime - allSaveData[i-1].currentTime) / 1000);
-                    }
-                    if(currentZone == -1) {
-                        var loop = allSaveData[i].world - 1;
-                        while (loop >= 0) {
-                            graphData[graphData.length -1].data.push(0);
-                            loop--;
-                        }
-                    }
-                    currentZone = allSaveData[i].world;
                 }
+                if(currentZone < allSaveData[i].world && currentZone != -1) {
+                    graphData[graphData.length - 1].data.push((allSaveData[i].currentTime - allSaveData[i-1].currentTime) / 1000);
+                }
+                if(currentZone == -1) {
+                    var loop = allSaveData[i].world - 1;
+                    while (loop >= 0) {
+                        graphData[graphData.length -1].data.push(0);
+                        loop--;
+                    }
+                }
+                currentZone = allSaveData[i].world;
 
             }
             title = 'Time to clear zone';
