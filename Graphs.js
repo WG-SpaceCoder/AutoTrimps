@@ -32,6 +32,14 @@ for (var item in graphList) {
 }
 document.getElementById('graphParent').appendChild(btn);
 
+//refresh graph button - probably don't need different variables but I don't know what I'm doing!
+var btn1 = document.createElement("button");
+var u = document.createTextNode("Refresh");
+btn1.appendChild(u);
+btn1.setAttribute("onclick", "drawGraph()");
+btn1.setAttribute("style", "color:black");
+document.getElementById('graphParent').appendChild(btn1);
+
 //clear data button
 var btn2 = document.createElement("button");
 var t = document.createTextNode("Clear Data");
