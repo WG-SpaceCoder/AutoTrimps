@@ -10,13 +10,13 @@ head.appendChild(script);
 var newItem = document.createElement("TD");
 newItem.appendChild(document.createTextNode("Graphs"));
 newItem.setAttribute("class", "btn btn-default");
-newItem.setAttribute("onclick", "autoToggleGraph(); gatherInfo();");
+newItem.setAttribute("onclick", "autoToggleGraph(); drawGraph();");
 var settingbarRow = document.getElementById("settingsTable").firstElementChild.firstElementChild;
 settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
 document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style="display: none;"><div id="graph" style="margin-bottom: 2vw;margin-top: 2vw;"></div></div>';
 
 //Create the dropdown for what graph to show
-var graphList = ['HeliumPerHour', 'Helium', 'Resources'];
+var graphList = ['HeliumPerHour', 'Helium', 'Clear Time'];
 var btn = document.createElement("select");
 btn.id = 'graphSelection';
 btn.setAttribute("style", "color:black");
@@ -32,11 +32,19 @@ for (var item in graphList) {
 }
 document.getElementById('graphParent').appendChild(btn);
 
+//refresh graph button - probably don't need different variables but I don't know what I'm doing!
+var btn1 = document.createElement("button");
+var u = document.createTextNode("Refresh");
+btn1.appendChild(u);
+btn1.setAttribute("onclick", "drawGraph()");
+btn1.setAttribute("style", "color:black");
+document.getElementById('graphParent').appendChild(btn1);
+
 //clear data button
 var btn2 = document.createElement("button");
 var t = document.createTextNode("Clear Data");
 btn2.appendChild(t);
-btn2.setAttribute("onclick", "clearData(); gatherInfo();");
+btn2.setAttribute("onclick", "clearData(); drawGraph();");
 btn2.setAttribute("style", "color:black");
 document.getElementById('graphParent').appendChild(btn2);
 
@@ -68,7 +76,8 @@ var chart1;
 function setGraph(title, xTitle, yTitle, valueSuffix, series) {
     chart1 = new Highcharts.Chart({
         chart: {
-            renderTo: 'graph'
+            renderTo: 'graph',
+            zoomType: 'xy'
         },
         title: {
             text: title,
@@ -148,12 +157,14 @@ function gatherInfo() {
         pushData();
     }
 
-    //Test graph for food
-    setGraphData(document.getElementById('graphSelection').value);
 
     // graphData = setColor(graphData);
 
 
+}
+
+function drawGraph() {
+        setGraphData(document.getElementById('graphSelection').value);
 }
 
 function setGraphData(graph) {
@@ -161,30 +172,39 @@ function setGraphData(graph) {
     var oldData = JSON.stringify(graphData);
     valueSuffix = '';
     switch (graph) {
-        case 'Resources':
-            var foodData = {
-                name: 'Food',
-                data: []
-            };
-            var woodData = {
-                name: 'Wood',
-                data: []
-            };
-            var metalData = {
-                name: 'Metal',
-                data: []
-            };
+        case 'Clear Time':
+            var graphData = [];
+            var currentPortal = -1;
+            var currentZone = -1;
             for (var i in allSaveData) {
-                if (allSaveData[i].totalPortals == allSaveData[allSaveData.length - 1].totalPortals) {
-                    foodData.data.push(allSaveData[i].resources.food.max);
-                    woodData.data.push(allSaveData[i].resources.wood.max);
-                    metalData.data.push(allSaveData[i].resources.metal.max);
+                if (allSaveData[i].totalPortals != currentPortal) {
+                    graphData.push({
+                        name: 'Portal number ' + allSaveData[i].totalPortals,
+                        data: []
+                    })
+                    currentPortal = allSaveData[i].totalPortals;
+                    //push a 0 to index 0 so that clear times line up with x-axis numbers
+                    graphData[graphData.length -1].data.push(0);
                 }
+                if(currentZone < allSaveData[i].world && currentZone != -1) {
+                    graphData[graphData.length - 1].data.push(Math.round((allSaveData[i].currentTime - allSaveData[i-1].currentTime) / 1000));
+                }
+                
+                //first time through, push 0s to zones we don't have data for. Probably only occurs if script is loaded in the middle of a run where it was previously not loaded (haven't tested this)
+                //this functionality could fix some of the weirdness in graphs from using bone portal?
+                if(currentZone == -1) {
+                    var loop = allSaveData[i].world - 1;
+                    while (loop > 0) {
+                        graphData[graphData.length -1].data.push(0);
+                        loop--;
+                    }
+                }
+                currentZone = allSaveData[i].world;
+
             }
-            graphData = [foodData, woodData, metalData];
-            title = 'Max Resources this run';
+            title = 'Time to clear zone';
             xTitle = 'Zone';
-            yTitle = 'Resources'
+            yTitle = 'Clear Time'
             break;
         case 'Helium':
             var currentPortal = -1;
@@ -243,4 +263,4 @@ if (tmpGraphData !== null) {
 }
 
 
-setInterval(gatherInfo, 10000);
+setInterval(gatherInfo, 1000);
