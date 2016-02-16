@@ -10,7 +10,7 @@ head.appendChild(script);
 var newItem = document.createElement("TD");
 newItem.appendChild(document.createTextNode("Graphs"));
 newItem.setAttribute("class", "btn btn-default");
-newItem.setAttribute("onclick", "autoToggleGraph(); gatherInfo();");
+newItem.setAttribute("onclick", "autoToggleGraph(); drawGraph();");
 var settingbarRow = document.getElementById("settingsTable").firstElementChild.firstElementChild;
 settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
 document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style="display: none;"><div id="graph" style="margin-bottom: 2vw;margin-top: 2vw;"></div></div>';
@@ -36,7 +36,7 @@ document.getElementById('graphParent').appendChild(btn);
 var btn2 = document.createElement("button");
 var t = document.createTextNode("Clear Data");
 btn2.appendChild(t);
-btn2.setAttribute("onclick", "clearData(); gatherInfo();");
+btn2.setAttribute("onclick", "clearData(); drawGraph();");
 btn2.setAttribute("style", "color:black");
 document.getElementById('graphParent').appendChild(btn2);
 
@@ -148,12 +148,14 @@ function gatherInfo() {
         pushData();
     }
 
-    //Test graph for food
-    setGraphData(document.getElementById('graphSelection').value);
 
     // graphData = setColor(graphData);
 
 
+}
+
+function drawGraph() {
+        setGraphData(document.getElementById('graphSelection').value);
 }
 
 function setGraphData(graph) {
@@ -247,4 +249,4 @@ if (tmpGraphData !== null) {
 }
 
 
-setInterval(gatherInfo, 10000);
+setInterval(gatherInfo, 1000);
