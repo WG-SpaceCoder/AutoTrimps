@@ -131,8 +131,7 @@ function pushData() {
         currentTime: new Date().getTime(),
         portalTime: game.global.portalTime,
         resources: game.resources,
-        world: game.global.world,
-        zoneStarted: game.global.zoneStarted
+        world: game.global.world
     });
     localStorage.setItem('allSaveData', JSON.stringify(allSaveData));
 }
@@ -174,10 +173,9 @@ function setGraphData(graph) {
                     })
                     currentPortal = allSaveData[i].totalPortals;
                     if(currentZone < allSaveData[i].world && currentZone != -1) {
-                        graphData[graphData.length - 1].data.push((new Date().getTime() - allSaveData[i-1].zoneStarted) / 1000);
-                        currentZone = allSaveData[i].world;
+                        graphData[allSaveData[i-1].world].data.push((allSaveData[i].currentTime - allSaveData[i-1].currentTime) / 1000);
                     }
-                    else currentZone = allSaveData[i].world;
+                    currentZone = allSaveData[i].world;
                 }
 
             }
