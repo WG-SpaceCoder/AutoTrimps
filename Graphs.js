@@ -16,7 +16,7 @@ settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
 document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style="display: none;"><div id="graph" style="margin-bottom: 2vw;margin-top: 2vw;"></div></div>';
 
 //Create the dropdown for what graph to show
-var graphList = ['HeliumPerHour', 'Helium', 'Resources'];
+var graphList = ['HeliumPerHour', 'Helium', 'Clear Time'];
 var btn = document.createElement("select");
 btn.id = 'graphSelection';
 btn.setAttribute("style", "color:black");
@@ -132,6 +132,7 @@ function pushData() {
         portalTime: game.global.portalTime,
         resources: game.resources,
         world: game.global.world
+        zoneStarted: game.global.zoneStarted;
     });
     localStorage.setItem('allSaveData', JSON.stringify(allSaveData));
 }
@@ -161,30 +162,28 @@ function setGraphData(graph) {
     var oldData = JSON.stringify(graphData);
     valueSuffix = '';
     switch (graph) {
-        case 'Resources':
-            var foodData = {
-                name: 'Food',
-                data: []
-            };
-            var woodData = {
-                name: 'Wood',
-                data: []
-            };
-            var metalData = {
-                name: 'Metal',
-                data: []
-            };
+        case 'Clear Time':
+            var graphData = [];
+            var currentPortal = -1;
+            var currentZone = -1;
             for (var i in allSaveData) {
-                if (allSaveData[i].totalPortals == allSaveData[allSaveData.length - 1].totalPortals) {
-                    foodData.data.push(allSaveData[i].resources.food.max);
-                    woodData.data.push(allSaveData[i].resources.wood.max);
-                    metalData.data.push(allSaveData[i].resources.metal.max);
+                if (allSaveData[i].totalPortals != currentPortal) {
+                    graphData.push({
+                        name: 'Portal number ' + allSaveData[i].totalPortals,
+                        data: []
+                    })
+                    currentPortal = allSaveData[i].totalPortals;
+                    if(currentZone < allSaveData[i].world && currentZone != -1) {
+                        graphData[graphData.length - 1].data.push((new Date().getTime() - allSaveData[i-1].zoneStarted) / 1000);
+                        currentZone = allSaveData[i].world;
+                    }
+                    else currentZone = allSaveData[i].world;
                 }
+
             }
-            graphData = [foodData, woodData, metalData];
-            title = 'Max Resources this run';
+            title = 'Time to clear zone';
             xTitle = 'Zone';
-            yTitle = 'Resources'
+            yTitle = 'Clear Time'
             break;
         case 'Helium':
             var currentPortal = -1;
