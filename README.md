@@ -1,9 +1,7 @@
 # AutoTrimps  
-Automation for the idle incremental game 'Trimps'  
-  
-~Installation~  
-<b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
+Automation script for the idle incremental game Trimps  
 
+<b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
 
 <b>Recent changes:</b>
 
@@ -11,6 +9,7 @@ Automation for the idle incremental game 'Trimps'
 - Graphs now only update on-demand. This means when clicking the graphs button, or clicking the new refresh button while in the graphs.
 - Enabled graphs zooming. Drag a box around area you wish to zoom in on. For those of you who didn't know, you can also toggle on/off series by clicking on the portal number on the right.
 - Removed the resources graph and replaced it with a zone clear time graph. This graph shows your zone clear time in seconds. The x- axis value should correspond to the clear time for that zone (value at x-axis 10 is how long it took you to clear zone 10, in seconds).
+- Graphs module should be able to be used stand-alone
 
 some older date 2/10/2016?
 
@@ -24,7 +23,12 @@ some older date 2/10/2016?
 
 - Nom and Toxicity breed timer now set at 15 sec when using Manage breed timer option.
 
-- On a toxicity run, manually entering the following into the console will force the script to get max toxicity stacks on all zones 60 and above, for a max helium run for bone portal:   heliumGrowing = true
+- On a toxicity run, manually entering the following into the console will force the script to get max toxicity stacks on all zones 60 and above, for a max helium run for bone portal:   heliumGrowing = true      Make sure to set it back to false after your long run(or reload).
+  
+~Installation~  
+<b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
+
+If you would like to use only the graphs module, replace AutoTrimps2.js with Graphs.js in the bookmark or your userscript.
 
 
 -install greasemonkey/tampermonkey  
@@ -33,12 +37,12 @@ some older date 2/10/2016?
 -go to https://trimps.github.io  
 -profit?  
   
-For more info or input post on the reddit forum: https://www.reddit.com/r/Trimps/comments/3yjsyq/autotrimps/  
-  
-I'm going to open up my discord channel for chat. Here is the link if you would like to come hang and chat about AutoTrimps:  
-https://discord.gg/0VbWe0dxB9kIfV2C  
-  
 V2 is now bookmark compatible. Create new bookmark and set its target to:  
 javascript:with(document)(head.appendChild(createElement('script')).src='https://rawgit.com/zininzinin/AutoTrimps/master/AutoTrimps2.js')._
 
 You can also paste V2 into the console of the page. Geez so many options :/
+
+Feel free to submit any bugs/suggestions as issues here on github.
+  
+I'm going to open up my discord channel for chat. Here is the link if you would like to come hang and chat about AutoTrimps:  
+https://discord.gg/0VbWe0dxB9kIfV2C  
