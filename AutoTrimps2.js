@@ -1409,7 +1409,6 @@ function mainLoop() {
     //auto-close breaking the world textbox
     if(document.getElementById('extraGridInfo').style.display == 'block') restoreGrid();
     autoLevelEquipment();
-    updateCustomStats();
     updateCustomButtons();
 
     if (getPageSetting('AutoFight')) {
