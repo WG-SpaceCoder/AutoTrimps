@@ -33,12 +33,12 @@ If you would like to use only the graphs module, replace AutoTrimps2.js with Gra
 
 -install greasemonkey/tampermonkey  
 -Open the tampermonkey dashboard and go to utilities
--in the URL box paste https://raw.githubusercontent.com/zininzinin/AutoTrimps/master/user.js and import  
+-in the URL box paste https://raw.githubusercontent.com/zininzinin/AutoTrimps/gh-pages/user.js and import  
 -go to https://trimps.github.io  
 -profit?  
   
 V2 is now bookmark compatible. Create new bookmark and set its target to:  
-javascript:with(document)(head.appendChild(createElement('script')).src='https://rawgit.com/zininzinin/AutoTrimps/master/AutoTrimps2.js')._
+javascript:with(document)(head.appendChild(createElement('script')).src='https://zininzinin.github.io/AutoTrimps/AutoTrimps2.js')._
 
 You can also paste V2 into the console of the page. Geez so many options :/
 
