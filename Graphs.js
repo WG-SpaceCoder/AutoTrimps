@@ -58,7 +58,10 @@ function clearData() {
 
 function autoToggleGraph() {
     if (game.options.displayed) toggleSettingsMenu();
-    if (document.getElementById('autoSettings').style.display === 'block') document.getElementById('autoSettings').style.display = 'none';
+    var aset = document.getElementById('autoSettings');
+    if (aset) {
+        if (aset.style.display === 'block') aset.style.display = 'none';
+    }
     var item = document.getElementById('graphParent');
     if (item.style.display === 'block') item.style.display = 'none';
     else {
