@@ -12,8 +12,8 @@ createSetting('ManualGather', 'Auto Gather', 'Will automatically gather resource
 createSetting('AutoFight', 'Better Auto Fight', 'Will automatically handle fighting.', 'boolean');
 createSetting('BuyJobs', 'Buy Jobs', 'Buys jobs based on ratios configured', 'boolean');
 createSetting('BuyBuildings', 'Buy Buildings', 'Will buy non storage buildings as soon as they are available', 'boolean');
-createSetting('BuyUpgrades', 'Buy Upgrades', 'autobuy non eqipment Upgrades', 'boolean');
-createSetting('AutoStance', 'Auto Stance', 'I am the lord of the stance said he', 'boolean');
+createSetting('BuyUpgrades', 'Buy Upgrades', 'Autobuy non eqipment Upgrades', 'boolean');
+createSetting('AutoStance', 'Auto Stance', 'Automatically swap stances to avoid death.', 'boolean');
 createSetting('BuyArmor', 'Buy Armor', 'Will buy the most efficient armor available', 'boolean');
 createSetting('BuyArmorUpgrades', 'Buy Armor Upgrades', 'Will buy the most efficient armor upgrade available', 'boolean');
 createSetting('BuyWeapons', 'Buy Weapons', 'Will buy the most efficient weapon available', 'boolean');
@@ -284,10 +284,4 @@ function updateCustomButtons() {
     document.getElementById('HeliumHourChallenge').value = autoTrimpSettings.HeliumHourChallenge.selected;
 }
 
-function updateCustomStats() {
-    var timeThisPortal = new Date().getTime() - game.global.portalTime;
-    timeThisPortal /= 3600000;
-    var resToUse = game.resources.helium.owned;
-    var heHr = prettify(Math.floor(game.resources.helium.owned / timeThisPortal));
-    document.getElementById('customHeHour').innerHTML = heHr + "/Hr";
-}
+
