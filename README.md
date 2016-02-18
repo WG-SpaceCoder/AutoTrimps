@@ -1,6 +1,9 @@
 # AutoTrimps
 Automation script for the idle incremental game Trimps  
 
+
+<b> UPDATED URL - see instructions below - scripts are now served from zininzinin.github.io/AutoTrimps/ </b>
+
 <b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
 
 <b>Recent changes:</b>
