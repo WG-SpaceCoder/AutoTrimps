@@ -1,4 +1,4 @@
-# AutoTrimps  
+# AutoTrimps  testest
 Automation script for the idle incremental game Trimps  
 
 <b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
