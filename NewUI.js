@@ -26,7 +26,7 @@ createSetting('HireScientists', 'Hire Scientists', 'We are nerds and we like to 
 createSetting('BuildGyms', 'Build Gyms', 'Time for a workout', 'boolean');
 createSetting('BuildTributes', 'Build Tributes', 'All praise to the Dragimp', 'boolean');
 createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the throne', 'boolean');
-createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress. Just worker ratios right now.', 'boolean');
+createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress. Just worker ratios right now. WARNING: overrides worker ratio settings.', 'boolean');
 createSetting('ManageBreedtimer', 'Manage Breed Timer', 'Automatically manage the breed timer. EFFECTIVELY LOCKS THE BREED TIMER', 'boolean');
 // createSetting('', '', '', 'boolean');
 //Values
@@ -48,8 +48,9 @@ createSetting('DeltaGigastation', 'Delta Gigastation', 'How many extra warpstati
 createSetting('MaxGym', 'Max Gym', '', 'value', '-1');
 createSetting('MaxTribute', 'Max Tribute', '', 'value', '-1');
 createSetting('MaxNursery', 'Max Nursery', '', 'value', '-1');
+createSetting('VoidMaps', 'Void Maps', 'The zone at which you want all your void maps to be cleared.', 'value', '-1');
 // createSetting('', '', '', 'value', '30');
-//Dropdown
+//Dropdown + context sensitive
 createSetting('Prestige', 'Prestige', 'Acquire prestiges through the selected item (inclusive) as soon as they are available in maps. Forces equip first mode. Automap must be enabled.', 'dropdown', 'Off', ['Off', 'Supershield', 'Dagadder', 'Bootboost', 'Megamace', 'Hellishmet', 'Polierarm', 'Pantastic', 'Axeidic', 'Smoldershoulder', 'Greatersword', 'Bestplate', 'Harmbalest', 'GambesOP']);
 createSetting('AutoPortal', 'Auto Portal', 'Automatically portal', 'dropdown', 'Off', ['Off', 'Helium Per Hour', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity', 'Custom']);
 createSetting('HeliumHourChallenge', 'Challenge for Helium per Hour', 'Automatically portal with this challenge when using helium per hour autoportal.', 'dropdown', 'None', ['None', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity']);
