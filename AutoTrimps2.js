@@ -497,6 +497,9 @@ function getBreedTime(remaining) {
     if (game.global.challengeActive == "Toxicity" && game.challenges.Toxicity.stacks > 0){
 	potencyMod *= Math.pow(game.challenges.Toxicity.stackMult, game.challenges.Toxicity.stacks);
 	}
+	if (game.global.voidBuff == "slowBreed"){
+		potencyMod *= 0.2;
+	}
     breeding = breeding * potencyMod;
     updatePs(breeding, true);
 
@@ -1027,7 +1030,7 @@ function autoMap() {
         for (var map in game.global.mapsOwnedArray) {
             var theMap = game.global.mapsOwnedArray[map];
             	//clear void maps if we need to
-            if(theMap.Location == 'Void' && getPageSetting('VoidMaps') > 0 && game.global.world >= getPageSetting('VoidMaps')) {
+            if(theMap.location == 'Void' && getPageSetting('VoidMaps') > 0 && game.global.world >= getPageSetting('VoidMaps')) {
                 	//if we are on toxicity, don't clear until we will have max stacks at the last cell.
 	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
 	        	shouldDoMaps = true;
