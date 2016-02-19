@@ -992,10 +992,14 @@ function autoMap() {
         }
         
 
+        
+
         //If on toxicity and reached the last cell, calculate if max tox stacks will give us better He/hr (assumes max agility)
         //at looting 54, I have found this only to trigger in lower zones, (20-72 or so) and not been worth it for overall he/hr. Higher looting should trigger it in progressively higher zones, but probably never worth it
         //leaving it in for now. Manually setting heliumGrowing to true in console should allow it to be used for a maximum total helium gained tox run (for bone trader)
-        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 96 && game.challenges.Toxicity.stacks < 1500 && heliumGrowing && game.global.world > 59) {
+        
+        //stack tox stacks if heliumGrowing has been set to true, or of we need to clear our void maps
+        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 96 && game.challenges.Toxicity.stacks < 1500 && ((heliumGrowing && game.global.world > 59) || (getPageSetting('VoidMaps') > 0 && game.global.world >= getPageSetting('VoidMaps')))) {
 		    shouldDoMaps = true;
 		    //force abandon army
 		    if(!game.global.mapsActive && !game.global.preMapsActive) {
@@ -1022,6 +1026,13 @@ function autoMap() {
 
         for (var map in game.global.mapsOwnedArray) {
             var theMap = game.global.mapsOwnedArray[map];
+            	//clear void maps if we need to
+            if(theMap.Location == 'Void' && getPageSetting('VoidMaps') > 0 && game.global.world >= getPageSetting('VoidMaps')) {
+                	//if we are on toxicity, don't clear until we will have max stacks at the last cell.
+	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
+	        	shouldDoMaps = true;
+	        	shouldDoMap = theMap.id;
+        	}
             if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
                 if (theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
                     shouldDoMap = theMap.id;
@@ -1060,6 +1071,8 @@ function autoMap() {
                 }
                 //other unique maps here
             }
+            
+
         }
 
         //map if we don't have health/dmg or if we are prestige mapping, and our set item has a new prestige available 
