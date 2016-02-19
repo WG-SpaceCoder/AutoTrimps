@@ -48,7 +48,7 @@ createSetting('DeltaGigastation', 'Delta Gigastation', 'How many extra warpstati
 createSetting('MaxGym', 'Max Gym', '', 'value', '-1');
 createSetting('MaxTribute', 'Max Tribute', '', 'value', '-1');
 createSetting('MaxNursery', 'Max Nursery', '', 'value', '-1');
-createSetting('VoidMaps', 'Void Maps', 'The zone at which you want all your void maps to be cleared.', 'value', '-1');
+createSetting('VoidMaps', 'Void Maps', 'The zone at which you want all your void maps to be cleared. 0 is off', 'value', '0');
 // createSetting('', '', '', 'value', '30');
 //Dropdown + context sensitive
 createSetting('Prestige', 'Prestige', 'Acquire prestiges through the selected item (inclusive) as soon as they are available in maps. Forces equip first mode. Automap must be enabled.', 'dropdown', 'Off', ['Off', 'Supershield', 'Dagadder', 'Bootboost', 'Megamace', 'Hellishmet', 'Polierarm', 'Pantastic', 'Axeidic', 'Smoldershoulder', 'Greatersword', 'Bestplate', 'Harmbalest', 'GambesOP']);
