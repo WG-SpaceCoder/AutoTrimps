@@ -1352,7 +1352,7 @@ function manageGenes() {
     //if we need to hire geneticists
     //Don't hire geneticists if total breed time remaining is greater than our target breed time
     //Don't hire geneticists if we have already reached 30 anti stacks (put off further delay to next trimp group)
-    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked && targetBreed > getBreedTime(true) && (game.global.lastBreedTime/1000 + getBreedTime(true) < 30)) {
+    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked && targetBreed > getBreedTime(true) && (game.global.lastBreedTime/1000 + getBreedTime(true) < 30) && game.resources.trimps.soldiers > 0) {
     	//insert 10% of total food limit here? or cost vs tribute?
         //if there's no free worker spots, fire a farmer
         if (fWorkers < 1 && canAffordJob('Geneticist', false)) {
@@ -1376,9 +1376,10 @@ function manageGenes() {
         safeBuyBuilding('Nursery');
     }
     //if our time remaining to full trimps is still too high, fire some jobs to get-er-done
-    else if (targetBreed < getBreedTime(true) && breedFire == false && game.global.world > 5) {
+  /*  else if (targetBreed < getBreedTime(true) && breedFire == false && game.global.world > 5) {
     	    	breedFire = true;
     }
+*/
     //reset breedFire once we have less than 2 seconds remaining
     if(getBreedTime(true) < 2) breedFire = false;
 
