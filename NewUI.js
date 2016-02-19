@@ -90,12 +90,7 @@ function automationMenuInit() {
     fightButtonCol.appendChild(newContainer);
 
     //create Helium per hour
-    var heHour = document.createElement("SPAN");
-    heHour.setAttribute("class", "ownedArea");
-    heHour.setAttribute("style", "display: block; opacity: 1; color:white;");
-    heHour.setAttribute("id", "customHeHour");
-    gameHe = document.getElementById('helium');
-    gameHe.appendChild(heHour);
+
 
     //create the space to place the automation settings.
     document.getElementById("settingsRow").innerHTML += '<div id="autoSettings" style="display: none;margin-bottom: 2vw;margin-top: 2vw;"></div>';
