@@ -40,9 +40,10 @@ If you would like to use only the graphs module, replace AutoTrimps2.js with Gra
 -go to https://trimps.github.io  
 -profit?  
   
-V2 is now bookmark compatible. Create new bookmark and set its target to:  
+V2 is now bookmark compatible. Create new bookmark and set its target to:
+```
 javascript:with(document)(head.appendChild(createElement('script')).src='https://zininzinin.github.io/AutoTrimps/AutoTrimps2.js')._
-
+```
 You can also paste V2 into the console of the page. Geez so many options :/
 
 Feel free to submit any bugs/suggestions as issues here on github.
