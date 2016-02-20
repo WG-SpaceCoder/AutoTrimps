@@ -30,7 +30,7 @@ createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on 
 createSetting('ManageBreedtimer', 'Manage Breed Timer', 'Automatically manage the breed timer. EFFECTIVELY LOCKS THE BREED TIMER', 'boolean');
 // createSetting('', '', '', 'boolean');
 //Values
-createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to shoot for using geneticists. MUST HAVE GAMES BASE SETTING BREED TIMER TURNED ON. CANNOT CHANGE WITH MANAGE BREED TIMER OPTION ON', 'value', '30');
+createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to shoot for using geneticists. CANNOT CHANGE WITH MANAGE BREED TIMER OPTION ON', 'value', '30');
 createSetting('FarmerRatio', 'Farmer Ratio', '', 'value', '1');
 createSetting('LumberjackRatio', 'Lumberjack Ratio', '', 'value', '1');
 createSetting('MinerRatio', 'Miner Ratio', '', 'value', '1');
@@ -42,6 +42,7 @@ createSetting('MaxMansion', 'MaxMansion', '', 'value', '50');
 createSetting('MaxHotel', 'Max Hotel', '', 'value', '50');
 createSetting('MaxResort', 'Max Resort', '', 'value', '50');
 createSetting('MaxGateway', 'Max Gateway', '', 'value', '25');
+createSetting('MaxWormhole', 'Max Wormhole', 'WARNING: Wormholes cost helium!', 'value', '0');
 createSetting('MaxCollector', 'Max Collector', '', 'value', '-1');
 createSetting('FirstGigastation', 'First Gigastation', 'How many warpstations to buy before your first gigastation', 'value', '20');
 createSetting('DeltaGigastation', 'Delta Gigastation', 'How many extra warpstations to buy for each gigastation. Supports fractional values. For example 2.5 will buy +2/+3/+2/+3...', 'value', '2');
@@ -278,6 +279,8 @@ function updateCustomButtons() {
     document.getElementById('Prestige').value = autoTrimpSettings.Prestige.selected;
     document.getElementById('AutoPortal').value = autoTrimpSettings.AutoPortal.selected;
     document.getElementById('HeliumHourChallenge').value = autoTrimpSettings.HeliumHourChallenge.selected;
+    //just turn confirmhole off period IMO
+    if(game.options.menu.confirmhole.enabled == 1) toggleSetting('confirmhole');
 }
 
 
