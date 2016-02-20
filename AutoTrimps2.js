@@ -204,9 +204,19 @@ function safeBuyBuilding(building) {
         postBuy();
         return false;
     }
-    debug('Building ' + building);
     game.global.firing = false;
-    buyBuilding(building);
+    //avoid slow building from clamping
+    if(building == 'Warpstation'){
+    	while(canAffordBuilding(building)) {
+	    	buyBuilding(building);
+	    	debug('Building ' + building);
+    	}
+    }
+    else {
+	    debug('Building ' + building);
+	    buyBuilding(building);
+    }
+    
     postBuy();
     tooltip("hide");
     return true;
