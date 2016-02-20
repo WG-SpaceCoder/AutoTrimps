@@ -1376,10 +1376,11 @@ function manageGenes() {
         safeBuyBuilding('Nursery');
     }
     //if our time remaining to full trimps is still too high, fire some jobs to get-er-done
-  /*  else if (targetBreed < getBreedTime(true) && breedFire == false && game.global.world > 5) {
+    //needs option to toggle? advanced options?
+    else if ((targetBreed < getBreedTime(true) || (game.resources.trimps.soldiers == 0 && getBreedTime(true) > 6)) && breedFire == false && game.global.world > 5) {
     	    	breedFire = true;
     }
-*/
+
     //reset breedFire once we have less than 2 seconds remaining
     if(getBreedTime(true) < 2) breedFire = false;
 
