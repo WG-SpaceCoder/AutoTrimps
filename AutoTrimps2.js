@@ -852,7 +852,7 @@ function manualLabor() {
             // debug('Current Stats ' + resource + ' is ' + currentRate + ' lowest ' + lowestResource + lowestResourceRate+ ' haveworkers ' +haveWorkers);
         }
 
-        if (game.global.playerGathering != lowestResource && !haveWorkers) {
+        if (game.global.playerGathering != lowestResource && !haveWorkers && !breedFire) {
             // debug('Set gather lowestResource');
             setGather(lowestResource);
         } else if (game.global.playerGathering != 'metal' && game.global.turkimpTimer > 0) {
