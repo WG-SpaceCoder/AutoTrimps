@@ -1355,7 +1355,7 @@ function manageGenes() {
         	//intent of below if is to push through past megafarming with 30 anti stacks if we need to farm, 
         	//but raising to 30 antistacks often turns shouldfarm off. Would need a separate shouldFarmNom variable that approximates at 10 stacks? Don't care enough to do now
         	//if(shouldFarm && !game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '30';
-        	autoTrimpSettings.GeneticistTimer.value = '14';
+        	autoTrimpSettings.GeneticistTimer.value = '11';
         }
         else autoTrimpSettings.GeneticistTimer.value = '30.5';
     }
