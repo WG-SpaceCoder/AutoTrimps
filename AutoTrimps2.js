@@ -12,13 +12,14 @@
 ////////////////////////////////////////
 //Variables/////////////////////////////
 ////////////////////////////////////////
-var runInterval = 10; //How often to loop through logic
+var runInterval = 100; //How often to loop through logic
 var enableDebug = true; //Spam console?
 var autoTrimpSettings = new Object();
 var bestBuilding;
 var scienceNeeded;
 var breedFire = false;
 var shouldFarm = false;
+var noFight = 0;
 
 
 
@@ -1470,7 +1471,7 @@ function mainLoop() {
             // debug('triggered fight');
         }
     }
-
+	if(game.resources.trimps.soldiers == 0) noFight ++;
     saveSettings();
     setTimeout(mainLoop, runInterval);
 }
