@@ -151,7 +151,7 @@ function pushData() {
         world: game.global.world
     });
     localStorage.setItem('allSaveData', JSON.stringify(allSaveData));
-    debug('noFight zone ' + game.global.world -1 + ': ' + noFight/10);
+    debug('noFight zone ' + game.global.world + ': ' + noFight/10);
 }
 
 
