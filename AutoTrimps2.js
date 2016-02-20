@@ -1383,7 +1383,7 @@ function manageGenes() {
     }
     
     //really should be integrated with the buyBuildings routine instead of here, but I think it's mostly harmless here
-    else if (targetBreed < getBreedTime() && getPageSetting('ManageBreedtimer') && !game.buildings.Nursery.locked) {
+    else if (targetBreed < getBreedTime() && getPageSetting('ManageBreedtimer') && !game.buildings.Nursery.locked && getPageSetting('BuildNurseries')) {
         safeBuyBuilding('Nursery');
     }
     //if our time remaining to full trimps is still too high, fire some jobs to get-er-done
