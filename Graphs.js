@@ -141,7 +141,7 @@ function setColor(tmp) {
 }
 
 function pushData() {
-    console.log('Pushing Data');
+    console.log('Starting Zone ' + game.global.world);
     allSaveData.push({
         totalPortals: game.global.totalPortals,
         heliumOwned: game.resources.helium.owned,
@@ -151,7 +151,6 @@ function pushData() {
         world: game.global.world
     });
     localStorage.setItem('allSaveData', JSON.stringify(allSaveData));
-    debug('noFight zone ' + game.global.world + ': ' + noFight/10);
 }
 
 
