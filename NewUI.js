@@ -111,7 +111,8 @@ function automationMenuInit() {
 
 function createSetting(id, name, description, type, defaultValue, list) {
     var btnParent = document.createElement("DIV");
-    btnParent.setAttribute('class', 'optionContainer');
+   // btnParent.setAttribute('class', 'optionContainer');
+   btnParent.setAttribute('style', 'display: inline-block; vertical-align: top; margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw; width: 14.5vw;');
     var btn = document.createElement("DIV");
     btn.id = id;
     if (type == 'boolean') {
