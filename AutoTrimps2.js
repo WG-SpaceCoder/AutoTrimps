@@ -208,13 +208,13 @@ function safeBuyBuilding(building) {
     //avoid slow building from clamping
     if(building == 'Warpstation'){
     	while(canAffordBuilding(building)) {
-	    	buyBuilding(building);
+	    	buyBuilding(building, true);
 	    	debug('Building ' + building);
     	}
     }
     else {
 	    debug('Building ' + building);
-	    buyBuilding(building);
+	    buyBuilding(building, true);
     }
     
     postBuy();
@@ -571,8 +571,7 @@ function buyUpgrades() {
         if (upgrade == 'Shieldblock' && !getPageSetting('BuyShieldblock')) continue;
         if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < (Math.floor(game.upgrades.Gigastation.done * getPageSetting('DeltaGigastation')) + getPageSetting('FirstGigastation')) : game.buildings.Warpstation.owned < getPageSetting('FirstGigastation'))) continue;
         if ((!game.upgrades.Scientists.done && upgrade != 'Battle') ? (available && upgrade == 'Scientists' && game.upgrades.Scientists.allowed) : (available)) {
-            buyUpgrade(upgrade, true);
-            tooltip("hide");
+            buyUpgrade(upgrade, true, true);
             //debug('bought upgrade ' + upgrade);
         }
     }
