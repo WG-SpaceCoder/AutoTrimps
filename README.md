@@ -15,6 +15,7 @@ Automation script for the idle incremental game Trimps
  - Fix for gateway/collector housing issues. Building logic will no longer consider purchasing gateways if they cannot be afforded right now. This will hopefully prevent the suspension of all housing purchases to collect fragments to buy a gateway.
  - (Experimental)Several logic changes to improve helium per hour, mostly focused around avoiding pauses to wait for breeding to fill the bar. Included in this is a new option that will fire all lumberjacks and miners to get them breeding when needed. 
  - Adjusted Automation settings sizes to be slightly smaller, 6 per row
+ - Confirmhole (setting to display warning for dangerous purchases) is now forced off
  - Misc bugfixes
 
 
