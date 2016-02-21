@@ -8,6 +8,15 @@ Automation script for the idle incremental game Trimps
 
 <b>Recent changes:</b>
 
+##########DATE
+ - Void maps option. For now just a manual entry of what zone you want all your void maps completed. If you are on a tox run, it will get max tox stacks first.
+ - New option for number of wormholes to purchase
+ - Fix for gateway/collector housing issues. Building logic will no longer consider purchasing gateways if they cannot be afforded right now. This will hopefully prevent the suspension of all housing purchases to collect fragments to buy a gateway.
+ - (Experimental)Several logic changes to improve helium per hour, mostly focused around avoiding pauses to wait for breeding to fill the bar. Included in this is a functionality that will fire all lumberjacks and miners to get them breeding. Seems to be only positive effects for me but please let me know if you feel it is negatively impacting you (and if so around what zone, and a save export would be great).
+ - Adjusted Automation settings sizes to be slightly smaller, 6 per row
+ - Misc bugfixes
+
+
 2-16-2016
 - Graphs now only update on-demand. This means when clicking the graphs button, or clicking the new refresh button while in the graphs.
 - Enabled graphs zooming. Drag a box around area you wish to zoom in on. For those of you who didn't know, you can also toggle on/off series by clicking on the portal number on the right.

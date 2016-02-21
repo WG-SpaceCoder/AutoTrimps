@@ -26,11 +26,12 @@ createSetting('HireScientists', 'Hire Scientists', 'We are nerds and we like to 
 createSetting('BuildGyms', 'Build Gyms', 'Time for a workout', 'boolean');
 createSetting('BuildTributes', 'Build Tributes', 'All praise to the Dragimp', 'boolean');
 createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the throne', 'boolean');
-createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress. Just worker ratios right now.', 'boolean');
+createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress. Just worker ratios right now. WARNING: overrides worker ratio settings.', 'boolean');
 createSetting('ManageBreedtimer', 'Manage Breed Timer', 'Automatically manage the breed timer. EFFECTIVELY LOCKS THE BREED TIMER', 'boolean');
+createSetting('BreedFire', 'Breed Fire', 'Fire Lumberjacks and Miners to speed up breeding when needed', 'boolean');
 // createSetting('', '', '', 'boolean');
 //Values
-createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to shoot for using geneticists. MUST HAVE GAMES BASE SETTING BREED TIMER TURNED ON. CANNOT CHANGE WITH MANAGE BREED TIMER OPTION ON', 'value', '30');
+createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to shoot for using geneticists. CANNOT CHANGE WITH MANAGE BREED TIMER OPTION ON', 'value', '30');
 createSetting('FarmerRatio', 'Farmer Ratio', '', 'value', '1');
 createSetting('LumberjackRatio', 'Lumberjack Ratio', '', 'value', '1');
 createSetting('MinerRatio', 'Miner Ratio', '', 'value', '1');
@@ -42,14 +43,16 @@ createSetting('MaxMansion', 'MaxMansion', '', 'value', '50');
 createSetting('MaxHotel', 'Max Hotel', '', 'value', '50');
 createSetting('MaxResort', 'Max Resort', '', 'value', '50');
 createSetting('MaxGateway', 'Max Gateway', '', 'value', '25');
+createSetting('MaxWormhole', 'Max Wormhole', 'WARNING: Wormholes cost helium!', 'value', '0');
 createSetting('MaxCollector', 'Max Collector', '', 'value', '-1');
 createSetting('FirstGigastation', 'First Gigastation', 'How many warpstations to buy before your first gigastation', 'value', '20');
 createSetting('DeltaGigastation', 'Delta Gigastation', 'How many extra warpstations to buy for each gigastation. Supports fractional values. For example 2.5 will buy +2/+3/+2/+3...', 'value', '2');
 createSetting('MaxGym', 'Max Gym', '', 'value', '-1');
 createSetting('MaxTribute', 'Max Tribute', '', 'value', '-1');
 createSetting('MaxNursery', 'Max Nursery', '', 'value', '-1');
+createSetting('VoidMaps', 'Void Maps', 'The zone at which you want all your void maps to be cleared. 0 is off', 'value', '0');
 // createSetting('', '', '', 'value', '30');
-//Dropdown
+//Dropdown + context sensitive
 createSetting('Prestige', 'Prestige', 'Acquire prestiges through the selected item (inclusive) as soon as they are available in maps. Forces equip first mode. Automap must be enabled.', 'dropdown', 'Off', ['Off', 'Supershield', 'Dagadder', 'Bootboost', 'Megamace', 'Hellishmet', 'Polierarm', 'Pantastic', 'Axeidic', 'Smoldershoulder', 'Greatersword', 'Bestplate', 'Harmbalest', 'GambesOP']);
 createSetting('AutoPortal', 'Auto Portal', 'Automatically portal', 'dropdown', 'Off', ['Off', 'Helium Per Hour', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity', 'Custom']);
 createSetting('HeliumHourChallenge', 'Challenge for Helium per Hour', 'Automatically portal with this challenge when using helium per hour autoportal.', 'dropdown', 'None', ['None', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity']);
@@ -89,12 +92,7 @@ function automationMenuInit() {
     fightButtonCol.appendChild(newContainer);
 
     //create Helium per hour
-    var heHour = document.createElement("SPAN");
-    heHour.setAttribute("class", "ownedArea");
-    heHour.setAttribute("style", "display: block; opacity: 1; color:white;");
-    heHour.setAttribute("id", "customHeHour");
-    gameHe = document.getElementById('helium');
-    gameHe.appendChild(heHour);
+
 
     //create the space to place the automation settings.
     document.getElementById("settingsRow").innerHTML += '<div id="autoSettings" style="display: none;margin-bottom: 2vw;margin-top: 2vw;"></div>';
@@ -114,7 +112,8 @@ function automationMenuInit() {
 
 function createSetting(id, name, description, type, defaultValue, list) {
     var btnParent = document.createElement("DIV");
-    btnParent.setAttribute('class', 'optionContainer');
+   // btnParent.setAttribute('class', 'optionContainer');
+   btnParent.setAttribute('style', 'display: inline-block; vertical-align: top; margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw; width: 14.5vw;');
     var btn = document.createElement("DIV");
     btn.id = id;
     if (type == 'boolean') {
@@ -282,6 +281,8 @@ function updateCustomButtons() {
     document.getElementById('Prestige').value = autoTrimpSettings.Prestige.selected;
     document.getElementById('AutoPortal').value = autoTrimpSettings.AutoPortal.selected;
     document.getElementById('HeliumHourChallenge').value = autoTrimpSettings.HeliumHourChallenge.selected;
+    //just turn confirmhole off period IMO
+    if(game.options.menu.confirmhole.enabled == 1) toggleSetting('confirmhole');
 }
 
 
