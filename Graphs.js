@@ -19,7 +19,8 @@ document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style
 var graphList = ['HeliumPerHour', 'Helium', 'Clear Time'];
 var btn = document.createElement("select");
 btn.id = 'graphSelection';
-btn.setAttribute("style", "color:black");
+if(game.options.menu.darkTheme.enabled == 2) btn.setAttribute("style", "color: #C8C8C8");
+else btn.setAttribute("style", "color:black");
 btn.setAttribute("class", "settingBtn");
 btn.setAttribute("onmouseover", 'tooltip(\"Graph\", \"customText\", event, \"What graph would you like to display you nerd you?\")');
 btn.setAttribute("onmouseout", 'tooltip("hide")');
@@ -38,7 +39,6 @@ var u = document.createTextNode("Refresh");
 btn1.appendChild(u);
 btn1.setAttribute("onclick", "drawGraph()");
 btn1.setAttribute("class", "settingBtn");
-btn1.setAttribute("style", "color:black");
 document.getElementById('graphParent').appendChild(btn1);
 
 //clear data button
@@ -47,7 +47,6 @@ var t = document.createTextNode("Clear All Data");
 btn2.appendChild(t);
 btn2.setAttribute("onclick", "clearData(); drawGraph();");
 btn2.setAttribute("class", "settingBtn");
-btn2.setAttribute("style", "color:black");
 document.getElementById('graphParent').appendChild(btn2);
 
 var tips = document.createElement('div');
