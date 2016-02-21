@@ -1398,7 +1398,7 @@ function manageGenes() {
     }
         //if our time remaining to full trimps is still too high, fire some jobs to get-er-done
     	//needs option to toggle? advanced options?
-        else if ((targetBreed < getBreedTime(true) || (game.resources.trimps.soldiers == 0 && getBreedTime(true) > 6)) && breedFire == false && game.global.world > 10) {
+        else if ((targetBreed < getBreedTime(true) || (game.resources.trimps.soldiers == 0 && getBreedTime(true) > 6)) && breedFire == false && getPageSetting('BreedFire') && game.global.world > 10) {
     	    	breedFire = true;
     }
 /*    
