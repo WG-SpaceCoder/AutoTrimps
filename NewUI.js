@@ -163,7 +163,8 @@ function createSetting(id, name, description, type, defaultValue, list) {
         }
         var btn = document.createElement("select");
         btn.id = id;
-        btn.setAttribute("style", "color:black");
+        if(game.options.menu.darkTheme.enabled == 2) btn.setAttribute("style", "color:white");
+        else btn.setAttribute("style", "color:black");
         btn.setAttribute("class", "settingBtn");
         btn.setAttribute("onmouseover", 'tooltip(\"' + name + '\", \"customText\", event, \"' + description + '\")');
         btn.setAttribute("onmouseout", 'tooltip("hide")');
