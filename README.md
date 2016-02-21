@@ -8,7 +8,7 @@ Automation script for the idle incremental game Trimps
 
 <b>Recent changes:</b>
 
-##########DATE
+2/21/2016
  - Void maps option. For now just a manual entry of what zone you want all your void maps completed. If you are on a tox run, it will get max tox stacks first.
  - New option for number of wormholes to purchase
  - Fix for gateway/collector housing issues. Building logic will no longer consider purchasing gateways if they cannot be afforded right now. This will hopefully prevent the suspension of all housing purchases to collect fragments to buy a gateway.
