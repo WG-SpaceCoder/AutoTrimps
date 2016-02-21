@@ -12,10 +12,11 @@ Automation script for the idle incremental game Trimps
  - Void maps option. For now just a manual entry of what zone you want all your void maps completed. If you are on a tox run, it will get max tox stacks first.
  - New option for number of wormholes to purchase
  - New option for breed firing (see below)
- - Tooltips are no longer spam closed on buying upgrades. (same will be true with buying buildings once next patch goes live)
+ - Tooltips are no longer spam closed on buying upgrades or buildings.
  - Fix for gateway/collector housing issues. Building logic will no longer consider purchasing gateways if they cannot be afforded right now. This will hopefully prevent the suspension of all housing purchases to collect fragments to buy a gateway.
  - (Experimental)Several logic changes to improve helium per hour, mostly focused around avoiding pauses to wait for breeding to fill the bar. Included in this is a new option that will fire all lumberjacks and miners to get them breeding when needed. 
  - Adjusted Automation settings sizes to be slightly smaller, 6 per row
+ - Adjusted colors for dark theme. Must reload while dark theme is active.
  - Misc bugfixes
 
 
