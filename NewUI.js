@@ -281,8 +281,7 @@ function updateCustomButtons() {
     document.getElementById('Prestige').value = autoTrimpSettings.Prestige.selected;
     document.getElementById('AutoPortal').value = autoTrimpSettings.AutoPortal.selected;
     document.getElementById('HeliumHourChallenge').value = autoTrimpSettings.HeliumHourChallenge.selected;
-    //just turn confirmhole off period IMO
-    if(game.options.menu.confirmhole.enabled == 1) toggleSetting('confirmhole');
+
 }
 
 
