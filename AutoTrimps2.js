@@ -208,17 +208,16 @@ function safeBuyBuilding(building) {
     //avoid slow building from clamping
     if(building == 'Warpstation'){
     	while(canAffordBuilding(building)) {
-	    	buyBuilding(building, true);
+	    	buyBuilding(building, true, true);
 	    	debug('Building ' + building);
     	}
     }
     else {
 	    debug('Building ' + building);
-	    buyBuilding(building, true);
+	    buyBuilding(building, true, true);
     }
     
     postBuy();
-    tooltip("hide");
     return true;
 }
 
