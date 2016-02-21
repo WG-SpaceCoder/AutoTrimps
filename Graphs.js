@@ -37,16 +37,22 @@ var btn1 = document.createElement("button");
 var u = document.createTextNode("Refresh");
 btn1.appendChild(u);
 btn1.setAttribute("onclick", "drawGraph()");
+btn1.setAttribute("class", "settingBtn");
 btn1.setAttribute("style", "color:black");
 document.getElementById('graphParent').appendChild(btn1);
 
 //clear data button
 var btn2 = document.createElement("button");
-var t = document.createTextNode("Clear Data");
+var t = document.createTextNode("Clear All Data");
 btn2.appendChild(t);
 btn2.setAttribute("onclick", "clearData(); drawGraph();");
+btn2.setAttribute("class", "settingBtn");
 btn2.setAttribute("style", "color:black");
 document.getElementById('graphParent').appendChild(btn2);
+
+var tips = document.createElement('div');
+tips.innerHTML = 'Tips: You can zoom by dragging a box around an area. You can turn series off by clicking them on the legend.';
+document.getElementById('graphParent').appendChild(tips);
 
     var heHour = document.createElement("SPAN");
     heHour.setAttribute("class", "ownedArea");
