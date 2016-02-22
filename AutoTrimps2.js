@@ -1062,7 +1062,7 @@ function autoMap() {
         //if there are no non-unique maps, there will be nothing in keysSorted, so set to create a map
         if (keysSorted[0]) var highestMap = keysSorted[0];
         else shouldDoMap = "create";
-        if (shouldFarm && siphonMap == -1) shouldDoMap = "create"; 
+         
 
 
         for (var map in game.global.mapsOwnedArray) {
@@ -1071,11 +1071,16 @@ function autoMap() {
             if(theMap.location == 'Void' && getPageSetting('VoidMaps') > 0 && game.global.world >= getPageSetting('VoidMaps')) {
                 	//if we are on toxicity, don't clear until we will have max stacks at the last cell.
 	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
+	           	shouldDoMaps = true;
 	            	//check to make sure we won't get 1-shot in nostance by boss
 	            	var eAttack = getEnemyAttack(game.global.world, 'Cthulimp');
 	            	eAttack *= theMap.difficulty;
-	            	if(baseHealth < eAttack - baseBlock) break;
-	        	shouldDoMaps = true;
+	            	//break to prevent finishing map to finish a challenge?
+	            	//continue to check for doable map?
+	            	if(baseHealth < eAttack - baseBlock) {
+	            		shouldFarm = true;
+	            		break;
+	            	}
 	        	shouldDoMap = theMap.id;
         	}
             if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
@@ -1119,10 +1124,14 @@ function autoMap() {
             
 
         }
+        //shouldFarm is true here if: regular shouldFarm check set it, or voidMap difficulty check set it
+	if (shouldFarm && siphonMap == -1) shouldDoMap = "create";
 
         //map if we don't have health/dmg or if we are prestige mapping, and our set item has a new prestige available 
         if (shouldDoMaps || (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5)) {
+        	//shouldDoMap = world here if we haven't set it to create yet, meaning we found appropriate high level map, or siphon map
             if (shouldDoMap == "world") {
+            	//if shouldFarm is true, use a siphonology adjusted map
             	if (shouldDoMaps && shouldFarm) shouldDoMap = game.global.mapsOwnedArray[siphonMap].id;
                 else if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
                     shouldDoMap = game.global.mapsOwnedArray[highestMap].id;
@@ -1166,6 +1175,7 @@ function autoMap() {
             if (shouldDoMap == "world") {
                 mapsClicked();
             } else if (shouldDoMap == "create") {
+            	//create a siphonology level map if shouldFarm
                 if(shouldFarm) document.getElementById("mapLevelInput").value = game.global.world - game.portal.Siphonology.level;
                 else document.getElementById("mapLevelInput").value = game.global.world;
                 if (game.global.world > 70) {
