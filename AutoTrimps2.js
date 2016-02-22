@@ -1034,7 +1034,7 @@ function autoMap() {
         //leaving it in for now. Manually setting heliumGrowing to true in console should allow it to be used for a maximum total helium gained tox run (for bone trader)
         
         //stack tox stacks if heliumGrowing has been set to true, or of we need to clear our void maps
-        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 96 && game.challenges.Toxicity.stacks < 1500 && ((heliumGrowing && game.global.world > 59) || (getPageSetting('VoidMaps') > 0 && game.global.world >= getPageSetting('VoidMaps')))) {
+        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 96 && game.challenges.Toxicity.stacks < 1500 && ((getPageSetting('MaxTox') && game.global.world > 59) || (getPageSetting('VoidMaps') > 0 && game.global.world >= getPageSetting('VoidMaps')))) {
 		    shouldDoMaps = true;
 		    //force abandon army
 		    if(!game.global.mapsActive && !game.global.preMapsActive) {
@@ -1345,6 +1345,7 @@ function autoPortal() {
 }
 
 function doPortal(challenge) {
+	if(!game.global.portalActive) return;
 	portalClicked();
 	if(challenge) selectChallenge(challenge);
     	activateClicked();
