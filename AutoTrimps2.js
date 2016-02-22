@@ -663,7 +663,7 @@ function buyJobs() {
         while (canAffordJob('Trainer', false) && !game.jobs.Trainer.locked) {
         	if (game.options.menu.pauseGame.enabled) break;
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
-            if (!freeWorkers) safeBuyJob('Farmer', -1);
+            if (freeWorkers <= 0) safeBuyJob('Farmer', -1);
             safeBuyJob('Trainer');
         }
     }
@@ -672,7 +672,7 @@ function buyJobs() {
         while (canAffordJob('Explorer', false) && !game.jobs.Explorer.locked) {
         	if (game.options.menu.pauseGame.enabled) break;
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
-            if (!freeWorkers) safeBuyJob('Farmer', -1);
+            if (freeWorkers <= 0) safeBuyJob('Farmer', -1);
             safeBuyJob('Explorer');
         }
     }
