@@ -608,7 +608,7 @@ function buyBuildings() {
         buyFoodEfficientHousing();
     }
 	
-	if(getPageSetting('MaxWormhole') > 0 && game.buildings.Wormhole.owned < getPageSetting('MaxWormhole')) safeBuyBuilding('Wormhole');
+	if(getPageSetting('MaxWormhole') > 0 && game.buildings.Wormhole.owned < getPageSetting('MaxWormhole') && !game.buildings.Wormhole.locked) safeBuyBuilding('Wormhole');
 
     //Buy non-housing buildings
     if (autoTrimpSettings.BuildGyms.enabled && !game.buildings.Gym.locked) {
