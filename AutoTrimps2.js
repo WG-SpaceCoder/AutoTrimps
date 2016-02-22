@@ -208,6 +208,7 @@ function safeBuyBuilding(building) {
     //avoid slow building from clamping
     if(building == 'Warpstation'){
     	while(canAffordBuilding(building)) {
+    		if (game.options.menu.pauseGame.enabled) break;
 	    	buyBuilding(building, true, true);
 	    	debug('Building ' + building);
     	}
@@ -660,6 +661,7 @@ function buyJobs() {
     if (getPageSetting('MaxTrainers') > game.jobs.Trainer.owned || getPageSetting('MaxTrainers') == -1) {
         game.global.buyAmt = 1;
         while (canAffordJob('Trainer', false) && !game.jobs.Trainer.locked) {
+        	if (game.options.menu.pauseGame.enabled) break;
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
             if (!freeWorkers) safeBuyJob('Farmer', -1);
             safeBuyJob('Trainer');
@@ -668,6 +670,7 @@ function buyJobs() {
     if (game.jobs.Explorer.owned < getPageSetting('MaxExplorers') || getPageSetting('MaxExplorers') == -1) {
         game.global.buyAmt = 1;
         while (canAffordJob('Explorer', false) && !game.jobs.Explorer.locked) {
+        	if (game.options.menu.pauseGame.enabled) break;
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
             if (!freeWorkers) safeBuyJob('Farmer', -1);
             safeBuyJob('Explorer');
@@ -1414,6 +1417,7 @@ function manageGenes() {
     //otherwise, if we have some geneticists, start firing them
     else if ((targetBreed < getBreedTime() || targetBreed < getBreedTime(true)) && !game.jobs.Geneticist.locked && game.jobs.Geneticist.owned > 0) {
     	while(targetBreed < getBreedTime(true)) {
+    		if (game.options.menu.pauseGame.enabled) break;
         	safeBuyJob('Geneticist', -1);
         	//debug('fired a geneticist');
     	}
