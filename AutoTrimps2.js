@@ -1047,9 +1047,12 @@ function autoMap() {
         }
         
         var obj = {};
+        var siphonMap = -1;
         for (var map in game.global.mapsOwnedArray) {
             if (!game.global.mapsOwnedArray[map].noRecycle) {
                 obj[map] = game.global.mapsOwnedArray[map].level;
+                if(game.global.mapsOwnedArray[map].level == (game.global.world - game.portal.Siphonology.level))
+                	siphonMap = map;
             }
         }
         var keysSorted = Object.keys(obj).sort(function(a, b) {
@@ -1058,7 +1061,7 @@ function autoMap() {
         //if there are no non-unique maps, there will be nothing in keysSorted, so set to create a map
         if (keysSorted[0]) var highestMap = keysSorted[0];
         else shouldDoMap = "create";
-
+        if (shouldFarm && siphonMap == -1) shouldDoMap = "create"; 
 
 
         for (var map in game.global.mapsOwnedArray) {
@@ -1115,7 +1118,8 @@ function autoMap() {
         //map if we don't have health/dmg or if we are prestige mapping, and our set item has a new prestige available 
         if (shouldDoMaps || (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5)) {
             if (shouldDoMap == "world") {
-                if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
+            	if (shouldDoMaps && shouldFarm) shouldDoMap = game.global.mapsOwnedArray[siphonMap].id;
+                else if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
                     shouldDoMap = game.global.mapsOwnedArray[highestMap].id;
                 } else {
                     //if we aren't here because of needing damage or health, then we must be here because of prestige mapping.
@@ -1157,7 +1161,8 @@ function autoMap() {
             if (shouldDoMap == "world") {
                 mapsClicked();
             } else if (shouldDoMap == "create") {
-                //TODO optimize buying
+                if(shouldFarm) document.getElementById("mapLevelInput").value = game.global.world - game.portal.Siphonology.level;
+                else document.getElementById("mapLevelInput").value = game.global.world;
                 if (game.global.world > 70) {
                     sizeAdvMapsRange.value = 9;
                     adjustMap('size', 9);
