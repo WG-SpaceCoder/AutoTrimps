@@ -611,10 +611,10 @@ function buyBuildings() {
 	if(getPageSetting('MaxWormhole') > 0 && game.buildings.Wormhole.owned < getPageSetting('MaxWormhole') && !game.buildings.Wormhole.locked) safeBuyBuilding('Wormhole');
 
     //Buy non-housing buildings
-    if (autoTrimpSettings.BuildGyms.enabled && !game.buildings.Gym.locked) {
+    if (autoTrimpSettings.BuildGyms.enabled && !game.buildings.Gym.locked && (getPageSetting('MaxGym') > game.buildings.Gym.owned || getPageSetting('MaxGym') == -1)) {
         safeBuyBuilding('Gym');
     }
-    if (getPageSetting('BuildTributes') && !game.buildings.Tribute.locked) {
+    if (getPageSetting('BuildTributes') && !game.buildings.Tribute.locked && (getPageSetting('MaxTribute') > game.buildings.Tribute.owned || getPageSetting('MaxTribute') == -1)) {
         safeBuyBuilding('Tribute');
     }
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
