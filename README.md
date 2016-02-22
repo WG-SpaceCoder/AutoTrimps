@@ -8,6 +8,12 @@ Automation script for the idle incremental game Trimps
 
 <b>Recent changes:</b>
 
+2/22/2016
+- Nursery purchases will now be limited by cost of collectors before warpstations are unlocked
+- Couple of nursery purchase bugs fixed
+- Fixed a bug with wormholes being purchased before they were unlocked
+- Fixed a bug where autostance was using dominance before it was available
+
 2/21/2016
  - Void maps option. For now just a manual entry of what zone you want all your void maps completed. If you are on a tox run, it will get max tox stacks first.
  - New option for number of wormholes to purchase

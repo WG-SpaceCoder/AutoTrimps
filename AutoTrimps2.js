@@ -610,13 +610,13 @@ function buyBuildings() {
         buyFoodEfficientHousing();
     }
 	
-	if(getPageSetting('MaxWormhole') > 0 && game.buildings.Wormhole.owned < getPageSetting('MaxWormhole')) safeBuyBuilding('Wormhole');
+	if(getPageSetting('MaxWormhole') > 0 && game.buildings.Wormhole.owned < getPageSetting('MaxWormhole') && !game.buildings.Wormhole.locked) safeBuyBuilding('Wormhole');
 
     //Buy non-housing buildings
-    if (autoTrimpSettings.BuildGyms.enabled && !game.buildings.Gym.locked) {
+    if (autoTrimpSettings.BuildGyms.enabled && !game.buildings.Gym.locked && (getPageSetting('MaxGym') > game.buildings.Gym.owned || getPageSetting('MaxGym') == -1)) {
         safeBuyBuilding('Gym');
     }
-    if (getPageSetting('BuildTributes') && !game.buildings.Tribute.locked) {
+    if (getPageSetting('BuildTributes') && !game.buildings.Tribute.locked && (getPageSetting('MaxTribute') > game.buildings.Tribute.owned || getPageSetting('MaxTribute') == -1)) {
         safeBuyBuilding('Tribute');
     }
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
@@ -674,7 +674,18 @@ function buyJobs() {
         }
     }
 game.global.buyAmt = oldBuy;
-
+freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+    if (getPageSetting('HireScientists') && !game.jobs.Scientist.locked) {
+    //if earlier in the game, buy a small amount of scientists
+    if (game.jobs.Farmer.owned < 250000 && !breedFire) {
+        var buyScientists = Math.floor((scientistRatio / totalRatio * totalDistributableWorkers) - game.jobs.Scientist.owned);
+        //bandaid to prevent situation where 1 scientist is bought, causing floor calculation to drop by 1, making next calculation -1 and entering hiring/firing loop
+        //proper fix is including scientists in totalDistributableWorkers and the scientist ratio in the total ratio, but then it waits for 4 jobs
+        if(buyScientists > 0 && freeWorkers > 0) safeBuyJob('Scientist', buyScientists);
+    }
+    //once over 100k farmers, fire our scientists and rely on manual gathering of science
+    else if (game.jobs.Scientist.owned > 0) safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
+}
     //Distribute Farmer/Lumberjack/Miner breedfire
     if(!game.jobs.Farmer.locked && !breedFire) 
     safeBuyJob('Farmer', Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
@@ -689,17 +700,7 @@ game.global.buyAmt = oldBuy;
     else if(breedFire)
     safeBuyJob('Miner', game.jobs.Miner.owned * -1);
     
-    if (getPageSetting('HireScientists') && !game.jobs.Scientist.locked) {
-    //if earlier in the game, buy a small amount of scientists
-    if (game.jobs.Farmer.owned < 250000 && !breedFire) {
-        var buyScientists = Math.floor((scientistRatio / totalRatio * totalDistributableWorkers) - game.jobs.Scientist.owned);
-        //bandaid to prevent situation where 1 scientist is bought, causing floor calculation to drop by 1, making next calculation -1 and entering hiring/firing loop
-        //proper fix is including scientists in totalDistributableWorkers and the scientist ratio in the total ratio, but then it waits for 4 jobs
-        if(buyScientists > 0 && freeWorkers > 0) safeBuyJob('Scientist', buyScientists);
-    }
-    //once over 100k farmers, fire our scientists and rely on manual gathering of science
-    else if (game.jobs.Scientist.owned > 0) safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
-}
+
 }
 
 function autoLevelEquipment() {
@@ -974,7 +975,7 @@ function autoStance() {
 				setFormation(2);
 			}
 			//regular checks if voidBuff isn't double attack, or we are going to one-shot. Double damage checks if voidBuff is doubleattack
-		} else if (game.upgrades.Dominance.done && (((newSquadRdy && dHealth > dDamage) || dHealth - missingHealth > dDamage) && (game.global.voidBuff != 'dblA' || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2))) || ((newSquadRdy && dHealth > dDamage * 2) || dHealth - missingHealth > dDamage * 2)) {
+		} else if (game.upgrades.Dominance.done && ((((newSquadRdy && dHealth > dDamage) || dHealth - missingHealth > dDamage) && (game.global.voidBuff != 'dblA' || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2))) || ((newSquadRdy && dHealth > dDamage * 2) || dHealth - missingHealth > dDamage * 2))) {
 			if (game.global.formation != 2) {
 				setFormation(2);
 			}
