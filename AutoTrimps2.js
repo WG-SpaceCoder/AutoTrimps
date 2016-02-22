@@ -1073,7 +1073,7 @@ function autoMap() {
 	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
 	           	shouldDoMaps = true;
 	            	//check to make sure we won't get 1-shot in nostance by boss
-	            	var eAttack = getEnemyAttack(game.global.world, 'Cthulimp');
+	            	var eAttack = game.global.getEnemyAttack(game.global.world, 'Cthulimp');
 	            	eAttack *= theMap.difficulty;
 	            	//break to prevent finishing map to finish a challenge?
 	            	//continue to check for doable map?
