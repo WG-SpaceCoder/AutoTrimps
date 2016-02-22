@@ -29,6 +29,7 @@ createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the thro
 createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress. Just worker ratios right now. WARNING: overrides worker ratio settings.', 'boolean');
 createSetting('ManageBreedtimer', 'Manage Breed Timer', 'Automatically manage the breed timer. EFFECTIVELY LOCKS THE BREED TIMER', 'boolean');
 createSetting('BreedFire', 'Breed Fire', 'Fire Lumberjacks and Miners to speed up breeding when needed', 'boolean');
+createSetting('MaxTox', 'Max Toxicity Stacks', 'Get maximum toxicity stacks before killing the improbability in each zone 60 and above. Generally only recommended for 1 run to maximize bone portal value.', 'boolean');
 // createSetting('', '', '', 'boolean');
 //Values
 createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to shoot for using geneticists. CANNOT CHANGE WITH MANAGE BREED TIMER OPTION ON', 'value', '30');
@@ -91,7 +92,9 @@ function automationMenuInit() {
     newContainer.appendChild(abutton);
     fightButtonCol.appendChild(newContainer);
 
-    //create Helium per hour
+     //make timer click toggle paused mode
+    document.getElementById('portalTimer').setAttribute('onclick', 'toggleSetting(\'pauseGame\')');
+    document.getElementById('portalTimer').setAttribute('style', 'cursor: default');
 
 
     //create the space to place the automation settings.
@@ -108,6 +111,7 @@ function automationMenuInit() {
     script.innerHTML = html;
     //inject the scripts
     document.body.appendChild(script);
+
 }
 
 function createSetting(id, name, description, type, defaultValue, list) {

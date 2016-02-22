@@ -39,6 +39,7 @@ var u = document.createTextNode("Refresh");
 btn1.appendChild(u);
 btn1.setAttribute("onclick", "drawGraph()");
 btn1.setAttribute("class", "settingBtn");
+if(game.options.menu.darkTheme.enabled != 2) btn1.setAttribute("style", "color:black");
 document.getElementById('graphParent').appendChild(btn1);
 
 //clear data button
@@ -47,6 +48,7 @@ var t = document.createTextNode("Clear All Data");
 btn2.appendChild(t);
 btn2.setAttribute("onclick", "clearData(); drawGraph();");
 btn2.setAttribute("class", "settingBtn");
+if(game.options.menu.darkTheme.enabled != 2) btn2.setAttribute("style", "color:black");
 document.getElementById('graphParent').appendChild(btn2);
 
 var tips = document.createElement('div');
