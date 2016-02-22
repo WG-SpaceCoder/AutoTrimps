@@ -1415,12 +1415,10 @@ function manageGenes() {
         buyUpgrade('Potency');
     }
     //otherwise, if we have some geneticists, start firing them
-    else if ((targetBreed < getBreedTime() || targetBreed < getBreedTime(true)) && !game.jobs.Geneticist.locked && game.jobs.Geneticist.owned > 0) {
-    	while(targetBreed < getBreedTime(true)) {
-    		if (game.options.menu.pauseGame.enabled) break;
-        	safeBuyJob('Geneticist', -1);
+    else if ((targetBreed < getBreedTime() || targetBreed < getBreedTime(true)) && !game.jobs.Geneticist.locked && game.jobs.Geneticist.owned > 10) {
+        	safeBuyJob('Geneticist', -10);
         	//debug('fired a geneticist');
-    	}
+    	
     }
         //if our time remaining to full trimps is still too high, fire some jobs to get-er-done
     	//needs option to toggle? advanced options?
