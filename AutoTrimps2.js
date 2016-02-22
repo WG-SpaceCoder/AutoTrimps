@@ -1070,6 +1070,10 @@ function autoMap() {
             if(theMap.location == 'Void' && getPageSetting('VoidMaps') > 0 && game.global.world >= getPageSetting('VoidMaps')) {
                 	//if we are on toxicity, don't clear until we will have max stacks at the last cell.
 	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
+	            	//check to make sure we won't get 1-shot in nostance by boss
+	            	var eAttack = getEnemyAttack(game.global.world, 'Cthulimp');
+	            	eAttack *= theMap.difficulty;
+	            	if(baseHealth < eAttack - baseBlock) break;
 	        	shouldDoMaps = true;
 	        	shouldDoMap = theMap.id;
         	}
