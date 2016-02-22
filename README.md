@@ -12,6 +12,7 @@ Automation script for the idle incremental game Trimps
 - (Experimental) added a failsafe difficulty check to void maps. If the boss of a void map can 1-shot you in nostance, it should not be attempted.
 - Added UI option for max toxicity stacks. When this mode is on, during a toxicity run the script will get max tox stacks before killing an improbability (so zones 60 and above only). You generally only turn this on for one run to get a very large total helium value for purchasing bone portals. The helium per hour will be terrible and the run itself will take over 24 hours minimum.
 - Clicking on the zone timer will now toggle the paused mode.
+- Script will no longer continue to run the block trying to get shieldblock.
 
 2/22/2016
 - Nursery purchases will now be limited by cost of collectors before warpstations are unlocked
