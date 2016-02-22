@@ -92,7 +92,8 @@ function automationMenuInit() {
     newContainer.appendChild(abutton);
     fightButtonCol.appendChild(newContainer);
 
-    //create Helium per hour
+     //make timer click toggle paused mode
+    document.getElementById('portalTimer').setAttribute('onclick', 'toggleSetting(\'pauseGame\')');
 
 
     //create the space to place the automation settings.
@@ -109,6 +110,7 @@ function automationMenuInit() {
     script.innerHTML = html;
     //inject the scripts
     document.body.appendChild(script);
+
 }
 
 function createSetting(id, name, description, type, defaultValue, list) {
