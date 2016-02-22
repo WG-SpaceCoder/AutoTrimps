@@ -972,7 +972,7 @@ function autoStance() {
 				setFormation(2);
 			}
 			//regular checks if voidBuff isn't double attack, or we are going to one-shot. Double damage checks if voidBuff is doubleattack
-		} else if (game.upgrades.Dominance.done && (((newSquadRdy && dHealth > dDamage) || dHealth - missingHealth > dDamage) && (game.global.voidBuff != 'dblA' || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2))) || ((newSquadRdy && dHealth > dDamage * 2) || dHealth - missingHealth > dDamage * 2)) {
+		} else if (game.upgrades.Dominance.done && ((((newSquadRdy && dHealth > dDamage) || dHealth - missingHealth > dDamage) && (game.global.voidBuff != 'dblA' || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2))) || ((newSquadRdy && dHealth > dDamage * 2) || dHealth - missingHealth > dDamage * 2))) {
 			if (game.global.formation != 2) {
 				setFormation(2);
 			}
