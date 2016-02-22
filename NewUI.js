@@ -94,6 +94,7 @@ function automationMenuInit() {
 
      //make timer click toggle paused mode
     document.getElementById('portalTimer').setAttribute('onclick', 'toggleSetting(\'pauseGame\')');
+    document.getElementById('portalTimer').setAttribute('style', 'cursor: default');
 
 
     //create the space to place the automation settings.
