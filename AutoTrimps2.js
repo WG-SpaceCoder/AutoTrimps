@@ -829,11 +829,13 @@ function manualLabor() {
     var breedingTrimps = game.resources.trimps.owned - game.resources.trimps.employed;
     
     if(breedingTrimps < 10 && game.buildings.Trap.owned == 0 && canAffordBuilding('Trap')) {
-    	safeBuyBuilding('Trap');
+    	if(!safeBuyBuilding('Trap'))
+    	setGather('buildings');
     }
     else if (breedingTrimps < 10 && game.buildings.Trap.owned > 0) {
     	setGather('trimps');
     }
+   else if (game.resources.science.owned < 100) setGather('science');
     //if we have more than 2 buildings in queue, or (our modifier is real fast and trapstorm is off), build
    else if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || game.global.autoCraftModifier == 0 || (game.global.playerModifier > 1000 && game.global.trapBuildToggled == false)) : false) {
         // debug('Gathering buildings??');
