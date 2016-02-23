@@ -20,6 +20,7 @@ var scienceNeeded;
 var breedFire = false;
 var shouldFarm = false;
 var noFight = 0;
+var trapTrimps = false;
 
 
 
@@ -206,17 +207,17 @@ function safeBuyBuilding(building) {
     }
     game.global.firing = false;
     //avoid slow building from clamping
-    if(building == 'Warpstation'){
-    	while(canAffordBuilding(building)) {
-    		if (game.options.menu.pauseGame.enabled) break;
-	    	buyBuilding(building, true, true);
-	    	debug('Building ' + building);
-    	}
+    if(building == 'Warpstation' && document.hidden){
+	    	while(canAffordBuilding(building)) {
+	    		if (game.options.menu.pauseGame.enabled) break;
+		    	buyBuilding(building, true, true);
+		    	debug('Building ' + building);
+	    	}
+	    	return;
     }
-    else {
 	    debug('Building ' + building);
 	    buyBuilding(building, true, true);
-    }
+    
     
     postBuy();
     return true;
@@ -845,7 +846,15 @@ function manualLabor() {
     else if (game.resources.science.owned < scienceNeeded && document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden') {
         // debug('Science needed ' + scienceNeeded);
         setGather('science');
-    } else {
+    } 
+    else if (trapTrimps && game.buildings.Trap.owned < 5 && canAffordBuilding('Trap')) {
+    	safeBuyBuilding('Trap');
+    }
+    else if (trapTrimps && parseInt(getPageSetting('GeneticistTimer')) < getBreedTime(true)) {
+    	setGather('trimps');
+    }
+    
+    else {
         var manualResourceList = {
             'food': 'Farmer',
             'wood': 'Lumberjack',
