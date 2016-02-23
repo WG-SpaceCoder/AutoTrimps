@@ -662,8 +662,7 @@ function buyJobs() {
     //Simple buy if you can
     if (getPageSetting('MaxTrainers') > game.jobs.Trainer.owned || getPageSetting('MaxTrainers') == -1) {
         game.global.buyAmt = 1;
-        while (canAffordJob('Trainer', false) && !game.jobs.Trainer.locked) {
-        	if (game.options.menu.pauseGame.enabled) break;
+        if (canAffordJob('Trainer', false) && !game.jobs.Trainer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
             if (freeWorkers <= 0) safeBuyJob('Farmer', -1);
             safeBuyJob('Trainer');
@@ -671,8 +670,7 @@ function buyJobs() {
     }
     if (game.jobs.Explorer.owned < getPageSetting('MaxExplorers') || getPageSetting('MaxExplorers') == -1) {
         game.global.buyAmt = 1;
-        while (canAffordJob('Explorer', false) && !game.jobs.Explorer.locked) {
-        	if (game.options.menu.pauseGame.enabled) break;
+        if (canAffordJob('Explorer', false) && !game.jobs.Explorer.locked) {
             freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
             if (freeWorkers <= 0) safeBuyJob('Farmer', -1);
             safeBuyJob('Explorer');
@@ -1083,7 +1081,7 @@ function autoMap() {
         for (var map in game.global.mapsOwnedArray) {
             var theMap = game.global.mapsOwnedArray[map];
             	//clear void maps if we need to
-            if(theMap.location == 'Void' && getPageSetting('VoidMaps') > 0 && game.global.world >= getPageSetting('VoidMaps')) {
+            if(theMap.location == 'Void' && getPageSetting('VoidMaps') > 0 && game.global.world == getPageSetting('VoidMaps')) {
                 	//if we are on toxicity, don't clear until we will have max stacks at the last cell.
 	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
 	           	shouldDoMaps = true;
@@ -1092,7 +1090,7 @@ function autoMap() {
 	            	eAttack *= theMap.difficulty;
 	            	//break to prevent finishing map to finish a challenge?
 	            	//continue to check for doable map?
-	            	if(baseHealth < eAttack - baseBlock) {
+	            	if(baseHealth/2 < eAttack - baseBlock) {
 	            		shouldFarm = true;
 	            		break;
 	            	}
