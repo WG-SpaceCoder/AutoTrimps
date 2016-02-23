@@ -9,6 +9,8 @@ Automation script for the idle incremental game Trimps
 <b>Recent changes:</b>
 
 2/23/2016
+- Adjusted void maps difficulty check to check for 1-shotting in dominance stance (and if so won't attempt the map, and if so it SHOULD try to farm to be able to clear it)
+- Adjusted void maps setting to only run void maps ON the zone set, not above.
 - Made some minor improvements to low-helium early game. Auto Gather should now behave mostly appropriately just after portaling.
 
 2/22/2016 - Update 2
