@@ -541,10 +541,10 @@ function getBreedTime(remaining) {
 function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
-   // javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
-   // javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
+   // javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
+   // javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
 }
 
 function easyMode() {
@@ -826,9 +826,16 @@ function autoLevelEquipment() {
 
 function manualLabor() {
     var ManualGather = 'metal';
-
+    var breedingTrimps = game.resources.trimps.owned - game.resources.trimps.employed;
+    
+    if(breedingTrimps < 10 && game.buildings.Trap.owned == 0 && canAffordBuilding('Trap')) {
+    	safeBuyBuilding('Trap');
+    }
+    else if (breedingTrimps < 10 && game.buildings.Trap.owned > 0) {
+    	setGather('trimps');
+    }
     //if we have more than 2 buildings in queue, or (our modifier is real fast and trapstorm is off), build
-    if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || (game.global.playerModifier > 1000 && game.global.trapBuildToggled == false)) : false) {
+   else if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || (game.global.playerModifier > 1000 && game.global.trapBuildToggled == false)) : false) {
         // debug('Gathering buildings??');
         setGather('buildings');
     }
