@@ -543,8 +543,10 @@ function initializeAutoTrimps() {
     loadPageVariables();
     javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
     javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
-   // javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
-   // javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
+    toggleSettingsMenu();
+    toggleSettingsMenu();
 }
 
 function easyMode() {
@@ -826,14 +828,23 @@ function autoLevelEquipment() {
 
 function manualLabor() {
     var ManualGather = 'metal';
-
+    var breedingTrimps = game.resources.trimps.owned - game.resources.trimps.employed;
+    
+    if(breedingTrimps < 5 && game.buildings.Trap.owned == 0 && canAffordBuilding('Trap')) {
+    	if(!safeBuyBuilding('Trap'))
+    	setGather('buildings');
+    }
+    else if (breedingTrimps < 5 && game.buildings.Trap.owned > 0) {
+    	setGather('trimps');
+    }
+   else if (game.resources.science.owned < 100 && document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden') setGather('science');
     //if we have more than 2 buildings in queue, or (our modifier is real fast and trapstorm is off), build
-    if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || (game.global.playerModifier > 1000 && game.global.trapBuildToggled == false)) : false) {
+   else if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || game.global.autoCraftModifier == 0 || (game.global.playerModifier > 1000 && game.global.trapBuildToggled == false)) : false) {
         // debug('Gathering buildings??');
         setGather('buildings');
     }
     //if we have some upgrades sitting around which we don't have enough science for, gather science
-    else if (game.resources.science.owned < scienceNeeded && document.getElementById('scienceCollectBtn').style.display == 'block') {
+    else if (game.resources.science.owned < scienceNeeded && document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden') {
         // debug('Science needed ' + scienceNeeded);
         setGather('science');
     } else {
@@ -1504,7 +1515,7 @@ function mainLoop() {
                 pauseFight(); //Disable autofight
             }
         }
-        lowLevelFight = game.resources.trimps.maxSoldiers < (game.resources.trimps.owned - game.resources.trimps.employed) * 0.5 && (game.resources.trimps.owned - game.resources.trimps.employed) > game.resources.trimps.realMax() * 0.1 && game.global.world < 5;
+        lowLevelFight = game.resources.trimps.maxSoldiers < (game.resources.trimps.owned - game.resources.trimps.employed) * 0.5 && (game.resources.trimps.owned - game.resources.trimps.employed) > game.resources.trimps.realMax() * 0.1 && game.global.world < 5 && game.global.sLevel > 0;
         if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || lowLevelFight )) {
             fightManual();
             // debug('triggered fight');

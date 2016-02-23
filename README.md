@@ -7,6 +7,10 @@ Automation script for the idle incremental game Trimps
 <b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
 
 <b>Recent changes:</b>
+
+2/23/2016
+- Made some minor improvements to low-helium early game. Auto Gather should now behave mostly appropriately just after portaling.
+
 2/22/2016 - Update 2
 - (Experimental) added siphonology logic. You should see lower level maps being used when you are pushing through more difficult content if you have the siphonology perk.
 - (Experimental) added a failsafe difficulty check to void maps. If the boss of a void map can 1-shot you in nostance, it should not be attempted.
