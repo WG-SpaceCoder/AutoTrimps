@@ -241,7 +241,7 @@ function highlightHousing() {
             cost += getBuildingItemPrice(building, "gems");
             var ratio = cost / building.increase.by;
             //don't consider Gateway if we can't afford it right now - hopefully to prevent game waiting for fragments to buy gateway when collector could be bought right now
-            if(house == "Gateway" && !canAffordBuilding('Gateway')) continue;
+            if(unlockedHousing[house] == "Gateway" && !canAffordBuilding('Gateway')) continue;
             obj[unlockedHousing[house]] = ratio;
             if (document.getElementById(unlockedHousing[house]).style.border = "1px solid #00CC00") {
                 document.getElementById(unlockedHousing[house]).style.border = "1px solid #FFFFFF";
