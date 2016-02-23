@@ -602,6 +602,7 @@ function buyStorage() {
 
 //Buy all non-storage buildings
 function buyBuildings() {
+	if(game.jobs.Miner.locked || game.jobs.Scientist.locked) return;
     highlightHousing();
 
     //if housing is highlighted
@@ -708,6 +709,7 @@ freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.tr
 }
 
 function autoLevelEquipment() {
+	if(game.jobs.Miner.locked || game.jobs.Scientist.locked) return;
     var Best = {
         'healthwood': {
             Factor: 0,
@@ -847,10 +849,10 @@ function manualLabor() {
         // debug('Science needed ' + scienceNeeded);
         setGather('science');
     } 
-    else if (trapTrimps && game.buildings.Trap.owned < 5 && canAffordBuilding('Trap')) {
+    else if (trapTrimps && game.buildings.Trap.owned < 1 && canAffordBuilding('Trap')) {
     	safeBuyBuilding('Trap');
     }
-    else if (trapTrimps && parseInt(getPageSetting('GeneticistTimer')) < getBreedTime(true)) {
+    else if (trapTrimps && parseInt(getPageSetting('GeneticistTimer')) < getBreedTime(true) && game.buildings.Trap.owned > 0) {
     	setGather('trimps');
     }
     
