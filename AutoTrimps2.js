@@ -1013,6 +1013,7 @@ function autoStance() {
 //prison/wonderland flags for use in autoPortal function
 var doPrison = false;
 var doWonderland = false;
+var stackingTox = false;
 
 function autoMap() {
     if (game.global.mapsUnlocked) {
@@ -1052,6 +1053,7 @@ function autoMap() {
         //stack tox stacks if heliumGrowing has been set to true, or of we need to clear our void maps
         if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 96 && game.challenges.Toxicity.stacks < 1500 && ((getPageSetting('MaxTox') && game.global.world > 59) || (getPageSetting('VoidMaps') > 0 && game.global.world == getPageSetting('VoidMaps')))) {
 		    shouldDoMaps = true;
+		    stackingTox = true;
 		    //force abandon army
 		    if(!game.global.mapsActive && !game.global.preMapsActive) {
 		    	mapsClicked();
@@ -1059,6 +1061,7 @@ function autoMap() {
 		    }
 
         }
+        else stackingTox = false;
         
         var obj = {};
         var siphonMap = -1;
@@ -1160,7 +1163,7 @@ function autoMap() {
         if (!game.global.preMapsActive) {
             if (game.global.mapsActive) {
                 //if we are doing the right map, and it's not a norecycle (unique) map, and we aren't going to hit max map bonus
-                if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle && (game.global.mapBonus < 9 || shouldFarm)) {
+                if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle && (game.global.mapBonus < 9 || shouldFarm || stackingTox)) {
                     var targetPrestige = autoTrimpSettings.Prestige.selected;
                     //make sure repeat map is on
                     if (!game.global.repeatMap) {
