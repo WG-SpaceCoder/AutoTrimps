@@ -20,7 +20,7 @@ createSetting('BuyArmor', 'Buy Armor', 'Will buy the most efficient armor availa
 createSetting('BuyArmorUpgrades', 'Buy Armor Upgrades', 'Will buy the most efficient armor upgrade available', 'boolean');
 createSetting('BuyWeapons', 'Buy Weapons', 'Will buy the most efficient weapon available', 'boolean');
 createSetting('BuyWeaponUpgrades', 'Buy Weapon Upgrades', 'Will buy the most efficient weapon upgrade available', 'boolean');
-createSetting('LimitEquipment', 'Limit Equipment', 'Limit levels of equipment bought to 11-prestige level. WARNING: may reduce He/hr performance in many cases.', 'boolean');
+
 createSetting('BuyShieldblock', 'Buy Shield Block', 'Will buy the shield block upgrade. If you are progressing past zone 60, you probably don\'t want this', 'boolean');
 createSetting('RunMapsWhenStuck', 'Auto Maps', 'Automatically run maps to progress', 'boolean');
 createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps. Required for autoPortal Electricity and Crushed modes.', 'boolean');
@@ -62,7 +62,9 @@ createSetting('AutoPortal', 'Auto Portal', 'Automatically portal', 'dropdown', '
 createSetting('HeliumHourChallenge', 'Challenge for Helium per Hour', 'Automatically portal with this challenge when using helium per hour autoportal.', 'dropdown', 'None', ['None', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity']);
 createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after clearing this level', 'value', '20');
 
-
+//advanced settings
+var aSettings = document.getElementById('advancedSettings');
+createSetting('LimitEquipment', 'Limit Equipment', 'Limit levels of equipment bought to 11-prestige level. WARNING: may reduce He/hr performance in many cases.', 'boolean', aSettings);
 
 
 function automationMenuInit() {
@@ -100,24 +102,35 @@ function automationMenuInit() {
     document.getElementById('portalTimer').setAttribute('style', 'cursor: default');
 
 
-    //create the space to place the automation settings.
+    //create container for settings buttons
     document.getElementById("settingsRow").innerHTML += '<div id="autoSettings" style="display: none;margin-bottom: 2vw;margin-top: 2vw;"></div>';
-    //Scripts to be injected. elements can't call tampermonkey scripts for some reason.(assume it's the same for grease)
-    var script = document.createElement('script');
-    //array to hold the settings. Loading values into them should be done before UI creation.
-    var html = "var automationSettings=[0,0,0];\r\n var ranstring=''; //cause I'm dumb \r\n";
-    //toggles the display of the settings menu.
-    html += "function autoToggle()\r\n {if (game.options.displayed)\r\n toggleSettingsMenu();\r\n if (document.getElementById('graphParent').style.display === 'block')\r\n document.getElementById('graphParent').style.display = 'none';\r\n var item = document.getElementById('autoSettings');\r\n if(item.style.display === 'block')\r\n item.style.display='none';\r\n else item.style.display = 'block'; }\r\n ";
-    //overloads the settings menu button to include hiding the auto menu settings.
-    html += "function autoPlusSettingsMenu(){\r\n var item = document.getElementById('autoSettings');\r\n if(item.style.display === 'block')\r\n item.style.display='none';\r\n toggleSettingsMenu();}\r\n ";
-
-    script.innerHTML = html;
-    //inject the scripts
-    document.body.appendChild(script);
-
+   
+    var adv = document.createElement("DIV");
+    adv.setAttribute('id', 'advancedSettings');
+    document.getElementById("autoSettings").appendChild(adv);
 }
 
-function createSetting(id, name, description, type, defaultValue, list) {
+
+//toggles the display of the settings menu.
+function autoToggle(){ 
+    if (game.options.displayed)
+        toggleSettingsMenu();
+    if (document.getElementById('graphParent').style.display === 'block')
+        document.getElementById('graphParent').style.display = 'none';
+    var item = document.getElementById('autoSettings');
+    if(item.style.display === 'block')
+        item.style.display='none';
+    else item.style.display = 'block'; 
+}
+    //overloads the settings menu button to include hiding the auto menu settings.
+  function autoPlusSettingsMenu() {
+      var item = document.getElementById('autoSettings');
+      if(item.style.display === 'block')
+        item.style.display='none';
+    toggleSettingsMenu();
+  }
+
+function createSetting(id, name, description, type, defaultValue, list, container) {
     var btnParent = document.createElement("DIV");
    // btnParent.setAttribute('class', 'optionContainer');
    btnParent.setAttribute('style', 'display: inline-block; vertical-align: top; margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw; width: 14.5vw;');
@@ -139,7 +152,8 @@ function createSetting(id, name, description, type, defaultValue, list) {
         btn.setAttribute("onmouseout", 'tooltip("hide")');
         btn.textContent = name;
         btnParent.appendChild(btn)
-        document.getElementById("autoSettings").appendChild(btnParent);
+        if(container) container.appendChild(btnParent);
+        else document.getElementById("autoSettings").appendChild(btnParent);
     } else if (type == 'value') {
         if (autoTrimpSettings[id] === undefined) {
             autoTrimpSettings[id] = {
@@ -156,7 +170,8 @@ function createSetting(id, name, description, type, defaultValue, list) {
         btn.setAttribute("onmouseout", 'tooltip("hide")');
         btn.textContent = name;
         btnParent.appendChild(btn)
-        document.getElementById("autoSettings").appendChild(btnParent);
+        if(container) container.appendChild(btnParent);
+        else document.getElementById("autoSettings").appendChild(btnParent);
     } else if (type == 'dropdown') {
         if (autoTrimpSettings[id] === undefined) {
             autoTrimpSettings[id] = {
@@ -185,7 +200,9 @@ function createSetting(id, name, description, type, defaultValue, list) {
         }
         btn.value = autoTrimpSettings[id].selected;
         btnParent.appendChild(btn)
-        document.getElementById("autoSettings").appendChild(btnParent);
+        
+        if(container) container.appendChild(btnParent);
+        else document.getElementById("autoSettings").appendChild(btnParent);
     }
 }
 
