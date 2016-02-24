@@ -25,9 +25,6 @@ createSetting('BuyShieldblock', 'Buy Shield Block', 'Will buy the shield block u
 createSetting('RunMapsWhenStuck', 'Auto Maps', 'Automatically run maps to progress', 'boolean');
 createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps. Required for autoPortal Electricity and Crushed modes.', 'boolean');
 createSetting('HireScientists', 'Hire Scientists', 'Enable or disable hiring of scientists.', 'boolean');
-createSetting('BuildGyms', 'Build Gyms', 'Time for a workout', 'boolean');
-createSetting('BuildTributes', 'Build Tributes', 'All praise to the Dragimp', 'boolean');
-createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the throne', 'boolean');
 createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress. Just worker ratios right now. WARNING: overrides worker ratio settings.', 'boolean');
 createSetting('ManageBreedtimer', 'Manage Breed Timer', 'Automatically manage the breed timer. Picks appropriate timers for various challenges. Delays purchasing potency and nurseries if trying to raise the timer. EFFECTIVELY LOCKS THE BREED TIMER', 'boolean');
 
@@ -63,7 +60,6 @@ createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after c
 //advanced settings
 
 var advHeader = document.createElement("DIV");
-advHeader.setAttribute('style', 'border-style: solid; border-top-color: white;');
 advHeader.innerHTML = 'Advanced Settings - Leave off unless you know what you\'re doing with them';
 document.getElementById("autoSettings").appendChild(advHeader);
 var adv = document.createElement("DIV");
