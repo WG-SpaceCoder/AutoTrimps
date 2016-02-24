@@ -1344,7 +1344,7 @@ function autoPortal() {
 	    			var myHelium = Math.floor(game.resources.helium.owned / timeThisPortal);
 	    			if(myHelium < lastHelium && !game.global.challengeActive) {
 	    				pushData();
-	    				if(autoTrimpSettings.HeliumHourChallenge != 'None') doPortal(autoTrimpSettings.HeliumHourChallenge.selected);
+	    				if(autoTrimpSettings.HeliumHourChallenge.selected != 'None') doPortal(autoTrimpSettings.HeliumHourChallenge.selected);
 	    				else doPortal();
 	    			}
 	    			else lastHelium = myHelium;
