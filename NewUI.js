@@ -65,7 +65,7 @@ advBtn.setAttribute('class', 'btn btn-default');
 advBtn.setAttribute('onclick', 'autoToggle(document.getElementById(\'advancedSettings\'))');
 advBtn.innerHTML = 'Advanced Settings';
 advHeader.appendChild(advBtn);
-advHeader.innerHTML = 'Leave off unless you know what you\'re doing with them';
+advHeader.appendChild(document.createTextNode('Leave off unless you know what you\'re doing with them'));
 document.getElementById("autoSettings").appendChild(advHeader);
 var adv = document.createElement("DIV");
 adv.setAttribute('id', 'advancedSettings');
