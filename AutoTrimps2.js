@@ -832,6 +832,7 @@ function manualLabor() {
     var breedingTrimps = game.resources.trimps.owned - game.resources.trimps.employed;
     
     if(breedingTrimps < 5 && game.buildings.Trap.owned == 0 && canAffordBuilding('Trap')) {
+    	//safeBuyBuilding returns false if item is already in queue
     	if(!safeBuyBuilding('Trap'))
     	setGather('buildings');
     }
@@ -849,13 +850,14 @@ function manualLabor() {
         // debug('Science needed ' + scienceNeeded);
         setGather('science');
     } 
-    else if (trapTrimps && game.buildings.Trap.owned < 1 && canAffordBuilding('Trap')) {
-    	safeBuyBuilding('Trap');
+    else if (trapTrimps && parseInt(getPageSetting('GeneticistTimer')) < getBreedTime(true)) {
+    	if(game.buildings.Trap.owned < 1 && canAffordBuilding('Trap')) {
+    		    safeBuyBuilding('Trap');
+    		    setGather('buildings');
+    	}
+	else if (game.buildings.Trap.owned > 0) setGather('trimps');
     }
-    else if (trapTrimps && parseInt(getPageSetting('GeneticistTimer')) < getBreedTime(true) && game.buildings.Trap.owned > 0) {
-    	setGather('trimps');
-    }
-    
+
     else {
         var manualResourceList = {
             'food': 'Farmer',
@@ -896,9 +898,11 @@ function manualLabor() {
         } else if (game.global.playerGathering != 'metal' && game.global.turkimpTimer > 0) {
             //debug('Set gather ManualGather');
             setGather('metal');
-        } else  if (document.getElementById('scienceCollectBtn').style.display == 'block' && game.global.turkimpTimer < 1 && haveWorkers) {
+        } else  if (document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden' && game.global.turkimpTimer < 1 && haveWorkers) {
             setGather('science');
         }
+        if(trapTrimps && game.resources.science.owned < getPsString('science', true) * 60 || game.buildings.Trap.owned < 100)
+        	setGather('buildings');
         
     }
 }
