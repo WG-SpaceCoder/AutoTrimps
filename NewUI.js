@@ -64,7 +64,7 @@ var advBtn = document.createElement("DIV");
 advBtn.setAttribute('class', 'btn btn-default');
 advBtn.setAttribute('onclick', 'autoToggle(document.getElementById(\'advancedSettings\'))');
 advBtn.innerHTML = 'Advanced Settings';
-advBtn.setAttribute("onmouseover", 'tooltip(\"'Advanced Settings'\", \"customText\", event, \"'Leave off unless you know what you\'re doing with them.''\")');
+advBtn.setAttribute("onmouseover", 'tooltip(\"Advanced Settings\", \"customText\", event, \"Leave off unless you know what you\'re doing with them.\")');
 advBtn.setAttribute("onmouseout", 'tooltip("hide")');
 advBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw;');
 advHeader.appendChild(advBtn);
