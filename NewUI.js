@@ -7,29 +7,32 @@ if (autoTrimpSettings === undefined) {
 automationMenuInit();
 
 //Booleans
-createSetting('BuyStorage', 'Buy Storage', 'Will buy storage when resource is almost full', 'boolean');
+
 createSetting('ManualGather', 'Auto Gather', 'Will automatically gather resources and build.', 'boolean');
 createSetting('AutoFight', 'Better Auto Fight', 'Will automatically handle fighting.', 'boolean');
+createSetting('AutoStance', 'Auto Stance', 'Automatically swap stances to avoid death.', 'boolean');
+createSetting('TrapTrimps', 'Trap Trimps', 'Automatically trap trimps when needed, including building traps.', 'boolean');
+createSetting('BuyStorage', 'Buy Storage', 'Will buy storage when resource is almost full', 'boolean');
 createSetting('BuyJobs', 'Buy Jobs', 'Buys jobs based on ratios configured', 'boolean');
 createSetting('BuyBuildings', 'Buy Buildings', 'Will buy non storage buildings as soon as they are available', 'boolean');
 createSetting('BuyUpgrades', 'Buy Upgrades', 'Autobuy non eqipment Upgrades', 'boolean');
-createSetting('AutoStance', 'Auto Stance', 'Automatically swap stances to avoid death.', 'boolean');
 createSetting('BuyArmor', 'Buy Armor', 'Will buy the most efficient armor available', 'boolean');
 createSetting('BuyArmorUpgrades', 'Buy Armor Upgrades', 'Will buy the most efficient armor upgrade available', 'boolean');
 createSetting('BuyWeapons', 'Buy Weapons', 'Will buy the most efficient weapon available', 'boolean');
 createSetting('BuyWeaponUpgrades', 'Buy Weapon Upgrades', 'Will buy the most efficient weapon upgrade available', 'boolean');
 createSetting('LimitEquipment', 'Limit Equipment', 'Limit levels of equipment bought to 11-prestige level. WARNING: may reduce He/hr performance in many cases.', 'boolean');
 createSetting('BuyShieldblock', 'Buy Shield Block', 'Will buy the shield block upgrade. If you are progressing past zone 60, you probably don\'t want this', 'boolean');
-createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps', 'boolean');
 createSetting('RunMapsWhenStuck', 'Auto Maps', 'Automatically run maps to progress', 'boolean');
-createSetting('HireScientists', 'Hire Scientists', 'We are nerds and we like to party', 'boolean');
+createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps. Required for autoPortal Electricity and Crushed modes.', 'boolean');
+createSetting('HireScientists', 'Hire Scientists', 'Enable or disable hiring of scientists.', 'boolean');
 createSetting('BuildGyms', 'Build Gyms', 'Time for a workout', 'boolean');
 createSetting('BuildTributes', 'Build Tributes', 'All praise to the Dragimp', 'boolean');
 createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the throne', 'boolean');
 createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress. Just worker ratios right now. WARNING: overrides worker ratio settings.', 'boolean');
-createSetting('ManageBreedtimer', 'Manage Breed Timer', 'Automatically manage the breed timer. Picks appropriate timers for various challenges. Delays purchasing potency and nurseries if trying to raise the timer. EFFECTIVELY LOCKS THE BREED TIMER', 'boolean');
 createSetting('BreedFire', 'Breed Fire', 'Fire Lumberjacks and Miners to speed up breeding when needed', 'boolean');
 createSetting('MaxTox', 'Max Toxicity Stacks', 'Get maximum toxicity stacks before killing the improbability in each zone 60 and above. Generally only recommended for 1 run to maximize bone portal value.', 'boolean');
+createSetting('ManageBreedtimer', 'Manage Breed Timer', 'Automatically manage the breed timer. Picks appropriate timers for various challenges. Delays purchasing potency and nurseries if trying to raise the timer. EFFECTIVELY LOCKS THE BREED TIMER', 'boolean');
+
 // createSetting('', '', '', 'boolean');
 //Values
 createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to shoot for using geneticists. CANNOT CHANGE WITH MANAGE BREED TIMER OPTION ON', 'value', '30');
@@ -39,18 +42,18 @@ createSetting('MinerRatio', 'Miner Ratio', '', 'value', '1');
 createSetting('MaxExplorers', 'Max Explorers', 'Map the planet!!', 'value', '150');
 createSetting('MaxTrainers', 'Max Trainers', 'Fist bump me bro', 'value', -1);
 createSetting('MaxHut', 'Max Huts', '', 'value', '50');
-createSetting('MaxHouse', 'Max House', '', 'value', '50');
-createSetting('MaxMansion', 'MaxMansion', '', 'value', '50');
-createSetting('MaxHotel', 'Max Hotel', '', 'value', '50');
-createSetting('MaxResort', 'Max Resort', '', 'value', '50');
-createSetting('MaxGateway', 'Max Gateway', 'WARNING: Not recommended to raise above 25', 'value', '25');
-createSetting('MaxWormhole', 'Max Wormhole', 'WARNING: Wormholes cost helium! Values below 0 do nothing.', 'value', '0');
-createSetting('MaxCollector', 'Max Collector', '', 'value', '-1');
+createSetting('MaxHouse', 'Max Houses', '', 'value', '50');
+createSetting('MaxMansion', 'Max Mansions', '', 'value', '50');
+createSetting('MaxHotel', 'Max Hotels', '', 'value', '50');
+createSetting('MaxResort', 'Max Resorts', '', 'value', '50');
+createSetting('MaxGateway', 'Max Gateways', 'WARNING: Not recommended to raise above 25', 'value', '25');
+createSetting('MaxWormhole', 'Max Wormholes', 'WARNING: Wormholes cost helium! Values below 0 do nothing.', 'value', '0');
+createSetting('MaxCollector', 'Max Collectors', '', 'value', '-1');
 createSetting('FirstGigastation', 'First Gigastation', 'How many warpstations to buy before your first gigastation', 'value', '20');
 createSetting('DeltaGigastation', 'Delta Gigastation', 'How many extra warpstations to buy for each gigastation. Supports fractional values. For example 2.5 will buy +2/+3/+2/+3...', 'value', '2');
-createSetting('MaxGym', 'Max Gym', '', 'value', '-1');
-createSetting('MaxTribute', 'Max Tribute', '', 'value', '-1');
-createSetting('MaxNursery', 'Max Nursery', '', 'value', '-1');
+createSetting('MaxGym', 'Max Gyms', '', 'value', '-1');
+createSetting('MaxTribute', 'Max Tributes', '', 'value', '-1');
+createSetting('MaxNursery', 'Max Nurseries', '', 'value', '-1');
 createSetting('VoidMaps', 'Void Maps', 'The zone at which you want all your void maps to be cleared. 0 is off', 'value', '0');
 // createSetting('', '', '', 'value', '30');
 //Dropdown + context sensitive
