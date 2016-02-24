@@ -850,12 +850,12 @@ function manualLabor() {
         // debug('Science needed ' + scienceNeeded);
         setGather('science');
     } 
-    else if (getPageSetting('TrapTrimps') && parseInt(getPageSetting('GeneticistTimer')) < getBreedTime(true)) {
-    	if(game.buildings.Trap.owned < 1 && canAffordBuilding('Trap')) {
+    else if (getPageSetting('TrapTrimps') && parseInt(getPageSetting('GeneticistTimer')) < getBreedTime(true) && game.buildings.Trap.owned < 1 && canAffordBuilding('Trap')) { 
     		    safeBuyBuilding('Trap');
     		    setGather('buildings');
-    	}
-	else if (game.buildings.Trap.owned > 0) setGather('trimps');
+    }
+	else if (getPageSetting('TrapTrimps') && parseInt(getPageSetting('GeneticistTimer')) < getBreedTime(true) && game.buildings.Trap.owned > 0) {
+		setGather('trimps');
     }
 
     else {
