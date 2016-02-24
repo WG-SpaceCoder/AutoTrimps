@@ -64,12 +64,15 @@ var advBtn = document.createElement("DIV");
 advBtn.setAttribute('class', 'btn btn-default');
 advBtn.setAttribute('onclick', 'autoToggle(document.getElementById(\'advancedSettings\'))');
 advBtn.innerHTML = 'Advanced Settings';
+advBtn.setAttribute("onmouseover", 'tooltip(\"'Advanced Settings'\", \"customText\", event, \"'Leave off unless you know what you\'re doing with them.''\")');
+advBtn.setAttribute("onmouseout", 'tooltip("hide")');
+advBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw;');
 advHeader.appendChild(advBtn);
-advHeader.appendChild(document.createTextNode('Leave off unless you know what you\'re doing with them'));
+
 document.getElementById("autoSettings").appendChild(advHeader);
 var adv = document.createElement("DIV");
-adv.setAttribute('id', 'advancedSettings');
-adv.setAttribute('style', 'display: \'none\'');
+adv.id = 'advancedSettings';
+adv.style.display = 'none';
 document.getElementById("autoSettings").appendChild(adv);
 
 createSetting('LimitEquipment', 'Limit Equipment', 'Limit levels of equipment bought to 11-prestige level. WARNING: may reduce He/hr performance in many cases.', 'boolean', null, null, 'advancedSettings');
