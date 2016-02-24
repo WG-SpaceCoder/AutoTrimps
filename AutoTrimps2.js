@@ -901,7 +901,7 @@ function manualLabor() {
         } else  if (game.resources.science.owned < getPsString('science', true) * 60 && document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden' && game.global.turkimpTimer < 1 && haveWorkers) {
             setGather('science');
         }
-        else if(getPageSetting('TrapTrimps') && game.global.trapBuildToggled == true)
+        else if(getPageSetting('TrapTrimps') && game.global.trapBuildToggled == true && game.buildings.Trap.owned < 10000)
         	setGather('buildings');
         
     }
