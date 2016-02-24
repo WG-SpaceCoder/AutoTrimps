@@ -63,8 +63,8 @@ createSetting('HeliumHourChallenge', 'Challenge for Helium per Hour', 'Automatic
 createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after clearing this level', 'value', '20');
 
 //advanced settings
-var aSettings = document.getElementById('advancedSettings');
-createSetting('LimitEquipment', 'Limit Equipment', 'Limit levels of equipment bought to 11-prestige level. WARNING: may reduce He/hr performance in many cases.', 'boolean', aSettings);
+
+createSetting('LimitEquipment', 'Limit Equipment', 'Limit levels of equipment bought to 11-prestige level. WARNING: may reduce He/hr performance in many cases.', 'boolean', 'advancedSettings');
 
 
 function automationMenuInit() {
@@ -152,7 +152,7 @@ function createSetting(id, name, description, type, defaultValue, list, containe
         btn.setAttribute("onmouseout", 'tooltip("hide")');
         btn.textContent = name;
         btnParent.appendChild(btn)
-        if(container) container.appendChild(btnParent);
+        if(container) document.getElementById(container).appendChild(btnParent);
         else document.getElementById("autoSettings").appendChild(btnParent);
     } else if (type == 'value') {
         if (autoTrimpSettings[id] === undefined) {
@@ -170,7 +170,7 @@ function createSetting(id, name, description, type, defaultValue, list, containe
         btn.setAttribute("onmouseout", 'tooltip("hide")');
         btn.textContent = name;
         btnParent.appendChild(btn)
-        if(container) container.appendChild(btnParent);
+        if(container) document.getElementById(container).appendChild(btnParent);
         else document.getElementById("autoSettings").appendChild(btnParent);
     } else if (type == 'dropdown') {
         if (autoTrimpSettings[id] === undefined) {
@@ -201,7 +201,7 @@ function createSetting(id, name, description, type, defaultValue, list, containe
         btn.value = autoTrimpSettings[id].selected;
         btnParent.appendChild(btn)
         
-        if(container) container.appendChild(btnParent);
+        if(container) document.getElementById(container).appendChild(btnParent);
         else document.getElementById("autoSettings").appendChild(btnParent);
     }
 }
