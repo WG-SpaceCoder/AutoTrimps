@@ -63,7 +63,10 @@ document.getElementById('graphParent').appendChild(tips);
     gameHe.appendChild(heHour);
 
 
-function clearData() {
+function clearData(portal) {
+    if(portal) {
+        while(allSaveData[0].totalPortals < game.global.totalPortals - portal) allSaveData.shift();
+    }
     while(allSaveData[0].totalPortals < game.global.totalPortals) allSaveData.shift();
 }
 
@@ -157,6 +160,8 @@ function pushData() {
         resources: game.resources,
         world: game.global.world
     });
+    //only keep 10 portals worth of runs to prevent filling storage
+    clearData(10);
     localStorage.setItem('allSaveData', JSON.stringify(allSaveData));
 }
 
