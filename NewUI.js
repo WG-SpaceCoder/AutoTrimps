@@ -62,7 +62,7 @@ createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after c
 var advHeader = document.createElement("DIV");
 var advBtn = document.createElement("DIV");
 advBtn.setAttribute('class', 'btn btn-default');
-advBtn.setAttribute('onclick', 'autoToggle(document.getElementById('advancedSettings'))');
+advBtn.setAttribute('onclick', 'autoToggle(document.getElementById(\'advancedSettings\'))');
 advHeader.appendChild(advBtn);
 advHeader.innerHTML = 'Advanced Settings - Leave off unless you know what you\'re doing with them';
 document.getElementById("autoSettings").appendChild(advHeader);
