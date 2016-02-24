@@ -840,7 +840,7 @@ function manualLabor() {
     }
    else if (game.resources.science.owned < 100 && document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden') setGather('science');
     //if we have more than 2 buildings in queue, or (our modifier is real fast and trapstorm is off), build
-   else if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || game.global.autoCraftModifier == 0 || (game.global.playerModifier > 1000 && game.global.trapBuildToggled == false)) : false) {
+   else if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || game.global.autoCraftModifier == 0 || (game.global.playerModifier > 1000 && game.global.buildingsQueue[0] != 'Trap.1')) : false) {
         // debug('Gathering buildings??');
         setGather('buildings');
     }
@@ -1490,8 +1490,11 @@ function mainLoop() {
     if (getPageSetting('ManualGather')) manualLabor();
     if (getPageSetting('RunMapsWhenStuck')) autoMap();
     if (getPageSetting('GeneticistTimer') >= 0) manageGenes();
-    if (getPageSetting('AutoStance')) autoStance();
     if (autoTrimpSettings.AutoPortal.selected != "Off") autoPortal();
+    if (trapTrimps && game.global.trapBuildAllowed && game.global.trapBuildToggled == 'false') toggleAutoTrap();
+    
+    
+    if (getPageSetting('AutoStance')) autoStance();
     //if autostance is not on, we should do base calculations here so stuff like automaps still works
     else {
         baseDamage = game.global.soldierCurrentAttack * 2 * (1 + (game.global.achievementBonus / 100)) * ((game.global.antiStacks * game.portal.Anticipation.level * game.portal.Anticipation.modifier) + 1) * (1 + (game.global.roboTrimpLevel * 0.2));
