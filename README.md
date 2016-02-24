@@ -8,6 +8,9 @@ Automation script for the idle incremental game Trimps
 
 <b>Recent changes:</b>
 
+2/24/2016
+- New option for Trapping trimps. When on, it will turn on auto-build traps, automatically build and collect traps when needed. For those that don't really need traps, interference if you happen to keep it on should be minimal.
+
 2/23/2016
 - Adjusted void maps difficulty check to check for 1-shotting in dominance stance (and if so won't attempt the map, and if so it SHOULD try to farm to be able to clear it)
 - Adjusted void maps setting to only run void maps ON the zone set, not above.
