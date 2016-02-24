@@ -60,6 +60,10 @@ createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after c
 //advanced settings
 
 var advHeader = document.createElement("DIV");
+var advBtn = document.createElement("DIV");
+advBtn.setAttribute('class', 'btn btn-default');
+advBtn.setAttribute('onclick', 'autoToggle(document.getElementById('advancedSettings'))');
+advHeader.appendChild(advBtn);
 advHeader.innerHTML = 'Advanced Settings - Leave off unless you know what you\'re doing with them';
 document.getElementById("autoSettings").appendChild(advHeader);
 var adv = document.createElement("DIV");
@@ -113,15 +117,21 @@ function automationMenuInit() {
 
 
 //toggles the display of the settings menu.
-function autoToggle(){ 
-    if (game.options.displayed)
-        toggleSettingsMenu();
-    if (document.getElementById('graphParent').style.display === 'block')
-        document.getElementById('graphParent').style.display = 'none';
-    var item = document.getElementById('autoSettings');
-    if(item.style.display === 'block')
-        item.style.display='none';
-    else item.style.display = 'block'; 
+function autoToggle(what){ 
+    if(what) {
+        if(what.style.display === 'block') what.style.display = 'none';
+        else what.style.display = 'block';
+    }
+    else {
+        if (game.options.displayed)
+            toggleSettingsMenu();
+        if (document.getElementById('graphParent').style.display === 'block')
+            document.getElementById('graphParent').style.display = 'none';
+        var item = document.getElementById('autoSettings');
+        if(item.style.display === 'block')
+            item.style.display='none';
+        else item.style.display = 'block'; 
+    }
 }
     //overloads the settings menu button to include hiding the auto menu settings.
   function autoPlusSettingsMenu() {
