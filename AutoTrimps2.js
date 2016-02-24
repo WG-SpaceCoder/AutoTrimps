@@ -20,7 +20,7 @@ var scienceNeeded;
 var breedFire = false;
 var shouldFarm = false;
 var noFight = 0;
-var trapTrimps = false;
+
 
 
 
@@ -850,7 +850,7 @@ function manualLabor() {
         // debug('Science needed ' + scienceNeeded);
         setGather('science');
     } 
-    else if (trapTrimps && parseInt(getPageSetting('GeneticistTimer')) < getBreedTime(true)) {
+    else if (getPageSetting('TrapTrimps') && parseInt(getPageSetting('GeneticistTimer')) < getBreedTime(true)) {
     	if(game.buildings.Trap.owned < 1 && canAffordBuilding('Trap')) {
     		    safeBuyBuilding('Trap');
     		    setGather('buildings');
@@ -898,10 +898,10 @@ function manualLabor() {
         } else if (game.global.playerGathering != 'metal' && game.global.turkimpTimer > 0) {
             //debug('Set gather ManualGather');
             setGather('metal');
-        } else  if (document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden' && game.global.turkimpTimer < 1 && haveWorkers) {
+        } else  if (game.resources.science.owned < getPsString('science', true) * 60 && document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden' && game.global.turkimpTimer < 1 && haveWorkers) {
             setGather('science');
         }
-        if(trapTrimps && game.resources.science.owned < getPsString('science', true) * 60 || game.buildings.Trap.owned < 100)
+        else if(getPageSetting('TrapTrimps'))
         	setGather('buildings');
         
     }
@@ -1495,7 +1495,7 @@ function mainLoop() {
     if (getPageSetting('RunMapsWhenStuck')) autoMap();
     if (getPageSetting('GeneticistTimer') >= 0) manageGenes();
     if (autoTrimpSettings.AutoPortal.selected != "Off") autoPortal();
-    if (trapTrimps && game.global.trapBuildAllowed && game.global.trapBuildToggled == 'false') toggleAutoTrap();
+    if (getPageSetting('TrapTrimps') && game.global.trapBuildAllowed && game.global.trapBuildToggled == 'false') toggleAutoTrap();
     
     
     if (getPageSetting('AutoStance')) autoStance();
