@@ -63,8 +63,13 @@ document.getElementById('graphParent').appendChild(tips);
     gameHe.appendChild(heHour);
 
 
-function clearData() {
-    while(allSaveData[0].totalPortals < game.global.totalPortals) allSaveData.shift();
+function clearData(portal) {
+    if(portal) {
+        while(allSaveData[0].totalPortals < game.global.totalPortals - portal) allSaveData.shift();
+    }
+    else {
+        while(allSaveData[0].totalPortals < game.global.totalPortals) allSaveData.shift();
+    }
 }
 
 
@@ -157,6 +162,8 @@ function pushData() {
         resources: game.resources,
         world: game.global.world
     });
+    //only keep 10 portals worth of runs to prevent filling storage
+    clearData(10);
     localStorage.setItem('allSaveData', JSON.stringify(allSaveData));
 }
 
@@ -240,6 +247,7 @@ function setGraphData(graph) {
             break;
         case 'HeliumPerHour':
             var currentPortal = -1;
+            var currentZone = -1;
             graphData = [];
             for (var i in allSaveData) {
                 if (allSaveData[i].totalPortals != currentPortal) {
@@ -248,8 +256,21 @@ function setGraphData(graph) {
                         data: []
                     })
                     currentPortal = allSaveData[i].totalPortals;
+                    graphData[graphData.length -1].data.push(0);
                 }
-                graphData[graphData.length - 1].data.push(Math.floor(allSaveData[i].heliumOwned / ((allSaveData[i].currentTime - allSaveData[i].portalTime) / 3600000)));
+                if(currentZone < allSaveData[i].world && currentZone != -1) {
+                    graphData[graphData.length - 1].data.push(Math.floor(allSaveData[i].heliumOwned / ((allSaveData[i].currentTime - allSaveData[i].portalTime) / 3600000)));
+                }
+                
+                if(currentZone == -1) {
+                    var loop = allSaveData[i].world;
+                    while (loop > 0) {
+                        graphData[graphData.length -1].data.push(0);
+                        loop--;
+                    }
+                }
+                currentZone = allSaveData[i].world;
+                
             }
             title = 'Helium/Hour';
             xTitle = 'Zone';

@@ -7,29 +7,27 @@ if (autoTrimpSettings === undefined) {
 automationMenuInit();
 
 //Booleans
-createSetting('BuyStorage', 'Buy Storage', 'Will buy storage when resource is almost full', 'boolean');
+
 createSetting('ManualGather', 'Auto Gather', 'Will automatically gather resources and build.', 'boolean');
 createSetting('AutoFight', 'Better Auto Fight', 'Will automatically handle fighting.', 'boolean');
+createSetting('AutoStance', 'Auto Stance', 'Automatically swap stances to avoid death.', 'boolean');
+createSetting('TrapTrimps', 'Trap Trimps', 'Automatically trap trimps when needed, including building traps.', 'boolean');
+createSetting('BuyStorage', 'Buy Storage', 'Will buy storage when resource is almost full', 'boolean');
 createSetting('BuyJobs', 'Buy Jobs', 'Buys jobs based on ratios configured', 'boolean');
 createSetting('BuyBuildings', 'Buy Buildings', 'Will buy non storage buildings as soon as they are available', 'boolean');
 createSetting('BuyUpgrades', 'Buy Upgrades', 'Autobuy non eqipment Upgrades', 'boolean');
-createSetting('AutoStance', 'Auto Stance', 'Automatically swap stances to avoid death.', 'boolean');
 createSetting('BuyArmor', 'Buy Armor', 'Will buy the most efficient armor available', 'boolean');
 createSetting('BuyArmorUpgrades', 'Buy Armor Upgrades', 'Will buy the most efficient armor upgrade available', 'boolean');
 createSetting('BuyWeapons', 'Buy Weapons', 'Will buy the most efficient weapon available', 'boolean');
 createSetting('BuyWeaponUpgrades', 'Buy Weapon Upgrades', 'Will buy the most efficient weapon upgrade available', 'boolean');
-createSetting('LimitEquipment', 'Limit Equipment', 'Limit levels of equipment bought to 11-prestige level. WARNING: may reduce He/hr performance in many cases.', 'boolean');
+
 createSetting('BuyShieldblock', 'Buy Shield Block', 'Will buy the shield block upgrade. If you are progressing past zone 60, you probably don\'t want this', 'boolean');
-createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps', 'boolean');
 createSetting('RunMapsWhenStuck', 'Auto Maps', 'Automatically run maps to progress', 'boolean');
-createSetting('HireScientists', 'Hire Scientists', 'We are nerds and we like to party', 'boolean');
-createSetting('BuildGyms', 'Build Gyms', 'Time for a workout', 'boolean');
-createSetting('BuildTributes', 'Build Tributes', 'All praise to the Dragimp', 'boolean');
-createSetting('BuildNurseries', 'Build Nurseries', 'I can smell it from the throne', 'boolean');
+createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps. Required for autoPortal Electricity and Crushed modes.', 'boolean');
+createSetting('HireScientists', 'Hire Scientists', 'Enable or disable hiring of scientists.', 'boolean');
 createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress. Just worker ratios right now. WARNING: overrides worker ratio settings.', 'boolean');
 createSetting('ManageBreedtimer', 'Manage Breed Timer', 'Automatically manage the breed timer. Picks appropriate timers for various challenges. Delays purchasing potency and nurseries if trying to raise the timer. EFFECTIVELY LOCKS THE BREED TIMER', 'boolean');
-createSetting('BreedFire', 'Breed Fire', 'Fire Lumberjacks and Miners to speed up breeding when needed', 'boolean');
-createSetting('MaxTox', 'Max Toxicity Stacks', 'Get maximum toxicity stacks before killing the improbability in each zone 60 and above. Generally only recommended for 1 run to maximize bone portal value.', 'boolean');
+
 // createSetting('', '', '', 'boolean');
 //Values
 createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to shoot for using geneticists. CANNOT CHANGE WITH MANAGE BREED TIMER OPTION ON', 'value', '30');
@@ -39,18 +37,18 @@ createSetting('MinerRatio', 'Miner Ratio', '', 'value', '1');
 createSetting('MaxExplorers', 'Max Explorers', 'Map the planet!!', 'value', '150');
 createSetting('MaxTrainers', 'Max Trainers', 'Fist bump me bro', 'value', -1);
 createSetting('MaxHut', 'Max Huts', '', 'value', '50');
-createSetting('MaxHouse', 'Max House', '', 'value', '50');
-createSetting('MaxMansion', 'MaxMansion', '', 'value', '50');
-createSetting('MaxHotel', 'Max Hotel', '', 'value', '50');
-createSetting('MaxResort', 'Max Resort', '', 'value', '50');
-createSetting('MaxGateway', 'Max Gateway', 'WARNING: Not recommended to raise above 25', 'value', '25');
-createSetting('MaxWormhole', 'Max Wormhole', 'WARNING: Wormholes cost helium! Values below 0 do nothing.', 'value', '0');
-createSetting('MaxCollector', 'Max Collector', '', 'value', '-1');
+createSetting('MaxHouse', 'Max Houses', '', 'value', '50');
+createSetting('MaxMansion', 'Max Mansions', '', 'value', '50');
+createSetting('MaxHotel', 'Max Hotels', '', 'value', '50');
+createSetting('MaxResort', 'Max Resorts', '', 'value', '50');
+createSetting('MaxGateway', 'Max Gateways', 'WARNING: Not recommended to raise above 25', 'value', '25');
+createSetting('MaxWormhole', 'Max Wormholes', 'WARNING: Wormholes cost helium! Values below 0 do nothing.', 'value', '0');
+createSetting('MaxCollector', 'Max Collectors', '', 'value', '-1');
 createSetting('FirstGigastation', 'First Gigastation', 'How many warpstations to buy before your first gigastation', 'value', '20');
 createSetting('DeltaGigastation', 'Delta Gigastation', 'How many extra warpstations to buy for each gigastation. Supports fractional values. For example 2.5 will buy +2/+3/+2/+3...', 'value', '2');
-createSetting('MaxGym', 'Max Gym', '', 'value', '-1');
-createSetting('MaxTribute', 'Max Tribute', '', 'value', '-1');
-createSetting('MaxNursery', 'Max Nursery', '', 'value', '-1');
+createSetting('MaxGym', 'Max Gyms', '', 'value', '-1');
+createSetting('MaxTribute', 'Max Tributes', '', 'value', '-1');
+createSetting('MaxNursery', 'Max Nurseries', '', 'value', '-1');
 createSetting('VoidMaps', 'Void Maps', 'The zone at which you want all your void maps to be cleared. 0 is off', 'value', '0');
 // createSetting('', '', '', 'value', '30');
 //Dropdown + context sensitive
@@ -59,9 +57,28 @@ createSetting('AutoPortal', 'Auto Portal', 'Automatically portal', 'dropdown', '
 createSetting('HeliumHourChallenge', 'Challenge for Helium per Hour', 'Automatically portal with this challenge when using helium per hour autoportal.', 'dropdown', 'None', ['None', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity']);
 createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after clearing this level', 'value', '20');
 
+//advanced settings
 
+var advHeader = document.createElement("DIV");
+var advBtn = document.createElement("DIV");
+advBtn.setAttribute('class', 'btn btn-default');
+advBtn.setAttribute('onclick', 'autoToggle(document.getElementById(\'advancedSettings\'))');
+advBtn.innerHTML = 'Advanced Settings';
+advBtn.setAttribute("onmouseover", 'tooltip(\"Advanced Settings\", \"customText\", event, \"Leave off unless you know what you\'re doing with them.\")');
+advBtn.setAttribute("onmouseout", 'tooltip("hide")');
+advBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw;');
+advHeader.appendChild(advBtn);
 
+document.getElementById("autoSettings").appendChild(advHeader);
+var adv = document.createElement("DIV");
+adv.id = 'advancedSettings';
+adv.style.display = 'none';
+document.getElementById("autoSettings").appendChild(adv);
 
+createSetting('LimitEquipment', 'Limit Equipment', 'Limit levels of equipment bought to 11-prestige level. WARNING: may reduce He/hr performance in many cases.', 'boolean', null, null, 'advancedSettings');
+createSetting('BreedFire', 'Breed Fire', 'Fire Lumberjacks and Miners to speed up breeding when needed', 'boolean', null, null, 'advancedSettings');
+createSetting('MaxTox', 'Max Toxicity Stacks', 'Get maximum toxicity stacks before killing the improbability in each zone 60 and above. Generally only recommended for 1 run to maximize bone portal value.', 'boolean', null, null, 'advancedSettings');
+createSetting('RunNewVoids', 'Run New Voids', 'Run new void maps acquired after the set void map zone.', 'boolean', null, null, 'advancedSettings');
 function automationMenuInit() {
 
     var settingBtnSrch = document.getElementsByClassName("btn btn-default");
@@ -97,24 +114,39 @@ function automationMenuInit() {
     document.getElementById('portalTimer').setAttribute('style', 'cursor: default');
 
 
-    //create the space to place the automation settings.
+    //create container for settings buttons
     document.getElementById("settingsRow").innerHTML += '<div id="autoSettings" style="display: none;margin-bottom: 2vw;margin-top: 2vw;"></div>';
-    //Scripts to be injected. elements can't call tampermonkey scripts for some reason.(assume it's the same for grease)
-    var script = document.createElement('script');
-    //array to hold the settings. Loading values into them should be done before UI creation.
-    var html = "var automationSettings=[0,0,0];\r\n var ranstring=''; //cause I'm dumb \r\n";
-    //toggles the display of the settings menu.
-    html += "function autoToggle()\r\n {if (game.options.displayed)\r\n toggleSettingsMenu();\r\n if (document.getElementById('graphParent').style.display === 'block')\r\n document.getElementById('graphParent').style.display = 'none';\r\n var item = document.getElementById('autoSettings');\r\n if(item.style.display === 'block')\r\n item.style.display='none';\r\n else item.style.display = 'block'; }\r\n ";
-    //overloads the settings menu button to include hiding the auto menu settings.
-    html += "function autoPlusSettingsMenu(){\r\n var item = document.getElementById('autoSettings');\r\n if(item.style.display === 'block')\r\n item.style.display='none';\r\n toggleSettingsMenu();}\r\n ";
-
-    script.innerHTML = html;
-    //inject the scripts
-    document.body.appendChild(script);
+   
 
 }
 
-function createSetting(id, name, description, type, defaultValue, list) {
+
+//toggles the display of the settings menu.
+function autoToggle(what){ 
+    if(what) {
+        if(what.style.display === 'block') what.style.display = 'none';
+        else what.style.display = 'block';
+    }
+    else {
+        if (game.options.displayed)
+            toggleSettingsMenu();
+        if (document.getElementById('graphParent').style.display === 'block')
+            document.getElementById('graphParent').style.display = 'none';
+        var item = document.getElementById('autoSettings');
+        if(item.style.display === 'block')
+            item.style.display='none';
+        else item.style.display = 'block'; 
+    }
+}
+    //overloads the settings menu button to include hiding the auto menu settings.
+  function autoPlusSettingsMenu() {
+      var item = document.getElementById('autoSettings');
+      if(item.style.display === 'block')
+        item.style.display='none';
+    toggleSettingsMenu();
+  }
+
+function createSetting(id, name, description, type, defaultValue, list, container) {
     var btnParent = document.createElement("DIV");
    // btnParent.setAttribute('class', 'optionContainer');
    btnParent.setAttribute('style', 'display: inline-block; vertical-align: top; margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw; width: 14.5vw;');
@@ -136,7 +168,8 @@ function createSetting(id, name, description, type, defaultValue, list) {
         btn.setAttribute("onmouseout", 'tooltip("hide")');
         btn.textContent = name;
         btnParent.appendChild(btn)
-        document.getElementById("autoSettings").appendChild(btnParent);
+        if(container) document.getElementById(container).appendChild(btnParent);
+        else document.getElementById("autoSettings").appendChild(btnParent);
     } else if (type == 'value') {
         if (autoTrimpSettings[id] === undefined) {
             autoTrimpSettings[id] = {
@@ -153,7 +186,8 @@ function createSetting(id, name, description, type, defaultValue, list) {
         btn.setAttribute("onmouseout", 'tooltip("hide")');
         btn.textContent = name;
         btnParent.appendChild(btn)
-        document.getElementById("autoSettings").appendChild(btnParent);
+        if(container) document.getElementById(container).appendChild(btnParent);
+        else document.getElementById("autoSettings").appendChild(btnParent);
     } else if (type == 'dropdown') {
         if (autoTrimpSettings[id] === undefined) {
             autoTrimpSettings[id] = {
@@ -182,7 +216,9 @@ function createSetting(id, name, description, type, defaultValue, list) {
         }
         btn.value = autoTrimpSettings[id].selected;
         btnParent.appendChild(btn)
-        document.getElementById("autoSettings").appendChild(btnParent);
+        
+        if(container) document.getElementById(container).appendChild(btnParent);
+        else document.getElementById("autoSettings").appendChild(btnParent);
     }
 }
 
