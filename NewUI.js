@@ -75,7 +75,7 @@ document.getElementById("autoSettings").appendChild(adv);
 createSetting('LimitEquipment', 'Limit Equipment', 'Limit levels of equipment bought to 11-prestige level. WARNING: may reduce He/hr performance in many cases.', 'boolean', null, null, 'advancedSettings');
 createSetting('BreedFire', 'Breed Fire', 'Fire Lumberjacks and Miners to speed up breeding when needed', 'boolean', null, null, 'advancedSettings');
 createSetting('MaxTox', 'Max Toxicity Stacks', 'Get maximum toxicity stacks before killing the improbability in each zone 60 and above. Generally only recommended for 1 run to maximize bone portal value.', 'boolean', null, null, 'advancedSettings');
-
+createSetting('RunNewVoids', 'Run New Voids', 'Run new void maps acquired after the set void map zone.', 'boolean', null, null, 'advancedSettings');
 function automationMenuInit() {
 
     var settingBtnSrch = document.getElementsByClassName("btn btn-default");
