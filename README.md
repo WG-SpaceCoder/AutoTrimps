@@ -13,6 +13,7 @@ Automation script for the idle incremental game Trimps
 - New advanced option to run new void maps. When on, the script will attempt to run voids maps acquired after the zone designated to run void maps. eg. if you clear all your void maps at your regularly set zone of 60, but your run continues and you acquire one at 65, it will attempt to run it with this on. With this option off, void maps are ONLY run on the set level, and void maps acquired after the fact are never attempted.
 - New advanced settings section of the UI, toggleable by clicking the button. Limit equipment, breed fire, max toxicity stacks, and run new voids options have all been moved here.
 - Removed the settings 'Buy Gyms', 'Buy Tributes' and 'Buy Nurseries' as they were redundant with their corresponding 'Max' settings, which can be set to 0 to turn off purchasing.
+- No upgrades or buildings are now purchased before Miners and Scientists are unlocked, to help ease low-helium early game.
 - Warpstations are now purchased slightly slower when the window has focus, to hopefully tax some systems less. If you experience temporary browser freezing when purchasing a gigastation and subsequent warpstations, I recommend running in Chrome.
 - Fixed the helium/hour graph to line up correctly zone numbers on the axis in all (hopefully?) cases. Undone still is helium graph (but who cares about that one, right?)
 - Graph data is now limited to the past 10 portals to prevent filling up the local storage and causing save failures.
