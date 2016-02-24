@@ -67,7 +67,9 @@ function clearData(portal) {
     if(portal) {
         while(allSaveData[0].totalPortals < game.global.totalPortals - portal) allSaveData.shift();
     }
-    while(allSaveData[0].totalPortals < game.global.totalPortals) allSaveData.shift();
+    else {
+        while(allSaveData[0].totalPortals < game.global.totalPortals) allSaveData.shift();
+    }
 }
 
 
