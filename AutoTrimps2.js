@@ -1099,7 +1099,7 @@ function autoMap() {
         for (var map in game.global.mapsOwnedArray) {
             var theMap = game.global.mapsOwnedArray[map];
             	//clear void maps if we need to
-            if(theMap.location == 'Void' && getPageSetting('VoidMaps') > 0 && game.global.world == getPageSetting('VoidMaps')) {
+            if(theMap.location == 'Void' && getPageSetting('VoidMaps') > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')))) {
                 	//if we are on toxicity, don't clear until we will have max stacks at the last cell.
 	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
 	           	shouldDoMaps = true;
