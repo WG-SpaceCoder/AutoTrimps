@@ -10,6 +10,13 @@ Automation script for the idle incremental game Trimps
 
 2/24/2016
 - New option for Trapping trimps. When on, it will turn on auto-build traps, automatically build and collect traps when needed. For those that don't really need traps, interference if you happen to keep it on should be minimal.
+- New advanced option to run new void maps. When on, the script will attempt to run voids maps acquired after the zone designated to run void maps. eg. if you clear all your void maps at your regularly set zone of 60, but your run continues and you acquire one at 65, it will attempt to run it with this on. With this option off, void maps are ONLY run on the set level, and void maps acquired after the fact are never attempted.
+- New advanced settings section of the UI, toggleable by clicking the button. Limit equipment, breed fire, max toxicity stacks, and run new voids options have all been moved here.
+- Removed the settings 'Buy Gyms', 'Buy Tributes' and 'Buy Nurseries' as they were redundant with their corresponding 'Max' settings, which can be set to 0 to turn off purchasing.
+- Warpstations are now purchased slightly slower when the window has focus, to hopefully tax some systems less. If you experience temporary browser freezing when purchasing a gigastation and subsequent warpstations, I recommend running in Chrome.
+- Fixed the helium/hour graph to line up correctly zone numbers on the axis in all (hopefully?) cases. Undone still is helium graph (but who cares about that one, right?)
+- Graph data is now limited to the past 10 portals to prevent filling up the local storage and causing save failures.
+- Fixed a bug that would crash the script when using he/hr autoPortal with no challenge setting.
 
 2/23/2016
 - Adjusted void maps difficulty check to check for 1-shotting in dominance stance (and if so won't attempt the map, and if so it SHOULD try to farm to be able to clear it)
