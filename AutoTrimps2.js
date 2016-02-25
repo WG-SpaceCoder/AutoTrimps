@@ -1148,7 +1148,7 @@ function autoMap() {
 	            	if(game.global.challengeActive == 'Toxicity') eAttack *= 5;
 	            	//break to prevent finishing map to finish a challenge?
 	            	//continue to check for doable map?
-	            	if(ourHealth/6 < eAttack - baseBlock) {
+	            	if(ourHealth/8 < eAttack - baseBlock) {
 	            		shouldFarm = true;
 	            		break;
 	            	}
