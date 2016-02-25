@@ -932,6 +932,8 @@ function manualLabor() {
         }
         else if(getPageSetting('TrapTrimps') && game.global.trapBuildToggled == true && game.buildings.Trap.owned < 10000)
         	setGather('buildings');
+      	else if (document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden')
+        	setGather('science');
         
     }
 }
@@ -1543,7 +1545,7 @@ function mainLoop() {
     if (getPageSetting('RunMapsWhenStuck')) autoMap();
     if (getPageSetting('GeneticistTimer') >= 0) manageGenes();
     if (autoTrimpSettings.AutoPortal.selected != "Off") autoPortal();
-    if (getPageSetting('TrapTrimps') && game.global.trapBuildAllowed && game.global.trapBuildToggled == 'false') toggleAutoTrap();
+    if (getPageSetting('TrapTrimps') && game.global.trapBuildAllowed && game.global.trapBuildToggled == false) toggleAutoTrap();
     
     
     if (getPageSetting('AutoStance')) autoStance();
