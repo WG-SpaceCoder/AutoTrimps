@@ -336,9 +336,9 @@ function updateCustomButtons() {
     
     var status = document.getElementById('autoMapStatus');
     if(needPrestige) status.innerHTML = 'Prestige';
-    if(doVoid && !shouldFarm) status.innerHTML = 'Void Maps';
-    if(doVoid && shouldFarm) status.innerHTML = 'Farming to do Voids';
-    if(shouldFarm && !doVoid) status.innerHTML = 'Farming';
+    if(doVoids && !shouldFarm) status.innerHTML = 'Void Maps';
+    if(doVoids && shouldFarm) status.innerHTML = 'Farming to do Voids';
+    if(shouldFarm && !doVoids) status.innerHTML = 'Farming';
     if(StackingTox) status.innerHTML = 'Getting Tox Stacks';
     if(!autoTrimpSettings.RunMapsWhenStuck.enabled) status.innerHTML = 'Off';
 
