@@ -117,7 +117,7 @@ function automationMenuInit() {
     newContainer.setAttribute("style", "display: block;");
     newContainer.setAttribute("class", "battleSideTitle");
     abutton = document.createElement("SPAN");
-    abutton.id = 'autoMapsStatus';
+    abutton.id = 'autoMapStatus';
     newContainer.appendChild(abutton);
     fightButtonCol.appendChild(newContainer);
 
