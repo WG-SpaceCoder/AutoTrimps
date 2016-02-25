@@ -1061,17 +1061,22 @@ var doPrison = false;
 var doWonderland = false;
 var stackingTox = false;
 var doVoids = false;
+var needToVoid = false;
+var needPrestige = false;
 
 function autoMap() {
     if (game.global.mapsUnlocked) {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
         var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
+        needToVoid = getPageSetting('VoidMaps') > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')));
+        needPrestige = (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5);
         if(game.global.challengeActive == "Toxicity") {
     	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
     	//enemyDamage *= 2;
     	enemyHeath *= 2;
     	}
-    	if(game.global.totalVoidMaps == 0) doVoids = false;
+    	if(game.global.totalVoidMaps == 0 || !needToVoid)
+    		doVoids = false;
     	
         var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
         var enoughDamage = (baseDamage * 4 > enemyHeath);
@@ -1099,7 +1104,7 @@ function autoMap() {
         //leaving it in for now. Manually setting heliumGrowing to true in console should allow it to be used for a maximum total helium gained tox run (for bone trader)
         
         //stack tox stacks if heliumGrowing has been set to true, or of we need to clear our void maps
-        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 96 && game.challenges.Toxicity.stacks < 1500 && ((getPageSetting('MaxTox') && game.global.world > 59) || ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids'))))) {
+        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 96 && game.challenges.Toxicity.stacks < 1500 && ((getPageSetting('MaxTox') && game.global.world > 59) || needToVoid)) {
 		    shouldDoMaps = true;
 		    stackingTox = true;
 		    //force abandon army
@@ -1132,7 +1137,7 @@ function autoMap() {
         for (var map in game.global.mapsOwnedArray) {
             var theMap = game.global.mapsOwnedArray[map];
             	//clear void maps if we need to
-            if(theMap.location == 'Void' && getPageSetting('VoidMaps') > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')))) {
+            if(theMap.location == 'Void' && needToVoid) {
             		doVoids = true;
                 	//if we are on toxicity, don't clear until we will have max stacks at the last cell.
 	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
@@ -1205,7 +1210,7 @@ function autoMap() {
 	if (shouldFarm && siphonMap == -1) shouldDoMap = "create";
 
         //map if we don't have health/dmg or we need to clear void maps or if we are prestige mapping, and our set item has a new prestige available 
-        if (shouldDoMaps || doVoids || (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5)) {
+        if (shouldDoMaps || doVoids || needPrestige) {
         	//shouldDoMap = world here if we haven't set it to create yet, meaning we found appropriate high level map, or siphon map
         	//if shouldDoMap != world, it already has a map ID and will be run below
             if (shouldDoMap == "world") {
@@ -1247,7 +1252,7 @@ function autoMap() {
                     if (!game.global.switchToMaps && ((shouldFarm && game.global.lastClearedCell > 79) || !shouldFarm)) {
                          mapsClicked();
                          //if (prestige mapping or need to do void maps) abandon army if (a new army is ready or need to void map and we're almost done with the zone)
-                         if((doVoids || autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5) && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || (doVoids && game.global.lastClearedCell > 95)))
+                         if((doVoids || needPrestige) && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || (doVoids && game.global.lastClearedCell > 95)))
                          	mapsClicked();
                     }
                 }
