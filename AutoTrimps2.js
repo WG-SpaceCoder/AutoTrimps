@@ -1071,6 +1071,7 @@ function autoMap() {
     	//enemyDamage *= 2;
     	enemyHeath *= 2;
     	}
+    	if(game.global.totalVoidMaps == 0) doVoids = false;
     	
         var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
         var enoughDamage = (baseDamage * 4 > enemyHeath);
@@ -1158,8 +1159,7 @@ function autoMap() {
 	        	shouldDoMap = theMap.id;
 	        	break;
         	}
-        	else if (theMap.location == 'Void') 
-        		doVoids = false;
+
             if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
                 if (theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
                     shouldDoMap = theMap.id;
@@ -1205,7 +1205,7 @@ function autoMap() {
 	if (shouldFarm && siphonMap == -1) shouldDoMap = "create";
 
         //map if we don't have health/dmg or we need to clear void maps or if we are prestige mapping, and our set item has a new prestige available 
-        if (shouldDoMaps || (doVoids && shouldFarm) || (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5)) {
+        if (shouldDoMaps || doVoids || (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5)) {
         	//shouldDoMap = world here if we haven't set it to create yet, meaning we found appropriate high level map, or siphon map
         	//if shouldDoMap != world, it already has a map ID and will be run below
             if (shouldDoMap == "world") {
