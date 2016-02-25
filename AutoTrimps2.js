@@ -1133,7 +1133,6 @@ function autoMap() {
             		doVoids = true;
                 	//if we are on toxicity, don't clear until we will have max stacks at the last cell.
 	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
-	           	shouldDoMaps = true;
 	            	//check to make sure we won't get 1-shot in nostance by boss
 	            	var eAttack = getEnemyMaxAttack(game.global.world, theMap.size, 'Cthulimp', theMap.difficulty);
 	            	var ourHealth = baseHealth;
