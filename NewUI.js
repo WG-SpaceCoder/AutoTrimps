@@ -335,16 +335,16 @@ function updateCustomButtons() {
     document.getElementById('HeliumHourChallenge').value = autoTrimpSettings.HeliumHourChallenge.selected;
     
     var status = document.getElementById('autoMapStatus');
-    if(needPrestige) status.innerHTML = 'Prestige';
+    if(!autoTrimpSettings.RunMapsWhenStuck.enabled) status.innerHTML = 'Off';
+   else if(needPrestige) status.innerHTML = 'Prestige';
    else if(doVoids && !shouldFarm) status.innerHTML = 'Void Maps';
    else if(needToVoid && !doVoids) status.innerHTML = 'Prepping for Voids';
    else if(doVoids && shouldFarm) status.innerHTML = 'Farming to do Voids';
    else if(shouldFarm && !doVoids) status.innerHTML = 'Farming';
    else if(stackingTox) status.innerHTML = 'Getting Tox Stacks';
-  else if(!autoTrimpSettings.RunMapsWhenStuck.enabled) status.innerHTML = 'Off';
-  else if(!enoughDamage) status.innerHTML = 'Want more damage';
-  else if (!enoughHealth) status.innerHTML = 'Want more health';
-  else if (enoughHealth && enoughDamage) status.innerHTML = 'Advancing';
+   else if(!enoughDamage) status.innerHTML = 'Want more damage';
+   else if (!enoughHealth) status.innerHTML = 'Want more health';
+   else if (enoughHealth && enoughDamage) status.innerHTML = 'Advancing';
 
 }
 
