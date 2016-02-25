@@ -8,6 +8,9 @@ Automation script for the idle incremental game Trimps
 
 <b>Recent changes:</b>
 
+2/25/2016
+- (experimental) Added the status of autoMaps below the autoMaps button to give you an idea of what it's thinking.
+
 2/24/2016 update 2
 - autoMaps will now abandon the army for the purposes of prestige mapping and void mapping
 - Added special conditions to the void maps difficulty check for toxicity and balance
