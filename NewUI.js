@@ -114,8 +114,7 @@ function automationMenuInit() {
     
     //create automaps status
     newContainer = document.createElement("DIV");
-    newContainer.setAttribute("style", "display: block;");
-    newContainer.setAttribute("class", "battleSideTitle");
+    newContainer.setAttribute("style", "display: block; font-size: 1.1vw; text-align: center; background-color: rgba(0,0,0,0.3);");
     abutton = document.createElement("SPAN");
     abutton.id = 'autoMapStatus';
     newContainer.appendChild(abutton);
