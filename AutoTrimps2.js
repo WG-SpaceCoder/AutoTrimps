@@ -1164,7 +1164,7 @@ function autoMap() {
 	            	var diff = parseInt(getPageSetting('VoidCheck')) > 0 ? parseInt(getPageSetting('VoidCheck')) : 2;
 	            	if(ourHealth/diff < eAttack - baseBlock) {
 	            		shouldFarm = true;
-	            		voidCheckPercent = (ourHealth/diff)/(eAttack-baseBlock)*100;
+	            		voidCheckPercent = Math.round((ourHealth/diff)/(eAttack-baseBlock)*100);
 	            		break;
 	            	}
 	        	shouldDoMap = theMap.id;
