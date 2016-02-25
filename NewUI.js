@@ -339,7 +339,7 @@ function updateCustomButtons() {
     if(doVoids && !shouldFarm) status.innerHTML = 'Void Maps';
     if(doVoids && shouldFarm) status.innerHTML = 'Farming to do Voids';
     if(shouldFarm && !doVoids) status.innerHTML = 'Farming';
-    if(StackingTox) status.innerHTML = 'Getting Tox Stacks';
+    if(stackingTox) status.innerHTML = 'Getting Tox Stacks';
     if(!autoTrimpSettings.RunMapsWhenStuck.enabled) status.innerHTML = 'Off';
 
 }
