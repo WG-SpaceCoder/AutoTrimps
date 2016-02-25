@@ -115,7 +115,7 @@ function automationMenuInit() {
     //create automaps status
     newContainer = document.createElement("DIV");
     newContainer.setAttribute("style", "display: block;");
-    newContainer.setAttribute("class", "battleSideBtnContainer");
+    newContainer.setAttribute("class", "battleSideTitle");
     abutton = document.createElement("SPAN");
     abutton.id = 'autoMapsStatus';
     newContainer.appendChild(abutton);
