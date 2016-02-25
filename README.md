@@ -8,6 +8,11 @@ Automation script for the idle incremental game Trimps
 
 <b>Recent changes:</b>
 
+2/24/2016 update 2
+- autoMaps will now abandon the army for the purposes of prestige mapping and void mapping
+- added special conditions to the void maps difficulty check for toxicity and balance
+
+
 2/24/2016
 - New option for Trapping trimps. When on, it will turn on auto-build traps, automatically build and collect traps when needed. For those that don't really need traps, interference if you happen to keep it on should be minimal.
 - New advanced option to run new void maps. When on, the script will attempt to run voids maps acquired after the zone designated to run void maps. eg. if you clear all your void maps at your regularly set zone of 60, but your run continues and you acquire one at 65, it will attempt to run it with this on. With this option off, void maps are ONLY run on the set level, and void maps acquired after the fact are never attempted.
