@@ -1177,7 +1177,7 @@ function autoMap() {
                 }
                 if (theMap.name == 'Dimension of Anger' && document.getElementById("portalBtn").style.display == "none") {
                     var doaDifficulty = Math.ceil(theMap.difficulty / 2);
-                    if(game.global.challengeActive == "Mapocalypse" && game.global.world < 20 + doaDifficulty) continue; 
+                    if(game.global.world < 20 + doaDifficulty) continue; 
                     shouldDoMap = theMap.id;
                     break;
                 }
