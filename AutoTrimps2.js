@@ -769,15 +769,14 @@ function autoLevelEquipment() {
         }
     };
     var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
-    //enemyHeath sic but too lazy to change
-    var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
+    var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
     if(game.global.challengeActive == "Toxicity") {
     	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
     	//enemyDamage *= 2;
-    	enemyHeath *= 2;
+    	enemyHealth *= 2;
     }
     enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
-    enoughDamage = (baseDamage * 4 > enemyHeath);
+    enoughDamage = (baseDamage * 4 > enemyHealth);
 
     for (var equipName in equipmentList) {
         var equip = equipmentList[equipName];
@@ -1072,19 +1071,19 @@ function autoMap() {
 	  needToVoid = getPageSetting('VoidMaps') > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')));
     if (game.global.mapsUnlocked) {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
-        var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
+        var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
       
         needPrestige = (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5);
         if(game.global.challengeActive == "Toxicity") {
     	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
     	//enemyDamage *= 2;
-    	enemyHeath *= 2;
+    	enemyHealth *= 2;
     	}
     	if(game.global.totalVoidMaps == 0 || !needToVoid)
     		doVoids = false;
     	
         var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
-        var enoughDamage = (baseDamage * 4 > enemyHeath);
+        var enoughDamage = (baseDamage * 4 > enemyHealth);
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
         
