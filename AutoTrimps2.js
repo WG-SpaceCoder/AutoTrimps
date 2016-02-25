@@ -634,7 +634,7 @@ function buyStorage() {
 
 //Buy all non-storage buildings
 function buyBuildings() {
-	if(game.jobs.Miner.locked || game.jobs.Scientist.locked) return;
+	if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || game.jobs.Scientist.locked) return;
     highlightHousing();
 
     //if housing is highlighted
@@ -741,7 +741,7 @@ freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.tr
 }
 
 function autoLevelEquipment() {
-	if(game.jobs.Miner.locked || game.jobs.Scientist.locked) return;
+	if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || game.jobs.Scientist.locked) return;
     var Best = {
         'healthwood': {
             Factor: 0,
