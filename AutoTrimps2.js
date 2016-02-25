@@ -24,8 +24,14 @@ var enoughHealth = false;
 
 var noFight = 0;
 
-
-
+var doPrison = false;
+var doWonderland = false;
+var stackingTox = false;
+var doVoids = false;
+var needToVoid = false;
+var needPrestige = false;
+var enoughHealth = false;
+var enoughDamage = false;
 
 var baseDamage = 0;
 var baseBlock = 0;
@@ -1058,15 +1064,6 @@ function autoStance() {
 	}
 }
 
-//core function written by Belaith
-//prison/wonderland flags for use in autoPortal function
-var doPrison = false;
-var doWonderland = false;
-var stackingTox = false;
-var doVoids = false;
-var needToVoid = false;
-var needPrestige = false;
-
 function autoMap() {
 	  needToVoid = getPageSetting('VoidMaps') > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')));
     if (game.global.mapsUnlocked) {
@@ -1082,8 +1079,8 @@ function autoMap() {
     	if(game.global.totalVoidMaps == 0 || !needToVoid)
     		doVoids = false;
     	
-        var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
-        var enoughDamage = (baseDamage * 4 > enemyHeath);
+        enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
+        enoughDamage = (baseDamage * 4 > enemyHeath);
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
         
