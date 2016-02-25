@@ -75,10 +75,12 @@ adv.id = 'advancedSettings';
 adv.style.display = 'none';
 document.getElementById("autoSettings").appendChild(adv);
 
+//advanced settings
 createSetting('LimitEquipment', 'Limit Equipment', 'Limit levels of equipment bought to 11-prestige level. WARNING: may reduce He/hr performance in many cases.', 'boolean', null, null, 'advancedSettings');
 createSetting('BreedFire', 'Breed Fire', 'Fire Lumberjacks and Miners to speed up breeding when needed', 'boolean', null, null, 'advancedSettings');
 createSetting('MaxTox', 'Max Toxicity Stacks', 'Get maximum toxicity stacks before killing the improbability in each zone 60 and above. Generally only recommended for 1 run to maximize bone portal value.', 'boolean', null, null, 'advancedSettings');
 createSetting('RunNewVoids', 'Run New Voids', 'Run new void maps acquired after the set void map zone.', 'boolean', null, null, 'advancedSettings');
+createSetting('VoidCheck', 'Void Difficulty Check', 'How many hits to be able to take from a void map boss in dominance stance before we attempt the map. Higher values will get you stronger before attempting.', 'value', '2', null, 'advancedSettings');
 function automationMenuInit() {
 
     var settingBtnSrch = document.getElementsByClassName("btn btn-default");
