@@ -1029,6 +1029,7 @@ function autoStance() {
 var doPrison = false;
 var doWonderland = false;
 var stackingTox = false;
+var doVoids = false;
 
 function autoMap() {
     if (game.global.mapsUnlocked) {
@@ -1051,7 +1052,7 @@ function autoMap() {
         //if we are at max map bonus, and we don't need to farm, don't do maps
         if(game.global.mapBonus == 10 && !shouldFarm) shouldDoMaps = false;
         //if we are prestige mapping, force equip first mode
-        if(autoTrimpSettings.Prestige.selected != "Off" && game.options.menu.mapLoot.enabled != 1) game.options.menu.mapLoot.enabled = 1;
+        if(autoTrimpSettings.Prestige.selected != "Off" && game.options.menu.mapLoot.enabled != 1) toggleSetting('mapLoot');
         //if player has selected arbalest or gambeson but doesn't have them unlocked, just unselect it for them! It's magic!
         if(document.getElementById('Prestige').selectedIndex > 11 && game.global.slowDone == false) {
             document.getElementById('Prestige').selectedIndex = 11;
@@ -1100,20 +1101,33 @@ function autoMap() {
             var theMap = game.global.mapsOwnedArray[map];
             	//clear void maps if we need to
             if(theMap.location == 'Void' && getPageSetting('VoidMaps') > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')))) {
+            		doVoids = true;
                 	//if we are on toxicity, don't clear until we will have max stacks at the last cell.
 	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
 	           	shouldDoMaps = true;
 	            	//check to make sure we won't get 1-shot in nostance by boss
 	            	var eAttack = game.global.getEnemyAttack(game.global.world, 'Cthulimp');
+	            	var ourHealth = baseHealth;
 	            	eAttack *= theMap.difficulty;
+	            	if(game.global.challengeActive == 'Balance') {
+	            		var stacks = game.challenges.Balance.balanceStacks ? (game.challenges.Balance.balanceStacks > theMap.size) ? theMap.size : game.challenges.Balance.balanceStacks : false;
+	            		eAttack *= 2;
+	            		if(stacks) {
+	            			for (i = 0; i < stacks; i++ ) {
+	            				ourHealth *= 1.01;
+	            			}
+	            		}
+	            	}
+	            	if(game.global.challengeActive == 'Toxicity') eAttack *= 5;
 	            	//break to prevent finishing map to finish a challenge?
 	            	//continue to check for doable map?
-	            	if(baseHealth/2 < eAttack - baseBlock) {
+	            	if(ourHealth/2 < eAttack - baseBlock) {
 	            		shouldFarm = true;
 	            		break;
 	            	}
 	        	shouldDoMap = theMap.id;
         	}
+        	else doVoids = false;
             if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
                 if (theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
                     shouldDoMap = theMap.id;
@@ -1161,6 +1175,7 @@ function autoMap() {
         //map if we don't have health/dmg or if we are prestige mapping, and our set item has a new prestige available 
         if (shouldDoMaps || (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5)) {
         	//shouldDoMap = world here if we haven't set it to create yet, meaning we found appropriate high level map, or siphon map
+        
             if (shouldDoMap == "world") {
             	//if shouldFarm is true, use a siphonology adjusted map
             	if (shouldDoMaps && shouldFarm) shouldDoMap = game.global.mapsOwnedArray[siphonMap].id;
@@ -1197,8 +1212,11 @@ function autoMap() {
             } else if (!game.global.mapsActive) {
                 if (shouldDoMap != "world") {
                     //if shouldFarm, don't switch until after megafarming
-                    if (!game.global.switchToMaps && (shouldFarm && game.global.lastClearedCell > 79 || !shouldFarm)) {
+                    if (!game.global.switchToMaps && ((shouldFarm && game.global.lastClearedCell > 79) || !shouldFarm)) {
                          mapsClicked();
+                         //if (prestige mapping or need to do void maps) abandon army if (a new army is ready or need to void map and we're almost done with the zone)
+                         if((doVoids || autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5) && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || (doVoids && game.global.lastClearedCell > 95)))
+                         	mapsClicked();
                     }
                 }
             }
