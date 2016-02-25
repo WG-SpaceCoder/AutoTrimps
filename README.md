@@ -11,7 +11,8 @@ Automation script for the idle incremental game Trimps
 2/24/2016 update 2
 - autoMaps will now abandon the army for the purposes of prestige mapping and void mapping
 - Added special conditions to the void maps difficulty check for toxicity and balance
-- Void maps difficulty check has become more stringint by a factor of 4 (wants to be able to take 4 hits in dominance as opposed to 1 before)
+- Added an advanced setting for void maps difficulty check. It is the number of hits in dominance stance you want to be able to take before attempting a void map. Higher values make the script get you stronger before trying. Defaults to 2 if user has entered 0 or less.
+- <strike>Void maps difficulty check has become more stringint by a factor of 4 (wants to be able to take 4 hits in dominance as opposed to 1 before)</strike>
 - Void maps difficulty check should now factor in Balance and Toxicity stacks modifiers.
 - Fixed a few bugs with void maps, including one that would cause them to be skipped completely.
 
