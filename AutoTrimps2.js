@@ -451,7 +451,7 @@ function breedTime(genes) {
 
     return Math.log(numerus) / Math.log(base);
 }
-
+/*
 function getEnemyMaxAttack(zone) {
     var amt = 0;
     var level = 30;
@@ -474,6 +474,35 @@ function getEnemyMaxAttack(zone) {
     amt *= 1.1;
     amt *= game.badGuys["Snimp"].attack;
     return Math.floor(amt);
+}
+*/
+
+function getEnemyMaxAttack(world, level, name, diff) {
+	var amt = 0;
+	var adjWorld = ((world - 1) * 100) + level;
+	amt += 50 * Math.sqrt(world * Math.pow(3.27, world));
+	amt -= 10;
+	if (world == 1){
+		amt *= 0.35;
+		amt = (amt * 0.20) + ((amt * 0.75) * (level / 100));
+	}
+	else if (world == 2){
+		amt *= 0.5;
+		amt = (amt * 0.32) + ((amt * 0.68) * (level / 100));
+	}
+	else if (world < 60)
+		amt = (amt * 0.375) + ((amt * 0.7) * (level / 100));
+	else{ 
+		amt = (amt * 0.4) + ((amt * 0.9) * (level / 100));
+		amt *= Math.pow(1.15, world - 59);
+	}	
+			
+	if (diff) { 
+		amt *= 1.1;
+		amt *= diff;
+	}
+	amt *= game.badGuys[name].attack;
+	return Math.floor(amt);
 }
 
 function getEnemyMaxHealth(zone) {
@@ -736,7 +765,7 @@ function autoLevelEquipment() {
             Status: 'white'
         }
     };
-    var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
+    var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
     //enemyHeath sic but too lazy to change
     var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
     if(game.global.challengeActive == "Toxicity") {
@@ -1033,7 +1062,7 @@ var doVoids = false;
 
 function autoMap() {
     if (game.global.mapsUnlocked) {
-        var enemyDamage = getEnemyMaxAttack(game.global.world + 1);
+        var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
         var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
         if(game.global.challengeActive == "Toxicity") {
     	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
@@ -1106,9 +1135,8 @@ function autoMap() {
 	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
 	           	shouldDoMaps = true;
 	            	//check to make sure we won't get 1-shot in nostance by boss
-	            	var eAttack = game.global.getEnemyAttack(game.global.world, 'Cthulimp');
+	            	var eAttack = game.global.getEnemyMaxAttack(game.global.world, theMap.size, 'Cthulimp', theMap.difficulty);
 	            	var ourHealth = baseHealth;
-	            	eAttack *= theMap.difficulty;
 	            	if(game.global.challengeActive == 'Balance') {
 	            		var stacks = game.challenges.Balance.balanceStacks ? (game.challenges.Balance.balanceStacks > theMap.size) ? theMap.size : game.challenges.Balance.balanceStacks : false;
 	            		eAttack *= 2;
@@ -1121,13 +1149,15 @@ function autoMap() {
 	            	if(game.global.challengeActive == 'Toxicity') eAttack *= 5;
 	            	//break to prevent finishing map to finish a challenge?
 	            	//continue to check for doable map?
-	            	if(ourHealth/2 < eAttack - baseBlock) {
+	            	if(ourHealth/6 < eAttack - baseBlock) {
 	            		shouldFarm = true;
 	            		break;
 	            	}
 	        	shouldDoMap = theMap.id;
+	        	break;
         	}
-        	else doVoids = false;
+        	else if (theMap.location == 'Void') 
+        		doVoids = false;
             if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
                 if (theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
                     shouldDoMap = theMap.id;
