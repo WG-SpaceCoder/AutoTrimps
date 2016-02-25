@@ -339,7 +339,7 @@ function updateCustomButtons() {
    else if(needPrestige) status.innerHTML = 'Prestige';
    else if(doVoids && !shouldFarm) status.innerHTML = 'Void Maps';
    else if(needToVoid && !doVoids) status.innerHTML = 'Prepping for Voids';
-   else if(doVoids && shouldFarm) status.innerHTML = 'Farming to do Voids';
+   else if(doVoids && shouldFarm) status.innerHTML = 'Farming to do Voids: ' + voidCheckPercent + '%';
    else if(shouldFarm && !doVoids) status.innerHTML = 'Farming';
    else if(stackingTox) status.innerHTML = 'Getting Tox Stacks';
    else if(!enoughDamage) status.innerHTML = 'Want more damage';
