@@ -333,6 +333,14 @@ function updateCustomButtons() {
     document.getElementById('Prestige').value = autoTrimpSettings.Prestige.selected;
     document.getElementById('AutoPortal').value = autoTrimpSettings.AutoPortal.selected;
     document.getElementById('HeliumHourChallenge').value = autoTrimpSettings.HeliumHourChallenge.selected;
+    
+    var status = document.getElementById('autoMapStatus');
+    if(needPrestige) status.innerHTML = 'Prestige';
+    if(doVoid && !shouldFarm) status.innerHTML = 'Void Maps';
+    if(doVoid && shouldFarm) status.innerHTML = 'Farming to do Voids';
+    if(shouldFarm && !doVoid) status.innerHTML = 'Farming';
+    if(StackingTox) status.innerHTML = 'Getting Tox Stacks';
+    if(!autoTrimpSettings.RunMapsWhenStuck.enabled) status.innerHTML = 'Off';
 
 }
 
