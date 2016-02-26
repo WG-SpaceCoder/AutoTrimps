@@ -11,6 +11,7 @@ Automation script for the idle incremental game Trimps
 2/26/2016
 - New option to pause the script under advanced settings.
 - autoStorage will now check storage against jestimp gains in maps and buy enough storage for them.
+- Changed voidmap difficulty check to be based on Voidsnimp instead of boss (however you spell that crap).
 
 2/25/2016 update 2
 - autoMaps status will now show how close you are to meeting a void map difficulty check, in %
