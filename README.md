@@ -8,6 +8,11 @@ Automation script for the idle incremental game Trimps
 
 <b>Recent changes:</b>
 
+2/25/2016 update 2
+- autoMaps status will now show how close you are to meeting a void map difficulty check, in %
+- autoMaps status will now show how many more void maps it has to run while running them
+- map creation logic should now make metal maps when trying to farm, and de-value size (followed by loot) when trying to farm. For reference, when not trying to farm, it de-values loot, followed by difficulty. And in zones above 70, all maps should be metal regardless of creation reason (Otherwise they are random).
+
 2/25/2016
 - (experimental) Added the status of autoMaps below the autoMaps button to give you an idea of what it's thinking.
 
