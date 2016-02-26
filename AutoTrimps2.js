@@ -1068,7 +1068,7 @@ var needPrestige = false;
 var voidCheckPercent = 0;
 
 function autoMap() {
-	  needToVoid = getPageSetting('VoidMaps') > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')));
+	needToVoid = getPageSetting('VoidMaps') > 0 && game.global.totalVoidMaps > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')));
     if (game.global.mapsUnlocked) {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
         var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
