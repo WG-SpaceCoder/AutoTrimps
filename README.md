@@ -9,6 +9,7 @@ Automation script for the idle incremental game Trimps
 <b>Recent changes:</b>
 
 2/26/2016
+- New option to pause the script under advanced settings.
 - autoStorage will now check storage against jestimp gains in maps and buy enough storage for them.
 
 2/25/2016 update 2
