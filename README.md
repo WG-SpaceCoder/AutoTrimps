@@ -112,3 +112,13 @@ Feel free to submit any bugs/suggestions as issues here on github.
   
 I'm going to open up my discord channel for chat. Here is the link if you would like to come hang and chat about AutoTrimps:  
 https://discord.gg/0VbWe0dxB9kIfV2C  
+
+
+<b>Colors for upgrades highlights</b>
+
+Red text on Equip - it's best in its category in terms of stat per resource. This also compares Gyms with Shields.
+White border - upgrade is not yet available
+Yellow border - upgrade is available, but not affordable
+Orange border - upgrade is available, affordable, but will actually reduce stat in qestion
+Red border - you have enough resources to level equip after upgrade to surpass it's current stats.
+Upgrade texts are also colored accordingly.
