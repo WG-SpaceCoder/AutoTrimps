@@ -769,15 +769,14 @@ function autoLevelEquipment() {
         }
     };
     var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
-    //enemyHeath sic but too lazy to change
-    var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
+    var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
     if(game.global.challengeActive == "Toxicity") {
     	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
     	//enemyDamage *= 2;
-    	enemyHeath *= 2;
+    	enemyHealth *= 2;
     }
     enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
-    enoughDamage = (baseDamage * 4 > enemyHeath);
+    enoughDamage = (baseDamage * 4 > enemyHealth);
 
     for (var equipName in equipmentList) {
         var equip = equipmentList[equipName];
@@ -1066,24 +1065,25 @@ var stackingTox = false;
 var doVoids = false;
 var needToVoid = false;
 var needPrestige = false;
+var voidCheckPercent = 0;
 
 function autoMap() {
-	  needToVoid = getPageSetting('VoidMaps') > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')));
+	needToVoid = getPageSetting('VoidMaps') > 0 && game.global.totalVoidMaps > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')));
     if (game.global.mapsUnlocked) {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
-        var enemyHeath = getEnemyMaxHealth(game.global.world + 1);
+        var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
       
         needPrestige = (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5);
         if(game.global.challengeActive == "Toxicity") {
     	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
     	//enemyDamage *= 2;
-    	enemyHeath *= 2;
+    	enemyHealth *= 2;
     	}
     	if(game.global.totalVoidMaps == 0 || !needToVoid)
     		doVoids = false;
     	
         var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
-        var enoughDamage = (baseDamage * 4 > enemyHeath);
+        var enoughDamage = (baseDamage * 4 > enemyHealth);
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
         
@@ -1142,9 +1142,9 @@ function autoMap() {
             var theMap = game.global.mapsOwnedArray[map];
             	//clear void maps if we need to
             if(theMap.location == 'Void' && needToVoid) {
-            		doVoids = true;
                 	//if we are on toxicity, don't clear until we will have max stacks at the last cell.
 	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
+	            	doVoids = true;
 	            	//check to make sure we won't get 1-shot in nostance by boss
 	            	var eAttack = getEnemyMaxAttack(game.global.world, theMap.size, 'Cthulimp', theMap.difficulty);
 	            	var ourHealth = baseHealth;
@@ -1163,6 +1163,7 @@ function autoMap() {
 	            	var diff = parseInt(getPageSetting('VoidCheck')) > 0 ? parseInt(getPageSetting('VoidCheck')) : 2;
 	            	if(ourHealth/diff < eAttack - baseBlock) {
 	            		shouldFarm = true;
+	            		voidCheckPercent = Math.round((ourHealth/diff)/(eAttack-baseBlock)*100);
 	            		break;
 	            	}
 	        	shouldDoMap = theMap.id;
@@ -1176,7 +1177,7 @@ function autoMap() {
                 }
                 if (theMap.name == 'Dimension of Anger' && document.getElementById("portalBtn").style.display == "none") {
                     var doaDifficulty = Math.ceil(theMap.difficulty / 2);
-                    if(game.global.challengeActive == "Mapocalypse" && game.global.world < 20 + doaDifficulty) continue; 
+                    if(game.global.world < 20 + doaDifficulty) continue; 
                     shouldDoMap = theMap.id;
                     break;
                 }
@@ -1299,22 +1300,34 @@ function autoMap() {
                     biomeAdvMapsSelect.value = "Random";
                     updateMapCost();
                 }
-
-                while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
-                    lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
+                //if we are farming (for resources), make sure it's metal, and put low priority on size
+                if(shouldFarm) {
+                	biomeAdvMapsSelect.value = "Mountain";
+                	while (sizeAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+                    		sizeAdvMapsRange.value = sizeAdvMapsRange.value - 1;
+                	}
+                	while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+                    	lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
+                	}
                 }
-                //prioritize size over difficulty? Not sure. high Helium that just wants prestige = yes.
-                //Really just trying to prevent prestige mapping from getting stuck
-                while (difficultyAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
-                    difficultyAdvMapsRange.value = difficultyAdvMapsRange.value - 1;
-                }
-
+		else {
+	                while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+	                    lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
+	                }
+	                //prioritize size over difficulty? Not sure. high Helium that just wants prestige = yes.
+	                //Really just trying to prevent prestige mapping from getting stuck
+	                while (difficultyAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+	                    difficultyAdvMapsRange.value = difficultyAdvMapsRange.value - 1;
+	                }
+		}
+		//if we can't afford the map we designed, pick our highest map
                 if (updateMapCost(true) > game.resources.fragments.owned) {
                     selectMap(game.global.mapsOwnedArray[highestMap].id);
                     runMap();
                 } else {
                     buyMap();
                 }
+                //if we already have a map picked, run it
             } else {
                 selectMap(shouldDoMap);
                 runMap();
