@@ -1559,9 +1559,10 @@ initializeAutoTrimps();
 //     game.settings.speed = 2;
 // }, 1000);
 
-setTimeout(mainLoop, 2000);
+setTimeout(delayStart, 2500);
 
 function mainLoop() {
+	if(getPageSetting('PauseScript')) return;
     setTitle();
     setScienceNeeded();
     updateValueFields();
@@ -1622,5 +1623,9 @@ function mainLoop() {
     }
 	if(game.resources.trimps.soldiers == 0) noFight ++;
     saveSettings();
-    setTimeout(mainLoop, runInterval);
+
+}
+
+function delayStart() {
+    setInterval(mainLoop, runInterval);
 }
