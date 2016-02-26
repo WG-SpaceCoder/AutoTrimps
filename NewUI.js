@@ -81,6 +81,7 @@ createSetting('BreedFire', 'Breed Fire', 'Fire Lumberjacks and Miners to speed u
 createSetting('MaxTox', 'Max Toxicity Stacks', 'Get maximum toxicity stacks before killing the improbability in each zone 60 and above. Generally only recommended for 1 run to maximize bone portal value.', 'boolean', null, null, 'advancedSettings');
 createSetting('RunNewVoids', 'Run New Voids', 'Run new void maps acquired after the set void map zone.', 'boolean', null, null, 'advancedSettings');
 createSetting('VoidCheck', 'Void Difficulty Check', 'How many hits to be able to take from a void map boss in dominance stance before we attempt the map. Higher values will get you stronger before attempting.', 'value', '2', null, 'advancedSettings');
+createSetting('PauseScript', 'Pause AutoTrimps', 'Pause AutoTrimps (not including the graphs module)', 'boolean', null, null, 'advancedSettings');
 
 function automationMenuInit() {
 
