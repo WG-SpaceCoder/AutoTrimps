@@ -623,12 +623,17 @@ function buyStorage() {
         'Forge': 'metal'
     };
     for (var B in Bs) {
-        if (game.resources[Bs[B]].owned > game.resources[Bs[B]].max * packMod * 0.9) {
+    	var owned = game.resources[Bs[B]].owned;
+    	var max = game.resources[Bs[B]].max * packMod;
+    	var jest = simpleSeconds(game.resources[Bs[B]], 45);
+    	jest = scaleToCurrentMap(jest);
+        if (owned > max * 0.9 || owned + jest > max * 0.9) {
             // debug('Buying ' + B + '(' + Bs[B] + ') at ' + Math.floor(game.resources[Bs[B]].owned / (game.resources[Bs[B]].max * packMod * 0.99) * 100) + '%');
             if (canAffordBuilding(B)) {
                 safeBuyBuilding(B);
             }
         }
+        
     }
 }
 
