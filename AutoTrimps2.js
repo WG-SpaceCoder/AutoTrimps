@@ -1154,7 +1154,7 @@ function autoMap() {
 	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
 	            	doVoids = true;
 	            	//check to make sure we won't get 1-shot in nostance by boss
-	            	var eAttack = getEnemyMaxAttack(game.global.world, theMap.size, 'Cthulimp', theMap.difficulty);
+	            	var eAttack = getEnemyMaxAttack(game.global.world, theMap.size, 'Voidsnimp', theMap.difficulty);
 	            	var ourHealth = baseHealth;
 	            	if(game.global.challengeActive == 'Balance') {
 	            		var stacks = game.challenges.Balance.balanceStacks ? (game.challenges.Balance.balanceStacks > theMap.size) ? theMap.size : game.challenges.Balance.balanceStacks : false;
