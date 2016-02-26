@@ -8,6 +8,9 @@ Automation script for the idle incremental game Trimps
 
 <b>Recent changes:</b>
 
+2/26/2016
+- autoStorage will now check storage against jestimp gains in maps and buy enough storage for them.
+
 2/25/2016 update 2
 - autoMaps status will now show how close you are to meeting a void map difficulty check, in %
 - autoMaps status will now show how many more void maps it has to run while running them
