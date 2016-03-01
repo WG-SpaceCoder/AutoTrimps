@@ -1175,6 +1175,11 @@ function autoMap() {
 	            		break;
 	            	}
 	        	shouldDoMap = theMap.id;
+	        	if(game.global.mapsActive && game.global.challengeActive == "Nom") {
+	        		if(game.global.mapGridArray[game.global.lastClearedMapCell + 1].nomStacks > 6) {
+	        			mapsClicked();
+	        		}
+	        	}
 	        	break;
         	}
 
