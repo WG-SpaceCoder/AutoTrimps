@@ -160,7 +160,9 @@ function pushData() {
         currentTime: new Date().getTime(),
         portalTime: game.global.portalTime,
         resources: game.resources,
-        world: game.global.world
+        world: game.global.world,
+        challenge: game.global.challengeActive,
+        voids: game.global.totalVoidMaps
     });
     //only keep 10 portals worth of runs to prevent filling storage
     clearData(10);
