@@ -203,7 +203,7 @@ function setGraphData(graph) {
             for (var i in allSaveData) {
                 if (allSaveData[i].totalPortals != currentPortal) {
                     graphData.push({
-                        name: 'Portal number ' + allSaveData[i].totalPortals,
+                        name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
                         data: []
                     })
                     currentPortal = allSaveData[i].totalPortals;
@@ -236,7 +236,7 @@ function setGraphData(graph) {
             for (var i in allSaveData) {
                 if (allSaveData[i].totalPortals != currentPortal) {
                     graphData.push({
-                        name: 'Portal number ' + allSaveData[i].totalPortals,
+                        name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
                         data: []
                     })
                     currentPortal = allSaveData[i].totalPortals;
@@ -254,7 +254,7 @@ function setGraphData(graph) {
             for (var i in allSaveData) {
                 if (allSaveData[i].totalPortals != currentPortal) {
                     graphData.push({
-                        name: 'Portal number ' + allSaveData[i].totalPortals,
+                        name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
                         data: []
                     })
                     currentPortal = allSaveData[i].totalPortals;
