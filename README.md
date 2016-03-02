@@ -9,7 +9,7 @@ Automation script for the idle incremental game Trimps
 <b>Recent changes:</b>
 
 3/2/2016
-- Graph seires now includes challenge name. Will be undefined for data gathered before running this version.
+- Graph series now includes challenge name. Will be undefined for data gathered before running this version.
 
 2/26/2016
 - New option to pause the script under advanced settings.
