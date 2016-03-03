@@ -642,8 +642,7 @@ function buyStorage() {
 
 //Buy all non-storage buildings
 function buyBuildings() {
-	var scientistChallenge 
-	if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || (game.jobs.Scientist.locked && game.global.challengeActive != "Scientist I" && game.global.challengeActive != "Scientist II" && game.global.challengeActive != "Scientist III" && game.global.challengeActive != "Scientist IV"))
+	if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || (game.jobs.Scientist.locked && game.global.challengeActive != "Scientist"))
 		return;
     highlightHousing();
 
@@ -751,7 +750,7 @@ freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.tr
 }
 
 function autoLevelEquipment() {
-	if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || (game.jobs.Scientist.locked && game.global.challengeActive != "Scientist I" && game.global.challengeActive != "Scientist II" && game.global.challengeActive != "Scientist III" && game.global.challengeActive != "Scientist IV"))
+	if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || (game.jobs.Scientist.locked && game.global.challengeActive != "Scientist"))
 		return;
     var Best = {
         'healthwood': {
@@ -1206,7 +1205,7 @@ function autoMap() {
                         break;
                     }
                 }
-                if(theMap.name == 'The Block' && !game.upgrades.Shieldblock.allowed && (game.global.challengeActive == "Scientist I" || game.global.challengeActive == "Scientist II" || game.global.challengeActive == "Scientist III" || game.global.challengeActive == "Scientist IV" || game.global.challengeActive == "Trimp" || getPageSetting('BuyShieldblock'))) {
+                if(theMap.name == 'The Block' && !game.upgrades.Shieldblock.allowed && (game.global.challengeActive == "Scientist" || game.global.challengeActive == "Trimp" || getPageSetting('BuyShieldblock'))) {
                     shouldDoMap = theMap.id;
                     break;
                 }
