@@ -642,7 +642,9 @@ function buyStorage() {
 
 //Buy all non-storage buildings
 function buyBuildings() {
-	if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || game.jobs.Scientist.locked) return;
+	var scientistChallenge 
+	if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || (game.jobs.Scientist.locked && game.global.challengeActive != "Scientist I" && game.global.challengeActive != "Scientist II" && game.global.challengeActive != "Scientist III" && game.global.challengeActive != "Scientist IV"))
+		return;
     highlightHousing();
 
     //if housing is highlighted
@@ -749,7 +751,8 @@ freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.tr
 }
 
 function autoLevelEquipment() {
-	if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || game.jobs.Scientist.locked) return;
+	if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || (game.jobs.Scientist.locked && game.global.challengeActive != "Scientist I" && game.global.challengeActive != "Scientist II" && game.global.challengeActive != "Scientist III" && game.global.challengeActive != "Scientist IV"))
+		return;
     var Best = {
         'healthwood': {
             Factor: 0,
@@ -1203,7 +1206,7 @@ function autoMap() {
                         break;
                     }
                 }
-                if(theMap.name == 'The Block' && !game.upgrades.Shieldblock.allowed && (game.global.challengeActive == "Scientist I" || game.global.challengeActive == "Scientist II" || game.global.challengeActive == "Scientist III" || game.global.challengeActive == "Trimp" || getPageSetting('BuyShieldblock'))) {
+                if(theMap.name == 'The Block' && !game.upgrades.Shieldblock.allowed && (game.global.challengeActive == "Scientist I" || game.global.challengeActive == "Scientist II" || game.global.challengeActive == "Scientist III" || game.global.challengeActive == "Scientist IV" || game.global.challengeActive == "Trimp" || getPageSetting('BuyShieldblock'))) {
                     shouldDoMap = theMap.id;
                     break;
                 }
