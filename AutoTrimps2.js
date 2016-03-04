@@ -396,8 +396,11 @@ function Effect(gameResource, equip) {
 }
 
 function Cost(gameResource, equip) {
+	preBuy();
+	game.global.buyAmt = 1;
     var price = parseFloat(getBuildingItemPrice(gameResource, equip.Resource, equip.Equip));
     if (equip.Equip) price = Math.ceil(price * (Math.pow(1 - game.portal.Artisanistry.modifier, game.portal.Artisanistry.level)));
+    postBuy();
     return price;
 }
 
