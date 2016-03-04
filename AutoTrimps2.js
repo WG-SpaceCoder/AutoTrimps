@@ -132,6 +132,21 @@ var buildingList = ['Hut', 'House', 'Gym', 'Mansion', 'Hotel', 'Resort', 'Gatewa
 ////////////////////////////////////////
 //Utility Functions/////////////////////
 ////////////////////////////////////////
+//polyfill for includes function
+if (!String.prototype.includes) {
+  String.prototype.includes = function(search, start) {
+    'use strict';
+    if (typeof start !== 'number') {
+      start = 0;
+    }
+
+    if (start + search.length > this.length) {
+      return false;
+    } else {
+      return this.indexOf(search, start) !== -1;
+    }
+  };
+}
 
 //Loads the automation settings from browser cache
 function loadPageVariables() {
