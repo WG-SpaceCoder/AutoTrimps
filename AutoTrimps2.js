@@ -320,6 +320,34 @@ function getScienceCostToUpgrade(upgrade) {
     }
 }
 
+function autoHeirlooms() {
+	var worth = {'Hat': {}, 'Staff': {}};
+	for (var loom in game.global.heirloomsExtra) {
+		var theLoom = game.global.heirloomsExtra[loom];
+		worth[theLoom.type][loom] = theLoom.rarity;
+	}
+//for (var n in worth['Hat'])
+//	console.log(n);
+	//sort high to low value, priority on rarity, followed by mod evaluation
+	for (var x in worth){
+		worth[x] = Object.keys(worth[x]).sort(function(a, b) {
+	            if(worth[x][b] == worth[x][a]) {
+	            	return evaluateMods(b) - evaluateMods(a);
+	            	console.log('found an equal');
+	            }
+	            else
+	            	return worth[x][b] - worth[x][a];
+	        });
+	}
+       console.log(worth);
+       console.log('hat: ' + worth['Hat']);
+       console.log('staff: ' + worth['Staff']);
+}
+
+function evaluateMods(loom) {
+	return game.global.heirloomsExtra[loom].rarity;
+}
+
 function evaluateEfficiency(equipName) {
     var equip = equipmentList[equipName];
     var gameResource = equip.Equip ? game.equipment[equipName] : game.buildings[equipName];
