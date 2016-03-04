@@ -345,7 +345,30 @@ function autoHeirlooms() {
 }
 
 function evaluateMods(loom) {
-	return game.global.heirloomsExtra[loom].rarity;
+	loom = game.global.heirloomsExtra[loom];
+	return loom.rarity;
+	var eff = 0;
+	for(var m in loom.mods) {
+		switch(loom.mods[m][0]) {
+			case 'critChance': 
+				break;
+			case 'critDamage':
+				break;
+			case 'trimpAttack':
+				break;
+			case 'MinerSpeed':
+				break;
+			case 'FarmerSpeed':
+				break;
+			case 'LumberjackSpeed':
+				break;
+			case 'DragimpSpeed':
+				break;
+			//metalDrop? trimpHealth?
+		}
+	}
+	getPlayerCritChance();
+	getPlayerCritDamageMult();
 }
 
 function evaluateEfficiency(equipName) {
@@ -451,7 +474,7 @@ function setScienceNeeded() {
         }
     }
 }
-
+/*
 function breedTime(genes) {
     var trimps = game.resources.trimps;
 
@@ -485,7 +508,7 @@ function breedTime(genes) {
 
     return Math.log(numerus) / Math.log(base);
 }
-/*
+
 function getEnemyMaxAttack(zone) {
     var amt = 0;
     var level = 30;
@@ -575,9 +598,12 @@ function getBreedTime(remaining) {
     if (game.global.challengeActive == "Toxicity" && game.challenges.Toxicity.stacks > 0){
 	potencyMod *= Math.pow(game.challenges.Toxicity.stackMult, game.challenges.Toxicity.stacks);
 	}
-	if (game.global.voidBuff == "slowBreed"){
+    if (game.global.voidBuff == "slowBreed"){
 		potencyMod *= 0.2;
-	}
+    	
+    }
+    //#newpatch
+    //potencyMod = calcHeirloomBonus("Hat", "breedSpeed", potencyMod);
     breeding = breeding * potencyMod;
     updatePs(breeding, true);
 
@@ -912,7 +938,7 @@ function manualLabor() {
     	setGather('trimps');
     }
    else if (game.resources.science.owned < 100 && document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden') setGather('science');
-    //if we have more than 2 buildings in queue, or (our modifier is real fast and trapstorm is off), build
+    //if we have more than 2 buildings in queue, or (our modifier is real fast and trapstorm is off), build                      #newPatch getPlayerModifier()
    else if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || game.global.autoCraftModifier == 0 || (game.global.playerModifier > 1000 && game.global.buildingsQueue[0] != 'Trap.1')) : false) {
         // debug('Gathering buildings??');
         setGather('buildings');
