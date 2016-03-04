@@ -8,6 +8,10 @@ Automation script for the idle incremental game Trimps
 
 <b>Recent changes:</b>
 
+DATE#######
+- Fixed a bug with checks for the scientist challenges
+- Fixed a bug with equipment efficiency function checking cost based on global buy amount
+
 3/2/2016
 - Graph series now includes challenge name. Will be undefined for data gathered before running this version.
 
