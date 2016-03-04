@@ -1477,7 +1477,8 @@ function autoPortal() {
 		case "Custom":
 			if(game.global.world > getPageSetting('CustomAutoPortal') && !game.global.challengeActive) {
 				pushData();
-				doPortal();
+	    			if(autoTrimpSettings.HeliumHourChallenge.selected != 'None') doPortal(autoTrimpSettings.HeliumHourChallenge.selected);
+	    			else doPortal();
 			}
 			break;
 		default:
