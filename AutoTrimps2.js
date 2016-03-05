@@ -214,12 +214,11 @@ function postBuy() {
 }
 
 function safeBuyBuilding(building) {
-	//exclude housing from 1 per queue limit
-    if(!housingList.includes(building)) {
-	    for (var b in game.global.buildingsQueue) {
-	        if (game.global.buildingsQueue[b].includes(building)) return false;
-	    }
-    }
+	//exclude housing from 1 per queue limit?
+	for (var b in game.global.buildingsQueue) {
+	       if (game.global.buildingsQueue[b].includes(building)) return false;
+	}
+   
     
     preBuy();
     game.global.buyAmt = 1;
