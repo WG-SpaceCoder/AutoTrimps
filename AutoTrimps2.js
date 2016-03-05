@@ -350,7 +350,7 @@ function autoHeirlooms() {
 	for (var x in worth){
 		worth[x] = Object.keys(worth[x]).sort(function(a, b) {
 	            if(worth[x][b] == worth[x][a]) {
-	            	return evaluateMods(b) - evaluateMods(a);
+	            	return evaluateMods(b, 'heirloomsExtra') - evaluateMods(a, 'heirloomsExtra');
 	            	console.log('found an equal');
 	            }
 	            else
@@ -362,38 +362,78 @@ function autoHeirlooms() {
        console.log('staff: ' + worth['Staff']);
 }
 
-function evaluateMods(loom) {
-	loom = game.global.heirloomsExtra[loom];
-	return loom.rarity;
+function evaluateMods(loom, location) {
+	var index = loom;
+	loom = game.global[location][loom];
+//	return loom.rarity;
 	var eff = 0;
 	for(var m in loom.mods) {
 		switch(loom.mods[m][0]) {
 			case 'critChance': 
-				eff += 2*loom.mods[m][1];
+				eff += (loom.mods[m][1]/100) * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100);
 				break;
 			case 'critDamage':
-				eff += 2*loom.mods[m][1];
+				eff += ((getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus) * (loom.mods[m][1]/100))/(getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100);
 				break;
 			case 'trimpAttack':
-				eff *= loom.mods[m][1];
+				eff += loom.mods[m][1]/100;
 				break;
 			case 'MinerSpeed':
-				eff += 2*loom.mods[m][1];
+				eff += 0.75*loom.mods[m][1]/100;
 				break;
 			case 'FarmerSpeed':
-				eff += 2*loom.mods[m][1];
+				eff += 0.5*loom.mods[m][1]/100;
 				break;
 			case 'LumberjackSpeed':
-				eff += 2*loom.mods[m][1];
+				eff += 0.5*loom.mods[m][1]/100;
 				break;
 			case 'DragimpSpeed':
-				eff += 2*loom.mods[m][1];
+				eff += 0.5*loom.mods[m][1]/100;
+				break;
+			case 'empty':
+				var steps;
+				var av;
+				//value empty mod as the average of the best mod it doesn't have. If it has all good mods, empty slot has no value
+				if(loom.type == 'Hat') {
+					if(!checkForMod('trimpAttack', index, location)){
+						steps = game.heirlooms.Hat.trimpAttack.steps[loom.rarity];
+						av = steps[0] + ((steps[1] - steps[0])/2);
+						eff += av/100;
+					}
+					else if(!checkForMod('critChance', index, location)){
+						steps = game.heirlooms.Hat.critChance.steps[loom.rarity];
+						av = steps[0] + ((steps[1] - steps[0])/2);
+						eff += av * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100);
+					}
+					else if(!checkForMod('critDamage', index, location)){
+						steps = game.heirlooms.Hat.critDamage.steps[loom.rarity];
+						av = steps[0] + ((steps[1] - steps[0])/2);
+						eff += ((getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus) * av)/(getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100);
+					}
+				}
+				if(loom.type == 'Staff') {
+					steps = game.heirlooms.defaultSteps[loom.rarity];
+					av = steps[0] + ((steps[1] - steps[0])/2);
+					if(!checkForMod('MinerSpeed', index, location)){
+					eff += 0.75*av/100;
+					}
+					else if(!checkForMod('LumberjackSpeed', index, location) || !checkForMod('FarmerSpeed', index, location) || !checkForMod('DragimpSpeed', index, location)){
+					eff += 0.5*av/100;	
+					}
+				}
 				break;
 			//metalDrop? trimpHealth?
 		}
 	}
-	getPlayerCritChance();
-	getPlayerCritDamageMult();
+	return eff;
+}
+
+function checkForMod(what, loom, location){
+	var heirloom = game.global[location][loom];
+	for (var mod in heirloom.mods){
+		if (heirloom.mods[mod][0] == what) return true;
+	}
+	return false;
 }
 
 function evaluateEfficiency(equipName) {
