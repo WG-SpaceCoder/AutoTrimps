@@ -387,7 +387,10 @@ function evaluateMods(loom, location, upgrade) {
 	var bestUpgrade = [0, ''];
 	var tempEff;
 	var steps;
-	loom = game.global[location][loom];
+	if(location.includes('Equipped'))
+		loom = game.global[location];
+	else
+		loom = game.global[location][loom];
 //	return loom.rarity;
 	var eff = 0;
 	for(var m in loom.mods) {
@@ -413,32 +416,74 @@ function evaluateMods(loom, location, upgrade) {
 					tempEff = (getPlayerCritChance() * (steps[2]/100))/((getPlayerCritDamageMult() * getPlayerCritChance()) + 1);
 					if(tempEff > bestUpgrade[0]) {
 						bestUpgrade[0] = tempEff;
-						bestUpgrade[1] = 'critChance';
+						bestUpgrade[1] = 'critDamage';
 					}
 				}
 				break;
 			case 'trimpAttack':
 				tempEff = loom.mods[m][1]/100;
 				eff += tempEff;
+				if(upgrade){
+					steps = game.heirlooms.Hat.trimpAttack.steps[loom.rarity];
+					tempEff = (steps[2]/100)/((game.heirlooms.Hat.trimpAttack.currentBonus/100) + 1);
+					if(tempEff > bestUpgrade[0]) {
+						bestUpgrade[0] = tempEff;
+						bestUpgrade[1] = 'trimpAttack';
+					}
+				}
 				break;
 			case 'MinerSpeed':
 				tempEff = 0.75*loom.mods[m][1]/100;
 				eff += tempEff;
+				if(upgrade) {
+					steps = game.heirlooms.defaultSteps[loom.rarity];
+					tempEff = (0.75*steps[2]/100)/((game.heirlooms.Staff.MinerSpeed.currentBonus/100) + 1);
+					if(tempEff > bestUpgrade[0]) {
+						bestUpgrade[0] = tempEff;
+						bestUpgrade[1] = 'MinerSpeed';
+					}
+				}
 				break;
 			case 'FarmerSpeed':
 				tempEff = 0.5*loom.mods[m][1]/100;
 				eff += tempEff;
+				if(upgrade) {
+					steps = game.heirlooms.defaultSteps[loom.rarity];
+					tempEff = (0.5*steps[2]/100)/((game.heirlooms.Staff.FarmerSpeed.currentBonus/100) + 1);
+					if(tempEff > bestUpgrade[0]) {
+						bestUpgrade[0] = tempEff;
+						bestUpgrade[1] = 'FarmerSpeed';
+					}
+				}
 				break;
 			case 'LumberjackSpeed':
 				tempEff = 0.5*loom.mods[m][1]/100;
 				eff += tempEff;
+				if(upgrade) {
+					steps = game.heirlooms.defaultSteps[loom.rarity];
+					tempEff = (0.5*steps[2]/100)/((game.heirlooms.Staff.LumberjackSpeed.currentBonus/100) + 1);
+					if(tempEff > bestUpgrade[0]) {
+						bestUpgrade[0] = tempEff;
+						bestUpgrade[1] = 'LumberjackSpeed';
+					}
+				}
 				break;
 			case 'DragimpSpeed':
 				tempEff = 0.5*loom.mods[m][1]/100;
 				eff += tempEff;
+				if(upgrade) {
+					steps = game.heirlooms.defaultSteps[loom.rarity];
+					tempEff = (0.5*steps[2]/100)/((game.heirlooms.Staff.DragimpSpeed.currentBonus/100) + 1);
+					if(tempEff > bestUpgrade[0]) {
+						bestUpgrade[0] = tempEff;
+						bestUpgrade[1] = 'DragimpSpeed';
+					}
+				}
 				break;
 			case 'empty':
 				var av;
+				//some other function?
+				if(upgrade) break;
 				//value empty mod as the average of the best mod it doesn't have. If it has all good mods, empty slot has no value
 				if(loom.type == 'Hat') {
 					if(!checkForMod('trimpAttack', index, location)){
@@ -474,6 +519,7 @@ function evaluateMods(loom, location, upgrade) {
 			//metalDrop? trimpHealth?
 		}
 	}
+	if(upgrade) return bestUpgrade;
 	return eff;
 }
 
