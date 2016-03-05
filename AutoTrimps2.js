@@ -338,20 +338,19 @@ function getScienceCostToUpgrade(upgrade) {
     }
 }
 
-function autoHeirlooms() {
-	var worth = {'Hat': {}, 'Staff': {}};
+var worth = {'Hat': {}, 'Staff': {}};
+function sortHeirlooms(){
+	worth = {'Hat': {}, 'Staff': {}};
 	for (var loom in game.global.heirloomsExtra) {
 		var theLoom = game.global.heirloomsExtra[loom];
 		worth[theLoom.type][loom] = theLoom.rarity;
 	}
-//for (var n in worth['Hat'])
-//	console.log(n);
+
 	//sort high to low value, priority on rarity, followed by mod evaluation
 	for (var x in worth){
 		worth[x] = Object.keys(worth[x]).sort(function(a, b) {
 	            if(worth[x][b] == worth[x][a]) {
 	            	return evaluateMods(b, 'heirloomsExtra') - evaluateMods(a, 'heirloomsExtra');
-	            	console.log('found an equal');
 	            }
 	            else
 	            	return worth[x][b] - worth[x][a];
@@ -360,6 +359,27 @@ function autoHeirlooms() {
        console.log(worth);
        console.log('hat: ' + worth['Hat']);
        console.log('staff: ' + worth['Staff']);
+}
+
+function autoHeirlooms() {
+	sortHeirlooms();
+       for(var carried in game.global.heirloomsCarried) {
+	       	var theLoom = game.global.heirloomsCarried[carried];
+	       	var index = worth[theLoom.type][0];
+	       	if(theLoom.rarity < game.global.heirloomsExtra[index].rarity || (theLoom.rarity == game.global.heirloomsExtra[index].rarity && evaluateMods(carried, 'heirloomsCarried') < evaluateMods(index, 'heirloomsExtra'))) {
+	       		selectHeirloom(carried, 'heirloomsCarried');
+	       		stopCarryHeirloom();
+	       		selectHeirloom(index, 'heirloomsExtra');
+	       		carryHeirloom();
+	       		sortHeirlooms();
+	       	}
+       }
+       if(game.global.heirloomsCarried.length < game.global.maxCarriedHeirlooms) {
+       	selectHeirloom(worth.Hat[0], 'heirloomsExtra');
+       	carryHeirloom();
+       }
+       
+       //document.getElementById('extraHeirloomsHere').childNodes[INDEX].childNodes[1].style.border = "1px solid #00CC00"
 }
 
 function evaluateMods(loom, location) {
