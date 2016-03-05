@@ -126,7 +126,7 @@ var equipmentList = {
 };
 
 var upgradeList = ['Coordination', 'Speedminer', 'Speedlumber', 'Speedfarming', 'Speedscience', 'Megaminer', 'Megalumber', 'Megafarming', 'Megascience', 'Efficiency', 'TrainTacular', 'Miners', 'Scientists', 'Trainers', 'Explorers', 'Blockmaster', 'Battle', 'Bloodlust', 'Bounty', 'Egg', 'Anger', 'Formations', 'Dominance', 'Barrier', 'UberHut', 'UberHouse', 'UberMansion', 'UberHotel', 'UberResort', 'Trapstorm', 'Gigastation', 'Shieldblock'];
-var buildingList = ['Hut', 'House', 'Gym', 'Mansion', 'Hotel', 'Resort', 'Gateway', 'Collector', 'Warpstation', 'Tribute', 'Nursery']; //NOTE THAT I REMOVED WORMHOLE TEMPORARILY UNTILL I FIGURE OUT WHAT TO DO WITH IT
+var housingList = ['Hut', 'House', 'Mansion', 'Hotel', 'Resort', 'Gateway', 'Collector', 'Warpstation'];
 
 
 ////////////////////////////////////////
@@ -214,9 +214,13 @@ function postBuy() {
 }
 
 function safeBuyBuilding(building) {
-    for (var b in game.global.buildingsQueue) {
-        if (game.global.buildingsQueue[b].includes(building)) return false;
+	//exclude housing from 1 per queue limit
+    if(!housingList.includes(building)) {
+	    for (var b in game.global.buildingsQueue) {
+	        if (game.global.buildingsQueue[b].includes(building)) return false;
+	    }
     }
+    
     preBuy();
     game.global.buyAmt = 1;
     if (!canAffordBuilding(building)) {
@@ -366,18 +370,25 @@ function evaluateMods(loom) {
 	for(var m in loom.mods) {
 		switch(loom.mods[m][0]) {
 			case 'critChance': 
+				eff += 2*loom.mods[m][1];
 				break;
 			case 'critDamage':
+				eff += 2*loom.mods[m][1];
 				break;
 			case 'trimpAttack':
+				eff *= loom.mods[m][1];
 				break;
 			case 'MinerSpeed':
+				eff += 2*loom.mods[m][1];
 				break;
 			case 'FarmerSpeed':
+				eff += 2*loom.mods[m][1];
 				break;
 			case 'LumberjackSpeed':
+				eff += 2*loom.mods[m][1];
 				break;
 			case 'DragimpSpeed':
+				eff += 2*loom.mods[m][1];
 				break;
 			//metalDrop? trimpHealth?
 		}
@@ -1501,7 +1512,7 @@ function autoPortal() {
 				var timeThisPortal = new Date().getTime() - game.global.portalTime;
 	    			timeThisPortal /= 3600000;
 	    			var myHelium = Math.floor(game.resources.helium.owned / timeThisPortal);
-	    			if(myHelium < lastHelium && !game.global.challengeActive) {
+	    			if(myHelium < game.stats.bestHeliumHourThisRun.storedValue * .97 && !game.global.challengeActive) {
 	    				pushData();
 	    				if(autoTrimpSettings.HeliumHourChallenge.selected != 'None') doPortal(autoTrimpSettings.HeliumHourChallenge.selected);
 	    				else doPortal();
