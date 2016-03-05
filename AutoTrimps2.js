@@ -362,29 +362,42 @@ function sortHeirlooms(){
 }
 
 function autoHeirlooms() {
-	sortHeirlooms();
-       for(var carried in game.global.heirloomsCarried) {
-	       	var theLoom = game.global.heirloomsCarried[carried];
-	       	var index = worth[theLoom.type][0];
-	       	if(theLoom.rarity < game.global.heirloomsExtra[index].rarity || (theLoom.rarity == game.global.heirloomsExtra[index].rarity && evaluateMods(carried, 'heirloomsCarried') < evaluateMods(index, 'heirloomsExtra'))) {
-	       		selectHeirloom(carried, 'heirloomsCarried');
-	       		stopCarryHeirloom();
-	       		selectHeirloom(index, 'heirloomsExtra');
-	       		carryHeirloom();
-	       		sortHeirlooms();
-	       	}
-       }
-       if(game.global.heirloomsCarried.length < game.global.maxCarriedHeirlooms) {
-       	selectHeirloom(worth.Hat[0], 'heirloomsExtra');
-       	carryHeirloom();
-       }
-       
+	var bestUpgrade;
+	if(!heirloomsShown){
+	       sortHeirlooms();
+	       for(var carried in game.global.heirloomsCarried) {
+		       	var theLoom = game.global.heirloomsCarried[carried];
+		       	var index = worth[theLoom.type][0];
+		       	if(theLoom.rarity < game.global.heirloomsExtra[index].rarity || (theLoom.rarity == game.global.heirloomsExtra[index].rarity && evaluateMods(carried, 'heirloomsCarried') < evaluateMods(index, 'heirloomsExtra'))) {
+		       		selectHeirloom(carried, 'heirloomsCarried');
+		       		stopCarryHeirloom();
+		       		selectHeirloom(index, 'heirloomsExtra');
+		       		carryHeirloom();
+		       		sortHeirlooms();
+		       	}
+	       }
+	       if(game.global.heirloomsCarried.length < game.global.maxCarriedHeirlooms) {
+	       selectHeirloom(worth.Hat[0], 'heirloomsExtra');
+	       carryHeirloom();
+	       }
+	}
+	else if(heirloomsShown && game.global.selectedHeirloom[1].includes('Equipped')){
+		bestUpgrade = evaluateMods(0, game.global.selectedHeirloom[1], true);
+		var styleIndex = 4 + (bestUpgrade.index * 3);
+		document.getElementById('selectedHeirloom').childNodes[0].childNodes[styleIndex].style.backgroundColor = "green";
+	}
+       //heirloomsShown
        //document.getElementById('extraHeirloomsHere').childNodes[INDEX].childNodes[1].style.border = "1px solid #00CC00"
+       //document.getElementById('selectedHeirloom').childNodes[0].childNodes[4/7/10/13].style.backgroundColor
 }
 
 function evaluateMods(loom, location, upgrade) {
 	var index = loom;
-	var bestUpgrade = [0, ''];
+	var bestUpgrade = {
+		'index': null,
+		'name': '',
+		'effect': 0
+	};
 	var tempEff;
 	var steps;
 	if(location.includes('Equipped'))
@@ -402,9 +415,10 @@ function evaluateMods(loom, location, upgrade) {
 					if(loom.mods[m][1] >= 30) break;
 					steps = game.heirlooms.Hat.critChance.steps[loom.rarity];
 					tempEff = (steps[2]/100 * getPlayerCritDamageMult())/((getPlayerCritChance() * getPlayerCritDamageMult()) + 1);
-					if(tempEff > bestUpgrade[0]) {
-						bestUpgrade[0] = tempEff;
-						bestUpgrade[1] = 'critChance';
+					if(tempEff > bestUpgrade.effect) {
+						bestUpgrade.effect = tempEff;
+						bestUpgrade.name = 'critChance';
+						bestUpgrade.index = m;
 					}
 				}
 				break;
@@ -414,9 +428,10 @@ function evaluateMods(loom, location, upgrade) {
 				if(upgrade){
 					steps = game.heirlooms.Hat.critDamage.steps[loom.rarity];
 					tempEff = (getPlayerCritChance() * (steps[2]/100))/((getPlayerCritDamageMult() * getPlayerCritChance()) + 1);
-					if(tempEff > bestUpgrade[0]) {
-						bestUpgrade[0] = tempEff;
-						bestUpgrade[1] = 'critDamage';
+					if(tempEff > bestUpgrade.effect) {
+						bestUpgrade.effect = tempEff;
+						bestUpgrade.name = 'critDamage';
+						bestUpgrade.index = m;
 					}
 				}
 				break;
@@ -426,9 +441,10 @@ function evaluateMods(loom, location, upgrade) {
 				if(upgrade){
 					steps = game.heirlooms.Hat.trimpAttack.steps[loom.rarity];
 					tempEff = (steps[2]/100)/((game.heirlooms.Hat.trimpAttack.currentBonus/100) + 1);
-					if(tempEff > bestUpgrade[0]) {
-						bestUpgrade[0] = tempEff;
-						bestUpgrade[1] = 'trimpAttack';
+					if(tempEff > bestUpgrade.effect) {
+						bestUpgrade.effect = tempEff;
+						bestUpgrade.name = 'trimpAttack';
+						bestUpgrade.index = m;
 					}
 				}
 				break;
@@ -438,9 +454,10 @@ function evaluateMods(loom, location, upgrade) {
 				if(upgrade) {
 					steps = game.heirlooms.defaultSteps[loom.rarity];
 					tempEff = (0.75*steps[2]/100)/((game.heirlooms.Staff.MinerSpeed.currentBonus/100) + 1);
-					if(tempEff > bestUpgrade[0]) {
-						bestUpgrade[0] = tempEff;
-						bestUpgrade[1] = 'MinerSpeed';
+					if(tempEff > bestUpgrade.effect) {
+						bestUpgrade.effect = tempEff;
+						bestUpgrade.name = 'MinerSpeed';
+						bestUpgrade.index = m;
 					}
 				}
 				break;
@@ -450,9 +467,10 @@ function evaluateMods(loom, location, upgrade) {
 				if(upgrade) {
 					steps = game.heirlooms.defaultSteps[loom.rarity];
 					tempEff = (0.5*steps[2]/100)/((game.heirlooms.Staff.FarmerSpeed.currentBonus/100) + 1);
-					if(tempEff > bestUpgrade[0]) {
-						bestUpgrade[0] = tempEff;
-						bestUpgrade[1] = 'FarmerSpeed';
+					if(tempEff > bestUpgrade.effect) {
+						bestUpgrade.effect = tempEff;
+						bestUpgrade.name = 'FarmerSpeed';
+						bestUpgrade.index = m;
 					}
 				}
 				break;
@@ -462,9 +480,10 @@ function evaluateMods(loom, location, upgrade) {
 				if(upgrade) {
 					steps = game.heirlooms.defaultSteps[loom.rarity];
 					tempEff = (0.5*steps[2]/100)/((game.heirlooms.Staff.LumberjackSpeed.currentBonus/100) + 1);
-					if(tempEff > bestUpgrade[0]) {
-						bestUpgrade[0] = tempEff;
-						bestUpgrade[1] = 'LumberjackSpeed';
+					if(tempEff > bestUpgrade.effect) {
+						bestUpgrade.effect = tempEff;
+						bestUpgrade.name = 'LumberjackSpeed';
+						bestUpgrade.index = m;
 					}
 				}
 				break;
@@ -474,9 +493,10 @@ function evaluateMods(loom, location, upgrade) {
 				if(upgrade) {
 					steps = game.heirlooms.defaultSteps[loom.rarity];
 					tempEff = (0.5*steps[2]/100)/((game.heirlooms.Staff.DragimpSpeed.currentBonus/100) + 1);
-					if(tempEff > bestUpgrade[0]) {
-						bestUpgrade[0] = tempEff;
-						bestUpgrade[1] = 'DragimpSpeed';
+					if(tempEff > bestUpgrade.effect) {
+						bestUpgrade.effect = tempEff;
+						bestUpgrade.name = 'DragimpSpeed';
+						bestUpgrade.index = m;
 					}
 				}
 				break;
