@@ -382,53 +382,82 @@ function autoHeirlooms() {
        //document.getElementById('extraHeirloomsHere').childNodes[INDEX].childNodes[1].style.border = "1px solid #00CC00"
 }
 
-function evaluateMods(loom, location) {
+function evaluateMods(loom, location, upgrade) {
 	var index = loom;
+	var bestUpgrade = [0, ''];
+	var tempEff;
+	var steps;
 	loom = game.global[location][loom];
 //	return loom.rarity;
 	var eff = 0;
 	for(var m in loom.mods) {
 		switch(loom.mods[m][0]) {
 			case 'critChance': 
-				eff += (loom.mods[m][1]/100) * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100);
+				tempEff = ((loom.mods[m][1]/100) * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100))/((getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus/100) * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100) + 1);
+				eff += tempEff;
+				if(upgrade){
+					if(loom.mods[m][1] >= 30) break;
+					steps = game.heirlooms.Hat.critChance.steps[loom.rarity];
+					tempEff = (steps[2]/100 * getPlayerCritDamageMult())/((getPlayerCritChance() * getPlayerCritDamageMult()) + 1);
+					if(tempEff > bestUpgrade[0]) {
+						bestUpgrade[0] = tempEff;
+						bestUpgrade[1] = 'critChance';
+					}
+				}
 				break;
 			case 'critDamage':
-				eff += ((getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus) * (loom.mods[m][1]/100))/(getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100);
+				tempEff = ((loom.mods[m][1]/100) * (getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus/100))/((getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100) * (getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus/100) + 1);
+				eff += tempEff;
+				if(upgrade){
+					steps = game.heirlooms.Hat.critDamage.steps[loom.rarity];
+					tempEff = (getPlayerCritChance() * (steps[2]/100))/((getPlayerCritDamageMult() * getPlayerCritChance()) + 1);
+					if(tempEff > bestUpgrade[0]) {
+						bestUpgrade[0] = tempEff;
+						bestUpgrade[1] = 'critChance';
+					}
+				}
 				break;
 			case 'trimpAttack':
-				eff += loom.mods[m][1]/100;
+				tempEff = loom.mods[m][1]/100;
+				eff += tempEff;
 				break;
 			case 'MinerSpeed':
-				eff += 0.75*loom.mods[m][1]/100;
+				tempEff = 0.75*loom.mods[m][1]/100;
+				eff += tempEff;
 				break;
 			case 'FarmerSpeed':
-				eff += 0.5*loom.mods[m][1]/100;
+				tempEff = 0.5*loom.mods[m][1]/100;
+				eff += tempEff;
 				break;
 			case 'LumberjackSpeed':
-				eff += 0.5*loom.mods[m][1]/100;
+				tempEff = 0.5*loom.mods[m][1]/100;
+				eff += tempEff;
 				break;
 			case 'DragimpSpeed':
-				eff += 0.5*loom.mods[m][1]/100;
+				tempEff = 0.5*loom.mods[m][1]/100;
+				eff += tempEff;
 				break;
 			case 'empty':
-				var steps;
 				var av;
 				//value empty mod as the average of the best mod it doesn't have. If it has all good mods, empty slot has no value
 				if(loom.type == 'Hat') {
 					if(!checkForMod('trimpAttack', index, location)){
 						steps = game.heirlooms.Hat.trimpAttack.steps[loom.rarity];
 						av = steps[0] + ((steps[1] - steps[0])/2);
-						eff += av/100;
+						tempEff = av/100;
+						eff += tempEff;
 					}
 					else if(!checkForMod('critChance', index, location)){
 						steps = game.heirlooms.Hat.critChance.steps[loom.rarity];
 						av = steps[0] + ((steps[1] - steps[0])/2);
-						eff += av * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100);
+						tempEff = av * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100);
+						eff += tempEff;
 					}
 					else if(!checkForMod('critDamage', index, location)){
 						steps = game.heirlooms.Hat.critDamage.steps[loom.rarity];
 						av = steps[0] + ((steps[1] - steps[0])/2);
-						eff += ((getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus) * av)/(getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100);
+						tempEff = ((getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus) * av)/(getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100);
+						eff += tempEff;
 					}
 				}
 				if(loom.type == 'Staff') {
