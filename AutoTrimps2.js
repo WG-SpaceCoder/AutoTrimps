@@ -1865,6 +1865,7 @@ function mainLoop() {
     if (getPageSetting('RunMapsWhenStuck')) autoMap();
     if (getPageSetting('GeneticistTimer') >= 0) manageGenes();
     if (autoTrimpSettings.AutoPortal.selected != "Off") autoPortal();
+    if (getPageSetting('AutoHeirlooms')) autoHeirlooms();
     if (getPageSetting('TrapTrimps') && game.global.trapBuildAllowed && game.global.trapBuildToggled == false) toggleAutoTrap();
     
     
