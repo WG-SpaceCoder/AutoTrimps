@@ -24,10 +24,11 @@ createSetting('BuyWeaponUpgrades', 'Buy Weapon Upgrades', 'Will buy the most eff
 createSetting('BuyShieldblock', 'Buy Shield Block', 'Will buy the shield block upgrade. If you are progressing past zone 60, you probably don\'t want this', 'boolean');
 createSetting('RunMapsWhenStuck', 'Auto Maps', 'Automatically run maps to progress', 'boolean');
 createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps. Required for autoPortal Electricity and Crushed modes.', 'boolean');
+createSetting('AutoHeirlooms', 'Auto Heirlooms', 'Automatically evaluate and carry 2 best heirlooms, and recommend upgrades for equipped items. AutoHeirlooms will only change carried items when the heirlooms window is not open. Carried items will be compared and swapped with the types that are already carried. If a carry spot is empty, it will be filled with the best hat. Evaluation is based ONLY on the following mods (listed in order of priority, high to low): Void Map Drop Chance/Trimp Attack, Crit Chance/Crit Damage, Miner Efficiency, Farmer/Lumberjack/Dragimp Efficiency. Empty mod slots are valued at the average value of the best missing mod.', 'boolean');
 createSetting('HireScientists', 'Hire Scientists', 'Enable or disable hiring of scientists.', 'boolean');
 createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress. Just worker ratios right now. WARNING: overrides worker ratio settings.', 'boolean');
 createSetting('ManageBreedtimer', 'Manage Breed Timer', 'Automatically manage the breed timer. Picks appropriate timers for various challenges. Delays purchasing potency and nurseries if trying to raise the timer. EFFECTIVELY LOCKS THE BREED TIMER', 'boolean');
-
+//
 // createSetting('', '', '', 'boolean');
 //Values
 createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to shoot for using geneticists. CANNOT CHANGE WITH MANAGE BREED TIMER OPTION ON', 'value', '30');
