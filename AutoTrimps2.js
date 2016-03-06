@@ -365,7 +365,7 @@ function sortHeirlooms(){
 
 function autoHeirlooms() {
 	var bestUpgrade;
-	if(!heirloomsShown){
+	if(!heirloomsShown && game.global.heirloomsExtra.length > 0){
 	       sortHeirlooms();
 	       for(var carried in game.global.heirloomsCarried) {
 		       	var theLoom = game.global.heirloomsCarried[carried];
