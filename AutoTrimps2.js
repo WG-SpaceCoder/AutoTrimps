@@ -385,8 +385,11 @@ function autoHeirlooms() {
 		bestUpgrade = evaluateMods(0, game.global.selectedHeirloom[1], true);
 		var styleIndex = 4 + (bestUpgrade.index * 3);
 		document.getElementById('selectedHeirloom').childNodes[0].childNodes[styleIndex].style.backgroundColor = "green";
+		//lightblue = greyish
 	}
        //heirloomsShown
+       //getModReplaceCost(heirloomObj, modIndex)
+       //getModUpgradeCost(heirloomObj, modIndex)
        //document.getElementById('extraHeirloomsHere').childNodes[INDEX].childNodes[1].style.border = "1px solid #00CC00"
        //document.getElementById('selectedHeirloom').childNodes[0].childNodes[4/7/10/13].style.backgroundColor
 }
@@ -415,6 +418,7 @@ function evaluateMods(loom, location, upgrade) {
 					if(loom.mods[m][1] >= 30) break;
 					steps = game.heirlooms.Hat.critChance.steps[loom.rarity];
 					tempEff = (steps[2]/100 * getPlayerCritDamageMult())/((getPlayerCritChance() * getPlayerCritDamageMult()) + 1);
+					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
 						bestUpgrade.effect = tempEff;
 						bestUpgrade.name = 'critChance';
@@ -428,6 +432,7 @@ function evaluateMods(loom, location, upgrade) {
 				if(upgrade){
 					steps = game.heirlooms.Hat.critDamage.steps[loom.rarity];
 					tempEff = (getPlayerCritChance() * (steps[2]/100))/((getPlayerCritDamageMult() * getPlayerCritChance()) + 1);
+					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
 						bestUpgrade.effect = tempEff;
 						bestUpgrade.name = 'critDamage';
@@ -441,6 +446,7 @@ function evaluateMods(loom, location, upgrade) {
 				if(upgrade){
 					steps = game.heirlooms.Hat.trimpAttack.steps[loom.rarity];
 					tempEff = (steps[2]/100)/((game.heirlooms.Hat.trimpAttack.currentBonus/100) + 1);
+					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
 						bestUpgrade.effect = tempEff;
 						bestUpgrade.name = 'trimpAttack';
@@ -454,6 +460,7 @@ function evaluateMods(loom, location, upgrade) {
 				if(upgrade) {
 					steps = game.heirlooms.defaultSteps[loom.rarity];
 					tempEff = (0.75*steps[2]/100)/((game.heirlooms.Staff.MinerSpeed.currentBonus/100) + 1);
+					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
 						bestUpgrade.effect = tempEff;
 						bestUpgrade.name = 'MinerSpeed';
@@ -467,6 +474,7 @@ function evaluateMods(loom, location, upgrade) {
 				if(upgrade) {
 					steps = game.heirlooms.defaultSteps[loom.rarity];
 					tempEff = (0.5*steps[2]/100)/((game.heirlooms.Staff.FarmerSpeed.currentBonus/100) + 1);
+					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
 						bestUpgrade.effect = tempEff;
 						bestUpgrade.name = 'FarmerSpeed';
@@ -480,6 +488,7 @@ function evaluateMods(loom, location, upgrade) {
 				if(upgrade) {
 					steps = game.heirlooms.defaultSteps[loom.rarity];
 					tempEff = (0.5*steps[2]/100)/((game.heirlooms.Staff.LumberjackSpeed.currentBonus/100) + 1);
+					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
 						bestUpgrade.effect = tempEff;
 						bestUpgrade.name = 'LumberjackSpeed';
@@ -493,6 +502,7 @@ function evaluateMods(loom, location, upgrade) {
 				if(upgrade) {
 					steps = game.heirlooms.defaultSteps[loom.rarity];
 					tempEff = (0.5*steps[2]/100)/((game.heirlooms.Staff.DragimpSpeed.currentBonus/100) + 1);
+					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
 						bestUpgrade.effect = tempEff;
 						bestUpgrade.name = 'DragimpSpeed';
