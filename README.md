@@ -9,7 +9,8 @@ Automation script for the idle incremental game Trimps
 <b>Recent changes:</b>
 
 DATE#######
-- Helium per hour autoportal setting is now based on max he/hr this run, and will portal when your new he/hr is less than 97% of your max he/hr.
+- Auto Heirlooms feature added. blah blah blah
+- Fixed a few bugs with autoMaps status display
 - Fixed a bug with checks for the scientist challenges
 - Fixed a bug with equipment efficiency function checking cost based on global buy amount
 
