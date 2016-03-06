@@ -454,6 +454,20 @@ function evaluateMods(loom, location, upgrade) {
 					}
 				}
 				break;
+			case 'voidMaps':
+				tempEff = loom.mods[m][1]/100;
+				eff += tempEff;
+				if(upgrade){
+					steps = game.heirlooms.Hat.voidMaps.steps[loom.rarity];
+					tempEff = (steps[2]/100)/((game.heirlooms.Hat.voidMaps.currentBonus/100) + 1);
+					tempEff = tempEff / getModUpgradeCost(loom, m);
+					if(tempEff > bestUpgrade.effect) {
+						bestUpgrade.effect = tempEff;
+						bestUpgrade.name = 'voidMaps';
+						bestUpgrade.index = m;
+					}
+				}
+				break;
 			case 'MinerSpeed':
 				tempEff = 0.75*loom.mods[m][1]/100;
 				eff += tempEff;
@@ -522,16 +536,22 @@ function evaluateMods(loom, location, upgrade) {
 						tempEff = av/100;
 						eff += tempEff;
 					}
+					else if(!checkForMod('voidMaps', index, location)){
+						steps = game.heirlooms.Hat.voidMaps.steps[loom.rarity];
+						av = steps[0] + ((steps[1] - steps[0])/2);
+						tempEff = (steps[2]/100);
+						eff += tempEff;
+					}
 					else if(!checkForMod('critChance', index, location)){
 						steps = game.heirlooms.Hat.critChance.steps[loom.rarity];
 						av = steps[0] + ((steps[1] - steps[0])/2);
-						tempEff = av * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100);
+						tempEff = (av * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100))/((getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus/100) * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100) + 1);
 						eff += tempEff;
 					}
 					else if(!checkForMod('critDamage', index, location)){
 						steps = game.heirlooms.Hat.critDamage.steps[loom.rarity];
 						av = steps[0] + ((steps[1] - steps[0])/2);
-						tempEff = ((getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus) * av)/(getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100);
+						tempEff = (av * (getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus/100))/((getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100) * (getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus/100) + 1);
 						eff += tempEff;
 					}
 				}
@@ -1203,7 +1223,7 @@ function autoStance() {
     var missingHealth = game.global.soldierHealthMax - game.global.soldierHealth;
     var newSquadRdy = game.resources.trimps.realMax() <= game.resources.trimps.owned + 1;
 
-    //baseDamage - *2 = relentlessness fudge factor? (add check?)
+    
     baseDamage = game.global.soldierCurrentAttack * 2 * (1 + (game.global.achievementBonus / 100)) * ((game.global.antiStacks * game.portal.Anticipation.level * game.portal.Anticipation.modifier) + 1) * (1 + (game.global.roboTrimpLevel * 0.2));
     if (game.global.formation == 2) {
         baseDamage /= 4;
@@ -1344,7 +1364,8 @@ function autoMap() {
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
         
-        //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 16
+        //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 15
+        //add crit in somehow?
         shouldFarm = shouldFarm ? getEnemyMaxHealth(game.global.world) / baseDamage > 10 : getEnemyMaxHealth(game.global.world) / baseDamage > 15
         
         //if we are at max map bonus, and we don't need to farm, don't do maps
