@@ -356,9 +356,9 @@ function sortHeirlooms(){
 	            	return worth[x][b] - worth[x][a];
 	        });
 	}
-       console.log(worth);
-       console.log('hat: ' + worth['Hat']);
-       console.log('staff: ' + worth['Staff']);
+      // console.log(worth);
+       //console.log('hat: ' + worth['Hat']);
+       //console.log('staff: ' + worth['Staff']);
 }
 
 
