@@ -361,6 +361,8 @@ function sortHeirlooms(){
        console.log('staff: ' + worth['Staff']);
 }
 
+
+
 function autoHeirlooms() {
 	var bestUpgrade;
 	if(!heirloomsShown){
@@ -384,14 +386,22 @@ function autoHeirlooms() {
 	else if(heirloomsShown && game.global.selectedHeirloom[1].includes('Equipped')){
 		bestUpgrade = evaluateMods(0, game.global.selectedHeirloom[1], true);
 		var styleIndex = 4 + (bestUpgrade.index * 3);
+		var html = '<div class="tooltipExtraHeirloom"> test this crap</div>';
+		
 		document.getElementById('selectedHeirloom').childNodes[0].childNodes[styleIndex].style.backgroundColor = "green";
+		document.getElementById('selectedHeirloom').childNodes[0].childNodes[styleIndex].setAttribute("onmouseover", 'tooltip(\'Heirloom\', \"customText\", event, \'<div class=\"selectedHeirloomItem heirloomRare\' + game.global[game.global.selectedHeirloom[1]].rarity + \'\"> test this</div>\'         )');
+		document.getElementById('selectedHeirloom').childNodes[0].childNodes[styleIndex].setAttribute("onmouseout", 'tooltip(\'hide\')');
 		//lightblue = greyish
+		//swapClass("tooltipExtra", "tooltipExtraHeirloom", document.getElementById("tooltipDiv"));
+		//document.getElementById("tooltipDiv");
 	}
        //heirloomsShown
        //getModReplaceCost(heirloomObj, modIndex)
        //getModUpgradeCost(heirloomObj, modIndex)
        //document.getElementById('extraHeirloomsHere').childNodes[INDEX].childNodes[1].style.border = "1px solid #00CC00"
        //document.getElementById('selectedHeirloom').childNodes[0].childNodes[4/7/10/13].style.backgroundColor
+       //advBtn.setAttribute("onmouseover", 'tooltip(\"Advanced Settings\", \"customText\", event, \"Leave off unless you know what you\'re doing with them.\")');
+//advBtn.setAttribute("onmouseout", 'tooltip("hide")');
 }
 
 function evaluateMods(loom, location, upgrade) {
@@ -1103,8 +1113,7 @@ function autoLevelEquipment() {
             ) {
                 var upgrade = equipmentList[equipName].Upgrade;
                 debug('Upgrading ' + upgrade);
-                buyUpgrade(upgrade);
-                tooltip('hide');
+                buyUpgrade(upgrade, true, true);
             }
         }
     }
