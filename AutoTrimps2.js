@@ -369,6 +369,7 @@ function autoHeirlooms() {
 	       sortHeirlooms();
 	       for(var carried in game.global.heirloomsCarried) {
 		       	var theLoom = game.global.heirloomsCarried[carried];
+		       	if(worth[theLoom.type].length == 0) continue;
 		       	var index = worth[theLoom.type][0];
 		       	if(theLoom.rarity < game.global.heirloomsExtra[index].rarity || (theLoom.rarity == game.global.heirloomsExtra[index].rarity && evaluateMods(carried, 'heirloomsCarried') < evaluateMods(index, 'heirloomsExtra'))) {
 		       		selectHeirloom(carried, 'heirloomsCarried');
@@ -379,7 +380,10 @@ function autoHeirlooms() {
 		       	}
 	       }
 	       if(game.global.heirloomsCarried.length < game.global.maxCarriedHeirlooms) {
-	       selectHeirloom(worth.Hat[0], 'heirloomsExtra');
+	       	if(worth.Hat.length > 0)
+	       		selectHeirloom(worth.Hat[0], 'heirloomsExtra');
+	       	else if(worth.Staff.length > 0)
+	       		selectHeirloom(worth.Staff[0], 'heirloomsExtra');
 	       carryHeirloom();
 	       }
 	}
