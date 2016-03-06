@@ -339,9 +339,9 @@ function updateCustomButtons() {
     var status = document.getElementById('autoMapStatus');
     if(!autoTrimpSettings.RunMapsWhenStuck.enabled) status.innerHTML = 'Off';
    else if(needPrestige) status.innerHTML = 'Prestige';
-   else if(doVoids && !shouldFarm) status.innerHTML = 'Void Maps: ' + game.global.totalVoidMaps + ' remaining';
+   else if(doVoids && voidCheckPercent == 0) status.innerHTML = 'Void Maps: ' + game.global.totalVoidMaps + ' remaining';
    else if(needToVoid && !doVoids && game.global.totalVoidMaps > 0 && !stackingTox) status.innerHTML = 'Prepping for Voids';
-   else if(doVoids && shouldFarm) status.innerHTML = 'Farming to do Voids: ' + voidCheckPercent + '%';
+   else if(doVoids && voidCheckPercent > 0) status.innerHTML = 'Farming to do Voids: ' + voidCheckPercent + '%';
    else if(shouldFarm && !doVoids) status.innerHTML = 'Farming';
    else if(stackingTox) status.innerHTML = 'Getting Tox Stacks';
    else if(!enoughDamage) status.innerHTML = 'Want more damage';
