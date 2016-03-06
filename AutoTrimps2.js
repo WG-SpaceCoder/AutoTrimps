@@ -384,12 +384,14 @@ function autoHeirlooms() {
 	       }
 	}
 	else if(heirloomsShown && game.global.selectedHeirloom[1].includes('Equipped')){
+		var loom = game.global[game.global.selectedHeirloom[1]];
 		bestUpgrade = evaluateMods(0, game.global.selectedHeirloom[1], true);
+		bestUpgrade.effect *= getModUpgradeCost(loom, bestUpgrade.index);
+		bestUpgrade.effect = bestUpgrade.effect.toFixed(6);
 		var styleIndex = 4 + (bestUpgrade.index * 3);
-		var html = '<div class="tooltipExtraHeirloom"> test this crap</div>';
-		
-		document.getElementById('selectedHeirloom').childNodes[0].childNodes[styleIndex].style.backgroundColor = "green";
-		document.getElementById('selectedHeirloom').childNodes[0].childNodes[styleIndex].setAttribute("onmouseover", 'tooltip(\'Heirloom\', \"customText\", event, \'<div class=\"selectedHeirloomItem heirloomRare\' + game.global[game.global.selectedHeirloom[1]].rarity + \'\"> test this</div>\'         )');
+		//enclose in backtic ` for template string $ stuff
+		document.getElementById('selectedHeirloom').childNodes[0].childNodes[styleIndex].style.backgroundColor = "lightblue";
+		document.getElementById('selectedHeirloom').childNodes[0].childNodes[styleIndex].setAttribute("onmouseover", `tooltip(\'Heirloom\', \"customText\", event, \'<div class=\"selectedHeirloomItem heirloomRare${loom.rarity}\"> AutoTrimps recommended upgrade for this item. </div>\'         )`);
 		document.getElementById('selectedHeirloom').childNodes[0].childNodes[styleIndex].setAttribute("onmouseout", 'tooltip(\'hide\')');
 		//lightblue = greyish
 		//swapClass("tooltipExtra", "tooltipExtraHeirloom", document.getElementById("tooltipDiv"));
