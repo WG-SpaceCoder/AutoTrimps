@@ -24,10 +24,11 @@ createSetting('BuyWeaponUpgrades', 'Buy Weapon Upgrades', 'Will buy the most eff
 createSetting('BuyShieldblock', 'Buy Shield Block', 'Will buy the shield block upgrade. If you are progressing past zone 60, you probably don\'t want this', 'boolean');
 createSetting('RunMapsWhenStuck', 'Auto Maps', 'Automatically run maps to progress', 'boolean');
 createSetting('RunUniqueMaps', 'Run Unique Maps', 'Auto run unique maps. Required for autoPortal Electricity and Crushed modes.', 'boolean');
+createSetting('AutoHeirlooms', 'Auto Heirlooms', 'Automatically evaluate and carry the best heirlooms, and recommend upgrades for equipped items. AutoHeirlooms will only change carried items when the heirlooms window is not open. Carried items will be compared and swapped with the types that are already carried. If a carry spot is empty, it will be filled with the best shield (if available). Evaluation is based ONLY on the following mods (listed in order of priority, high to low): Void Map Drop Chance/Trimp Attack, Crit Chance/Crit Damage, Miner Efficiency, Farmer/Lumberjack/Dragimp Efficiency. For the purposes of carrying, rarity trumps all of the stat evaluations. Empty mod slots are valued at the average value of the best missing mod.', 'boolean');
 createSetting('HireScientists', 'Hire Scientists', 'Enable or disable hiring of scientists.', 'boolean');
 createSetting('EasyMode', 'Easy Mode', 'Automatically changes settings based on current progress. Just worker ratios right now. WARNING: overrides worker ratio settings.', 'boolean');
 createSetting('ManageBreedtimer', 'Manage Breed Timer', 'Automatically manage the breed timer. Picks appropriate timers for various challenges. Delays purchasing potency and nurseries if trying to raise the timer. EFFECTIVELY LOCKS THE BREED TIMER', 'boolean');
-
+//
 // createSetting('', '', '', 'boolean');
 //Values
 createSetting('GeneticistTimer', 'Geneticist Timer', 'Breed time in seconds to shoot for using geneticists. CANNOT CHANGE WITH MANAGE BREED TIMER OPTION ON', 'value', '30');
@@ -54,8 +55,8 @@ createSetting('VoidMaps', 'Void Maps', 'The zone at which you want all your void
 //Dropdown + context sensitive
 createSetting('Prestige', 'Prestige', 'Acquire prestiges through the selected item (inclusive) as soon as they are available in maps. Forces equip first mode. Automap must be enabled.', 'dropdown', 'Off', ['Off', 'Supershield', 'Dagadder', 'Bootboost', 'Megamace', 'Hellishmet', 'Polierarm', 'Pantastic', 'Axeidic', 'Smoldershoulder', 'Greatersword', 'Bestplate', 'Harmbalest', 'GambesOP']);
 createSetting('AutoPortal', 'Auto Portal', 'Automatically portal. Will NOT auto-portal if you have a challenge active. ', 'dropdown', 'Off', ['Off', 'Helium Per Hour', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity', 'Custom']);
-createSetting('HeliumHourChallenge', 'Challenge for Helium per Hour', 'Automatically portal with this challenge when using helium per hour autoportal.', 'dropdown', 'None', ['None', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity']);
-createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after clearing this level', 'value', '20');
+createSetting('HeliumHourChallenge', 'Challenge for Helium per Hour and Custom', 'Automatically portal with this challenge when using helium per hour or custom autoportal.', 'dropdown', 'None', ['None', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity']);
+createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after clearing this level', 'value', '200');
 
 //advanced settings
 
@@ -328,7 +329,7 @@ function updateCustomButtons() {
     if (autoTrimpSettings.AutoPortal.selected == "Custom") document.getElementById("CustomAutoPortal").style.display = '';
     else document.getElementById("CustomAutoPortal").style.display = 'none';
     //challenge for he/hr setting
-    if (autoTrimpSettings.AutoPortal.selected == "Helium Per Hour") document.getElementById("HeliumHourChallenge").style.display = '';
+    if (autoTrimpSettings.AutoPortal.selected == "Helium Per Hour" || autoTrimpSettings.AutoPortal.selected == "Custom") document.getElementById("HeliumHourChallenge").style.display = '';
     else document.getElementById("HeliumHourChallenge").style.display = 'none';
     //update dropdown selections
     document.getElementById('Prestige').value = autoTrimpSettings.Prestige.selected;
@@ -338,9 +339,9 @@ function updateCustomButtons() {
     var status = document.getElementById('autoMapStatus');
     if(!autoTrimpSettings.RunMapsWhenStuck.enabled) status.innerHTML = 'Off';
    else if(needPrestige) status.innerHTML = 'Prestige';
-   else if(doVoids && !shouldFarm) status.innerHTML = 'Void Maps: ' + game.global.totalVoidMaps + ' remaining';
+   else if(doVoids && voidCheckPercent == 0) status.innerHTML = 'Void Maps: ' + game.global.totalVoidMaps + ' remaining';
    else if(needToVoid && !doVoids && game.global.totalVoidMaps > 0 && !stackingTox) status.innerHTML = 'Prepping for Voids';
-   else if(doVoids && shouldFarm) status.innerHTML = 'Farming to do Voids: ' + voidCheckPercent + '%';
+   else if(doVoids && voidCheckPercent > 0) status.innerHTML = 'Farming to do Voids: ' + voidCheckPercent + '%';
    else if(shouldFarm && !doVoids) status.innerHTML = 'Farming';
    else if(stackingTox) status.innerHTML = 'Getting Tox Stacks';
    else if(!enoughDamage) status.innerHTML = 'Want more damage';

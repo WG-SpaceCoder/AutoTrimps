@@ -162,7 +162,9 @@ function pushData() {
         resources: game.resources,
         world: game.global.world,
         challenge: game.global.challengeActive,
-        voids: game.global.totalVoidMaps
+        voids: game.global.totalVoidMaps,
+        heirlooms: game.stats.totalHeirlooms,
+        nullifium: game.global.nullifium
     });
     //only keep 10 portals worth of runs to prevent filling storage
     clearData(10);
