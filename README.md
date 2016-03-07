@@ -10,6 +10,7 @@ Automation script for the idle incremental game Trimps
 
 DATE#######
 - Auto Heirlooms feature added. blah blah blah
+- The custom autoPortal setting now includes an associated challenge selection. This should facilitate running challenges but continuing to a higher desired level to run void maps for heirlooms.
 - Fixed a few bugs with autoMaps status display
 - Fixed a bug with checks for the scientist challenges
 - Fixed a bug with equipment efficiency function checking cost based on global buy amount
