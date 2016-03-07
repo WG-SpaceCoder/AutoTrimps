@@ -337,9 +337,9 @@ function getScienceCostToUpgrade(upgrade) {
     }
 }
 
-var worth = {'Hat': {}, 'Staff': {}};
+var worth = {'Shield': {}, 'Staff': {}};
 function sortHeirlooms(){
-	worth = {'Hat': {}, 'Staff': {}};
+	worth = {'Shield': {}, 'Staff': {}};
 	for (var loom in game.global.heirloomsExtra) {
 		var theLoom = game.global.heirloomsExtra[loom];
 		worth[theLoom.type][loom] = theLoom.rarity;
@@ -356,7 +356,7 @@ function sortHeirlooms(){
 	        });
 	}
       // console.log(worth);
-       //console.log('hat: ' + worth['Hat']);
+       //console.log('hat: ' + worth['Shield']);
        //console.log('staff: ' + worth['Staff']);
 }
 
@@ -379,8 +379,8 @@ function autoHeirlooms() {
 		       	}
 	       }
 	       if(game.global.heirloomsCarried.length < game.global.maxCarriedHeirlooms) {
-	       	if(worth.Hat.length > 0)
-	       		selectHeirloom(worth.Hat[0], 'heirloomsExtra');
+	       	if(worth.Shield.length > 0)
+	       		selectHeirloom(worth.Shield[0], 'heirloomsExtra');
 	       	else if(worth.Staff.length > 0)
 	       		selectHeirloom(worth.Staff[0], 'heirloomsExtra');
 	       carryHeirloom();
@@ -430,11 +430,11 @@ function evaluateMods(loom, location, upgrade) {
 	for(var m in loom.mods) {
 		switch(loom.mods[m][0]) {
 			case 'critChance': 
-				tempEff = ((loom.mods[m][1]/100) * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100))/((getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus/100) * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100) + 1);
+				tempEff = ((loom.mods[m][1]/100) * (getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100))/((getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100) * (getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100) + 1);
 				eff += tempEff;
 				if(upgrade){
 					if(loom.mods[m][1] >= 30) break;
-					steps = game.heirlooms.Hat.critChance.steps[loom.rarity];
+					steps = game.heirlooms.Shield.critChance.steps[loom.rarity];
 					tempEff = (steps[2]/100 * getPlayerCritDamageMult())/((getPlayerCritChance() * getPlayerCritDamageMult()) + 1);
 					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
@@ -445,10 +445,10 @@ function evaluateMods(loom, location, upgrade) {
 				}
 				break;
 			case 'critDamage':
-				tempEff = ((loom.mods[m][1]/100) * (getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus/100))/((getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100) * (getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus/100) + 1);
+				tempEff = ((loom.mods[m][1]/100) * (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100))/((getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100) * (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100) + 1);
 				eff += tempEff;
 				if(upgrade){
-					steps = game.heirlooms.Hat.critDamage.steps[loom.rarity];
+					steps = game.heirlooms.Shield.critDamage.steps[loom.rarity];
 					tempEff = (getPlayerCritChance() * (steps[2]/100))/((getPlayerCritDamageMult() * getPlayerCritChance()) + 1);
 					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
@@ -462,8 +462,8 @@ function evaluateMods(loom, location, upgrade) {
 				tempEff = loom.mods[m][1]/100;
 				eff += tempEff;
 				if(upgrade){
-					steps = game.heirlooms.Hat.trimpAttack.steps[loom.rarity];
-					tempEff = (steps[2]/100)/((game.heirlooms.Hat.trimpAttack.currentBonus/100) + 1);
+					steps = game.heirlooms.Shield.trimpAttack.steps[loom.rarity];
+					tempEff = (steps[2]/100)/((game.heirlooms.Shield.trimpAttack.currentBonus/100) + 1);
 					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
 						bestUpgrade.effect = tempEff;
@@ -476,8 +476,8 @@ function evaluateMods(loom, location, upgrade) {
 				tempEff = loom.mods[m][1]/100;
 				eff += tempEff;
 				if(upgrade){
-					steps = game.heirlooms.Hat.voidMaps.steps[loom.rarity];
-					tempEff = (steps[2]/100)/((game.heirlooms.Hat.voidMaps.currentBonus/100) + 1);
+					steps = game.heirlooms.Shield.voidMaps.steps[loom.rarity];
+					tempEff = (steps[2]/100)/((game.heirlooms.Shield.voidMaps.currentBonus/100) + 1);
 					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
 						bestUpgrade.effect = tempEff;
@@ -547,29 +547,29 @@ function evaluateMods(loom, location, upgrade) {
 				//some other function?
 				if(upgrade) break;
 				//value empty mod as the average of the best mod it doesn't have. If it has all good mods, empty slot has no value
-				if(loom.type == 'Hat') {
+				if(loom.type == 'Shield') {
 					if(!checkForMod('trimpAttack', index, location)){
-						steps = game.heirlooms.Hat.trimpAttack.steps[loom.rarity];
+						steps = game.heirlooms.Shield.trimpAttack.steps[loom.rarity];
 						av = steps[0] + ((steps[1] - steps[0])/2);
 						tempEff = av/100;
 						eff += tempEff;
 					}
 					else if(!checkForMod('voidMaps', index, location)){
-						steps = game.heirlooms.Hat.voidMaps.steps[loom.rarity];
+						steps = game.heirlooms.Shield.voidMaps.steps[loom.rarity];
 						av = steps[0] + ((steps[1] - steps[0])/2);
 						tempEff = (steps[2]/100);
 						eff += tempEff;
 					}
 					else if(!checkForMod('critChance', index, location)){
-						steps = game.heirlooms.Hat.critChance.steps[loom.rarity];
+						steps = game.heirlooms.Shield.critChance.steps[loom.rarity];
 						av = steps[0] + ((steps[1] - steps[0])/2);
-						tempEff = (av * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100))/((getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus/100) * (getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100) + 1);
+						tempEff = (av * (getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100))/((getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100) * (getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100) + 1);
 						eff += tempEff;
 					}
 					else if(!checkForMod('critDamage', index, location)){
-						steps = game.heirlooms.Hat.critDamage.steps[loom.rarity];
+						steps = game.heirlooms.Shield.critDamage.steps[loom.rarity];
 						av = steps[0] + ((steps[1] - steps[0])/2);
-						tempEff = (av * (getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus/100))/((getPlayerCritDamageMult() - game.heirlooms.Hat.critDamage.currentBonus/100) * (getPlayerCritChance() - game.heirlooms.Hat.critChance.currentBonus/100) + 1);
+						tempEff = (av * (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100))/((getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100) * (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100) + 1);
 						eff += tempEff;
 					}
 				}
