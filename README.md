@@ -9,7 +9,7 @@ Automation script for the idle incremental game Trimps
 <b>Recent changes:</b>
 
 3/7/2016
-- Auto Heirlooms feature added. When enabled, the script will evaluate and 'carry' the best heirlooms, as well as suggest upgrades for equipped heirlooms based on their effect per cost. As of right now, the evaluations are based ONLY on the following mods (listed by their precedence/weighting):<br>
+- Auto Heirlooms feature added. When enabled, the script will evaluate and 'carry' the best heirlooms, as well as suggest upgrades for equipped heirlooms based on their effect per cost. <b> For carrying, the script will only compare and swap out higher rarity/better items with the SAME TYPE. This means if you want to keep the best shield and staff, you need to already have a shield and staff in there. </b>As of right now, the evaluations are based ONLY on the following mods (listed by their precedence/weighting):<br>
 Shield: Void Map Drop Chance/Trimp Attack, Crit Chance/Crit Damage<br>
 Staff: Miner Efficiency, Lumberjack/Farmer/Dragimp Efficiency<br>
 This also means that recommended upgrades are only suggested for these mods (as compared to any other of the evaluated mods present). If you have an item with only one evaluated mod, it will always be the 'recommended' upgrade. For the purposes of carrying, rarity trumps all of the stat evaluations.
