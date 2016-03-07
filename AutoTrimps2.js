@@ -830,8 +830,8 @@ function getBreedTime(remaining) {
 		potencyMod *= 0.2;
     	
     }
-    //#newpatch
-    //potencyMod = calcHeirloomBonus("Hat", "breedSpeed", potencyMod);
+
+    potencyMod = calcHeirloomBonus("Shield", "breedSpeed", potencyMod);
     breeding = breeding * potencyMod;
     updatePs(breeding, true);
 
@@ -859,10 +859,10 @@ function getBreedTime(remaining) {
 function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
-    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
-    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
     toggleSettingsMenu();
     toggleSettingsMenu();
 }
@@ -911,6 +911,7 @@ function buyStorage() {
     	var jest = 0;
     	var owned = game.resources[Bs[B]].owned;
     	var max = game.resources[Bs[B]].max * packMod;
+    	max = calcHeirloomBonus("Shield", "storageSize", max);
     	if(game.global.mapsActive && game.unlocks.imps.Jestimp) {
 	    	jest = simpleSeconds(Bs[B], 45);
 	    	jest = scaleToCurrentMap(jest);
@@ -1163,8 +1164,8 @@ function manualLabor() {
     	setGather('trimps');
     }
    else if (game.resources.science.owned < 100 && document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden') setGather('science');
-    //if we have more than 2 buildings in queue, or (our modifier is real fast and trapstorm is off), build                      #newPatch getPlayerModifier()
-   else if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || game.global.autoCraftModifier == 0 || (game.global.playerModifier > 1000 && game.global.buildingsQueue[0] != 'Trap.1')) : false) {
+    //if we have more than 2 buildings in queue, or (our modifier is real fast and trapstorm is off), build                      
+   else if (game.global.buildingsQueue.length ? (game.global.buildingsQueue.length > 1 || game.global.autoCraftModifier == 0 || (getPlayerModifier() > 1000 && game.global.buildingsQueue[0] != 'Trap.1')) : false) {
         // debug('Gathering buildings??');
         setGather('buildings');
     }
