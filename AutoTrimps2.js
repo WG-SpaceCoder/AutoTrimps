@@ -430,12 +430,12 @@ function evaluateMods(loom, location, upgrade) {
 	for(var m in loom.mods) {
 		switch(loom.mods[m][0]) {
 			case 'critChance': 
-				tempEff = ((loom.mods[m][1]/100) * (getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100))/((getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100) * (getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100) + 1);
+				tempEff = ((loom.mods[m][1]/100) * (getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100))/((getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100) * (getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100) + 1 - (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100));
 				eff += tempEff;
 				if(upgrade){
 					if(loom.mods[m][1] >= 30) break;
 					steps = game.heirlooms.Shield.critChance.steps[loom.rarity];
-					tempEff = (steps[2]/100 * getPlayerCritDamageMult())/((getPlayerCritChance() * getPlayerCritDamageMult()) + 1);
+					tempEff = (steps[2]/100 * getPlayerCritDamageMult())/((getPlayerCritChance() * getPlayerCritDamageMult()) + 1 - getPlayerCritChance());
 					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
 						bestUpgrade.effect = tempEff;
@@ -445,11 +445,11 @@ function evaluateMods(loom, location, upgrade) {
 				}
 				break;
 			case 'critDamage':
-				tempEff = ((loom.mods[m][1]/100) * (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100))/((getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100) * (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100) + 1);
+				tempEff = ((loom.mods[m][1]/100) * (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100))/((getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100) * (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100) + 1 - (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100));
 				eff += tempEff;
 				if(upgrade){
 					steps = game.heirlooms.Shield.critDamage.steps[loom.rarity];
-					tempEff = (getPlayerCritChance() * (steps[2]/100))/((getPlayerCritDamageMult() * getPlayerCritChance()) + 1);
+					tempEff = (getPlayerCritChance() * (steps[2]/100))/((getPlayerCritDamageMult() * getPlayerCritChance()) + 1 - getPlayerCritChance());
 					tempEff = tempEff / getModUpgradeCost(loom, m);
 					if(tempEff > bestUpgrade.effect) {
 						bestUpgrade.effect = tempEff;
@@ -563,13 +563,13 @@ function evaluateMods(loom, location, upgrade) {
 					else if(!checkForMod('critChance', index, location)){
 						steps = game.heirlooms.Shield.critChance.steps[loom.rarity];
 						av = steps[0] + ((steps[1] - steps[0])/2);
-						tempEff = (av * (getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100))/((getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100) * (getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100) + 1);
+						tempEff = (av * (getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100))/((getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100) * (getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100) + 1 - (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100));
 						eff += tempEff;
 					}
 					else if(!checkForMod('critDamage', index, location)){
 						steps = game.heirlooms.Shield.critDamage.steps[loom.rarity];
 						av = steps[0] + ((steps[1] - steps[0])/2);
-						tempEff = (av * (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100))/((getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100) * (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100) + 1);
+						tempEff = (av * (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100))/((getPlayerCritDamageMult() - game.heirlooms.Shield.critDamage.currentBonus/100) * (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100) + 1 - (getPlayerCritChance() - game.heirlooms.Shield.critChance.currentBonus/100));
 						eff += tempEff;
 					}
 				}
