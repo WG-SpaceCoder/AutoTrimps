@@ -323,9 +323,8 @@ function safeBuyJob(jobTitle, amount) {
     }
     //debug((game.global.firing ? 'Firing ' : 'Hiring ') + game.global.buyAmt + ' ' + jobTitle);
     game.global.buyAmt = amount;
-    buyJob(jobTitle);
+    buyJob(jobTitle, null, true);
     postBuy();
-    tooltip("hide");
     return true;
 }
 
@@ -1136,16 +1135,14 @@ function autoLevelEquipment() {
             if (getPageSetting('BuyWeapons') && DaThing.Stat == 'attack' && (!enoughDamage || enoughHealth)) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
-                    buyEquipment(Best[stat].Name);
-                    tooltip('hide');
+                    buyEquipment(Best[stat].Name, null, true);
                 }
             }
             //If we're considering a health item, buy it if we don't have enough health, otherwise we default to buying damage
             if (getPageSetting('BuyArmor') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealth) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
-                    buyEquipment(Best[stat].Name);
-                    tooltip('hide');
+                    buyEquipment(Best[stat].Name, null, true);
                 }
             }
         }
