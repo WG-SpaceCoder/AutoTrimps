@@ -1898,7 +1898,7 @@ function mainLoop() {
         }
     }
     //auto-close breaking the world textbox
-    if(document.getElementById('extraGridInfo').style.display == 'block') restoreGrid();
+    if(document.getElementById('tipTitle').innerHTML == 'The Improbability') cancelTooltip();
     autoLevelEquipment();
     updateCustomButtons();
 
