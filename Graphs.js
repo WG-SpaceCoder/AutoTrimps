@@ -298,18 +298,12 @@ function setGraphData(graph) {
                     });
                         continue;
                     }
-                    var array = [];
+                    totalVoids = allSaveData[i].heirlooms.valueTotal - allSaveData[i-1].heirlooms.valueTotal;
                     graphData[0].data.push([allSaveData[i-1].totalPortals, totalVoids]);
                     theChallenge = allSaveData[i].challenge;
-                    totalVoids = 0;
                     currentPortal = allSaveData[i].totalPortals;
-                }
-                
-                if(allSaveData[i].voids > totalVoids) {
-                    totalVoids = allSaveData[i].voids;
-                }
+                }      
             }
-            console.log(graphData);
             title = 'Void Maps Per Portal';
             xTitle = 'Portal';
             yTitle = 'Void Maps'
