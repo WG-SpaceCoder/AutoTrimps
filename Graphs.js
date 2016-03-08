@@ -290,21 +290,27 @@ function setGraphData(graph) {
                 if (allSaveData[i].totalPortals != currentPortal) {
                     if(currentPortal == -1) {
                         theChallenge = allSaveData[i].challenge;
+                        currentPortal = allSaveData[i].totalPortals;
+                        graphData.push({
+                        name: 'Void Maps',
+                        data: [],
+                        type: 'column'
+                    });
                         continue;
                     }
-                    graphData.push({
-                        name: 'Portal ' + allSaveData[i-1].totalPortals + ': ' + theChallenge,
-                        data: totalVoids
-                    });
+                    var array = [];
+                    graphData[0].data.push([allSaveData[i-1].totalPortals, totalVoids]);
                     theChallenge = allSaveData[i].challenge;
                     totalVoids = 0;
+                    currentPortal = allSaveData[i].totalPortals;
                 }
-                currentPortal = allSaveData[i].totalPortals;
+                
                 if(allSaveData[i].voids > totalVoids) {
                     totalVoids = allSaveData[i].voids;
                 }
             }
-            title = 'Void Maps';
+            console.log(graphData);
+            title = 'Void Maps Per Portal';
             xTitle = 'Portal';
             yTitle = 'Void Maps'
             break;
