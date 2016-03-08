@@ -7,6 +7,8 @@ Automation script for the idle incremental game Trimps
 <b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
 
 <b>Recent changes:</b>
+3/7/2016 -2 
+- Added metal drop to efficiency calculations, weighted same as miner efficiency.
 
 3/7/2016
 - Auto Heirlooms feature added. When enabled, the script will evaluate and 'carry' the best heirlooms, as well as suggest upgrades for equipped heirlooms based on their effect per cost. <b> For carrying, the script will only compare and swap out higher rarity/better items with the SAME TYPE. This means if you want to keep the best shield and staff, you need to already have a shield and staff in there. </b>As of right now, the evaluations are based ONLY on the following mods (listed by their precedence/weighting):<br>
