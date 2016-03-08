@@ -303,9 +303,9 @@ function setGraphData(graph) {
                     totalVoids = 0;
                     currentPortal = allSaveData[i].totalPortals;
                 }
-                - if(allSaveData[i].voids > totalVoids) {
- -                    totalVoids = allSaveData[i].voids;
- -                }
+                if(allSaveData[i].voids > totalVoids) {
+                     totalVoids = allSaveData[i].voids;
+                 }
             }
             title = 'Void Maps Per Portal';
             xTitle = 'Portal';
