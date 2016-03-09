@@ -260,19 +260,21 @@ function setGraphData(graph) {
                         data: []
                     })
                     currentPortal = allSaveData[i].totalPortals;
-                    graphData[graphData.length -1].data.push(0);
+                    if(allSaveData[i].world == 1)
+                        graphData[graphData.length -1].data.push(0);
+                    
+                    if(currentZone == -1 || allSaveData[i].world != 1) {
+                        var loop = allSaveData[i].world;
+                        while (loop > 0) {
+                            graphData[graphData.length -1].data.push(0);
+                            loop--;
+                        }
+                    }
                 }
                 if(currentZone < allSaveData[i].world && currentZone != -1) {
                     graphData[graphData.length - 1].data.push(Math.floor(allSaveData[i].heliumOwned / ((allSaveData[i].currentTime - allSaveData[i].portalTime) / 3600000)));
                 }
-                
-                if(currentZone == -1) {
-                    var loop = allSaveData[i].world;
-                    while (loop > 0) {
-                        graphData[graphData.length -1].data.push(0);
-                        loop--;
-                    }
-                }
+            
                 currentZone = allSaveData[i].world;
                 
             }
