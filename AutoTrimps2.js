@@ -1082,7 +1082,8 @@ function autoLevelEquipment() {
     var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
     if(game.global.challengeActive == "Toxicity") {
     	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
-    	//enemyDamage *= 2;
+    	if(game.global.world < 61)
+    		enemyDamage *= 2;
     	enemyHealth *= 2;
     }
     enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
