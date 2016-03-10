@@ -590,7 +590,7 @@ function evaluateMods(loom, location, upgrade) {
 				if(loom.type == 'Staff') {
 					steps = game.heirlooms.defaultSteps[loom.rarity];
 					av = steps[0] + ((steps[1] - steps[0])/2);
-					if(!checkForMod('MinerSpeed', index, location)){
+					if(!checkForMod('MinerSpeed', index, location) || !checkForMod('metalDrop', index, location)){
 					eff += 0.75*av/100;
 					}
 					else if(!checkForMod('LumberjackSpeed', index, location) || !checkForMod('FarmerSpeed', index, location) || !checkForMod('DragimpSpeed', index, location)){
@@ -1082,7 +1082,8 @@ function autoLevelEquipment() {
     var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
     if(game.global.challengeActive == "Toxicity") {
     	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
-    	//enemyDamage *= 2;
+    	if(game.global.world < 61)
+    		enemyDamage *= 2;
     	enemyHealth *= 2;
     }
     enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
@@ -1534,14 +1535,13 @@ function autoMap() {
         	//shouldDoMap = world here if we haven't set it to create yet, meaning we found appropriate high level map, or siphon map
         	//if shouldDoMap != world, it already has a map ID and will be run below
             if (shouldDoMap == "world") {
-            	//if shouldFarm is true, use a siphonology adjusted map
-            	if (shouldDoMaps && shouldFarm) shouldDoMap = game.global.mapsOwnedArray[siphonMap].id;
+            	//if shouldFarm is true, use a siphonology adjusted map, as long as we aren't trying to prestige
+            	if (shouldDoMaps && shouldFarm && !needPrestige) shouldDoMap = game.global.mapsOwnedArray[siphonMap].id;
                 else if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
                     shouldDoMap = game.global.mapsOwnedArray[highestMap].id;
                 } else {
-                    //if we aren't here because of needing damage or health, then we must be here because of prestige mapping.
-                    //If we aren't prestige mapping on a max level map, we shouldn't be prestige mapping
-                    if(!shouldDoMaps) shouldDoMap = "world";
+                    //if we dont' have an appropriate max level map, or a siphon map, we need to make one
+                    //if(!shouldDoMaps) shouldDoMap = "world";
                     shouldDoMap = "create";
                 }
             }

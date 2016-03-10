@@ -16,7 +16,7 @@ settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
 document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style="display: none;"><div id="graph" style="margin-bottom: 2vw;margin-top: 2vw;"></div></div>';
 
 //Create the dropdown for what graph to show
-var graphList = ['HeliumPerHour', 'Helium', 'Clear Time'];
+var graphList = ['HeliumPerHour', 'Helium', 'Clear Time', 'Void Maps'];
 var btn = document.createElement("select");
 btn.id = 'graphSelection';
 if(game.options.menu.darkTheme.enabled == 2) btn.setAttribute("style", "color: #C8C8C8");
@@ -260,25 +260,58 @@ function setGraphData(graph) {
                         data: []
                     })
                     currentPortal = allSaveData[i].totalPortals;
-                    graphData[graphData.length -1].data.push(0);
+                    if(allSaveData[i].world == 1)
+                        graphData[graphData.length -1].data.push(0);
+                    
+                    if(currentZone == -1 || allSaveData[i].world != 1) {
+                        var loop = allSaveData[i].world;
+                        while (loop > 0) {
+                            graphData[graphData.length -1].data.push(0);
+                            loop--;
+                        }
+                    }
                 }
                 if(currentZone < allSaveData[i].world && currentZone != -1) {
                     graphData[graphData.length - 1].data.push(Math.floor(allSaveData[i].heliumOwned / ((allSaveData[i].currentTime - allSaveData[i].portalTime) / 3600000)));
                 }
-                
-                if(currentZone == -1) {
-                    var loop = allSaveData[i].world;
-                    while (loop > 0) {
-                        graphData[graphData.length -1].data.push(0);
-                        loop--;
-                    }
-                }
+            
                 currentZone = allSaveData[i].world;
                 
             }
             title = 'Helium/Hour';
             xTitle = 'Zone';
             yTitle = 'Helium'
+            break;
+            
+            case 'Void Maps':
+            var currentPortal = -1;
+            var totalVoids = 0;
+            var theChallenge = '';
+            graphData = [];
+            for (var i in allSaveData) {
+                if (allSaveData[i].totalPortals != currentPortal) {
+                    if(currentPortal == -1) {
+                        theChallenge = allSaveData[i].challenge;
+                        currentPortal = allSaveData[i].totalPortals;
+                        graphData.push({
+                        name: 'Void Maps',
+                        data: [],
+                        type: 'column'
+                    });
+                        continue;
+                    }
+                    graphData[0].data.push([allSaveData[i-1].totalPortals, totalVoids]);
+                    theChallenge = allSaveData[i].challenge;
+                    totalVoids = 0;
+                    currentPortal = allSaveData[i].totalPortals;
+                }
+                if(allSaveData[i].voids > totalVoids) {
+                     totalVoids = allSaveData[i].voids;
+                 }
+            }
+            title = 'Void Maps Per Portal';
+            xTitle = 'Portal';
+            yTitle = 'Void Maps'
             break;
     }
     if (oldData != JSON.stringify(graphData)) {
