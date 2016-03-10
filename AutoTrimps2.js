@@ -1337,7 +1337,7 @@ function autoStance() {
 		//add voidcrit?
 
 		//this thing is getting too messy - any more special crap and this needs a bunch of flag variables or something
-	if (!game.global.preMapsActive) {
+	if (!game.global.preMapsActive && game.global.soldierHealth > 0) {
 		if (!enemyFast && game.upgrades.Dominance.done && enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) && (newSquadRdy || (dHealth - missingHealth > 0 && (game.global.challengeActive != 'Nom' && game.global.challengeActive != "Toxicity")) || ((game.global.challengeActive == 'Nom' || game.global.challengeActive == "Toxicity") && dHealth - missingHealth > dHealth/20))) {
 			if (game.global.formation != 2) {
 				setFormation(2);
@@ -1870,6 +1870,7 @@ initializeAutoTrimps();
 setTimeout(delayStart, 2500);
 
 function mainLoop() {
+	game.global.addonUser = true;
 	if(getPageSetting('PauseScript')) return;
     setTitle();
     setScienceNeeded();
