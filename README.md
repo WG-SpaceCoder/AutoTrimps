@@ -7,6 +7,9 @@ Automation script for the idle incremental game Trimps
 <b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
 
 <b>Recent changes:</b><br>
+3/10/2016
+- AutoStance now only swaps stances when soldiers are alive, in attempt to avoid a reported block multiplying issue.
+
 3/9/2016
 - New Void Maps graph which shows you the maximum amount of void maps you saved up in a run. So if you save all yours up before running them, this basically shows you the total void maps (and thus heirlooms) you found on that run. It may miss one void map if you were to enter the zone in which you want to void map (which is when the graph data is gathered), and then find a void map before starting your void maps. This should be pretty limited, though. Bone portals will break the data for the current run. I think it should still get the correct max for the remainder of the run (under the 'new' portal number), but the one test case I have seems too low by 1, so it may just be wrong for the before and after portals.
 - Added consideration of metal drop mod to empty mod slot calculations
