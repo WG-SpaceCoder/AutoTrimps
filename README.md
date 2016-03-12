@@ -2,7 +2,7 @@
 Automation script for the idle incremental game Trimps  
 
 
-<b> UPDATED URL - see instructions below - scripts are now served from zininzinin.github.io/AutoTrimps/ </b>
+<b> Installation instructions at the bottom of this readme</b>
 
 <b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
 
@@ -119,7 +119,7 @@ some older date 2/10/2016?
 
 - On a toxicity run, manually entering the following into the console will force the script to get max toxicity stacks on all zones 60 and above, for a max helium run for bone portal:   heliumGrowing = true      Make sure to set it back to false after your long run(or reload).
   
-~Installation~  
+#Installation  
 <b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
 
 If you would like to use only the graphs module, replace AutoTrimps2.js with Graphs.js in the bookmark or your userscript.
