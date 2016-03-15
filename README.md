@@ -7,6 +7,9 @@ Automation script for the idle incremental game Trimps
 <b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
 
 <b>Recent changes:</b><br>
+3/14/2016
+- (Untested) Added an advanced option to disable the 'farming' section of the autoMaps algorithm. This should make it always kick back out to the zone after reaching 10 map stacks. Farming to prepare for void maps should remain intact. 
+
 3/10/2016
 - AutoStance now only swaps stances when soldiers are alive, in attempt to avoid a reported block multiplying issue.
 
