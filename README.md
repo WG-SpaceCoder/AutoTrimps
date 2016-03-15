@@ -7,6 +7,9 @@ Automation script for the idle incremental game Trimps
 <b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
 
 <b>Recent changes:</b><br>
+3/15/2016
+- Fixed an issue that could cause autoMaps to try prestiging on the wrong level map.
+
 3/14/2016
 - (Untested) Added an advanced option to disable the 'farming' section of the autoMaps algorithm. This should make it always kick back out to the zone after reaching 10 map stacks. Farming to prepare for void maps should remain intact. 
 
