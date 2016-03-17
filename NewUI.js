@@ -158,6 +158,9 @@ function autoToggle(what){
       var item = document.getElementById('autoSettings');
       if(item.style.display === 'block')
         item.style.display='none';
+      item = document.getElementById('graphParent');
+      if(item.style.display === 'block')
+        item.style.display='none';
     toggleSettingsMenu();
   }
 
