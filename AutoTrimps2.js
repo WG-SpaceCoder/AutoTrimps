@@ -1397,7 +1397,7 @@ function autoMap() {
         if(!getPageSetting('DisableFarm')) {
         	shouldFarm = shouldFarm ? getEnemyMaxHealth(game.global.world) / baseDamage > 10 : getEnemyMaxHealth(game.global.world) / baseDamage > 15;
         }
-        
+
 	needToVoid = getPageSetting('VoidMaps') > 0 && game.global.totalVoidMaps > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')));
     if (game.global.mapsUnlocked) {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
@@ -1512,6 +1512,8 @@ function autoMap() {
 	        	}
 	        	break;
         	}
+        //don't map on even worlds if on Lead, except if person is dumb and wants to void on even	
+        if(game.global.challengeActive == 'Lead' && !doVoids && (game.global.world % 2 == 0)) return;
 
             if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
                 if (theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
