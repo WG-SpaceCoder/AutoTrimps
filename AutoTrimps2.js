@@ -1346,6 +1346,9 @@ function autoStance() {
 			dDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
 			xDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
 			bDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
+			dDamage += dHealth/20;
+			xDamage += xHealth/20;
+			bDamage += bHealth/20;
 		}
 		
 		//add voidcrit?
@@ -1837,13 +1840,13 @@ function manageGenes() {
     	
         if(game.portal.Anticipation.level == 0) autoTrimpSettings.GeneticistTimer.value = '0';
         else if(game.global.challengeActive == 'Electricity' || game.global.challengeActive == 'Mapocalypse') autoTrimpSettings.GeneticistTimer.value = '3.5';
-        else if(game.global.challengeActive == 'Nom' || game.global.challengeActive == 'Toxicity') {
+        else if(game.global.challengeActive == 'Nom' || game.global.challengeActive == 'Toxicity' || game.global.challengeActive == 'Lead' || game.global.challengeActive == 'Watch') {
         	//intent of below if is to push through past megafarming with 30 anti stacks if we need to farm, 
         	//but raising to 30 antistacks often turns shouldfarm off. Would need a separate shouldFarmNom variable that approximates at 10 stacks? Don't care enough to do now
         	//if(shouldFarm && !game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '30';
         	autoTrimpSettings.GeneticistTimer.value = '11';
         }
-        else autoTrimpSettings.GeneticistTimer.value = '30.5';
+        else autoTrimpSettings.GeneticistTimer.value = '30';
     }
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
     //if we need to hire geneticists
