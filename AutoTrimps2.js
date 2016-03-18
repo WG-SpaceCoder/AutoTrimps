@@ -1599,7 +1599,7 @@ function autoMap() {
                 mapsClicked();
             } else if (shouldDoMap == "create") {
             	//create a siphonology level map if shouldFarm and not prestiging (void map diff check consideration here?)
-                if(shouldFarm && !needPrestige) document.getElementById("mapLevelInput").value = game.global.world - game.portal.Siphonology.level;
+                if(shouldDoMaps && shouldFarm && !needPrestige) document.getElementById("mapLevelInput").value = game.global.world - game.portal.Siphonology.level;
                 else document.getElementById("mapLevelInput").value = game.global.world;
                 if (game.global.world > 70) {
                     sizeAdvMapsRange.value = 9;
