@@ -1287,12 +1287,15 @@ function autoStance() {
         }
         var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow' || game.global.voidBuff == 'doubleAttack');
         var enemyHealth = enemy.health;
+        //think this is fluctuation in calculateDamage();
         var enemyDamage = enemy.attack * 1.19;
-        var dDamage = enemyDamage - baseBlock / 2 > enemyDamage * 0.2 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2;
+        var pierceMod = 0;
+        if (game.global.challengeActive == "Lead" && ((game.global.world % 2) == 0)) pierceMod += (game.challenges.Lead.stacks * 0.0005);
+        var dDamage = enemyDamage - baseBlock / 2 > enemyDamage * (0.2 + pierceMod) ? enemyDamage - baseBlock / 2 : enemyDamage * (0.2 + pierceMod);
         var dHealth = baseHealth/2;
-        var xDamage = enemyDamage - baseBlock > enemyDamage * 0.2 ? enemyDamage - baseBlock : enemyDamage * 0.2;
+        var xDamage = enemyDamage - baseBlock > enemyDamage * (0.2 + pierceMod) ? enemyDamage - baseBlock : enemyDamage * (0.2 + pierceMod);
         var xHealth = baseHealth;
-        var bDamage = enemyDamage - baseBlock * 4 > enemyDamage * 0.1 ? enemyDamage - baseBlock * 4 : enemyDamage * 0.1;
+        var bDamage = enemyDamage - baseBlock * 4 > enemyDamage * (0.1 + pierceMod) ? enemyDamage - baseBlock * 4 : enemyDamage * (0.1 + pierceMod);
         var bHealth = baseHealth/2;
     } else if (game.global.mapsActive && !game.global.preMapsActive) {
         if (typeof game.global.mapGridArray[game.global.lastClearedMapCell + 1] === 'undefined') {
@@ -1332,6 +1335,11 @@ function autoStance() {
 			dDamage += game.global.soldierHealth * 0.2;
 			xDamage += game.global.soldierHealth * 0.2;
 			bDamage += game.global.soldierHealth * 0.2;
+		}
+		else if (game.global.challengeActive == 'Lead') {
+			dDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
+			xDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
+			bDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
 		}
 		
 		//add voidcrit?
@@ -1376,7 +1384,9 @@ var needPrestige = false;
 var voidCheckPercent = 0;
 
 function autoMap() {
-	//if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 15
+	//allow script to handle abandoning
+        if(game.options.menu.alwaysAbandon.enabled == 1) toggleSetting('alwaysAbandon');
+        //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 15
         //add crit in somehow?
         if(!getPageSetting('DisableFarm')) {
         	shouldFarm = shouldFarm ? getEnemyMaxHealth(game.global.world) / baseDamage > 10 : getEnemyMaxHealth(game.global.world) / baseDamage > 15;
@@ -1487,7 +1497,7 @@ function autoMap() {
 	        	shouldDoMap = theMap.id;
 	        	if(game.global.mapsActive && game.global.challengeActive == "Nom") {
 	        		if(game.global.mapGridArray[game.global.lastClearedMapCell + 1].nomStacks > 6) {
-	        			mapsClicked();
+	        			mapsClicked(true);
 	        		}
 	        	}
 	        	break;
