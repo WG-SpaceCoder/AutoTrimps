@@ -7,6 +7,10 @@ Automation script for the idle incremental game Trimps
 <b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
 
 <b>Recent changes:</b><br>
+3/18/2016
+- Fixed an issue that could cause the script to use up all available fragments (and all subsequently acquired fragments) making maps while trying to farm for voids.
+- (actually sometime 3/16 I think) Fixed an issue that could cause farming mode to get stuck on if you had farming disabled with the advanced option.
+
 3/15/2016
 - Fixed an issue that could cause autoMaps to try prestiging on the wrong level map.
 
