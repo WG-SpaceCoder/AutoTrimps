@@ -1080,11 +1080,17 @@ function autoLevelEquipment() {
     };
     var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
     var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
+    
+    //below challenge multiplier not necessarily accurate, just fudge factors
     if(game.global.challengeActive == "Toxicity") {
     	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
     	if(game.global.world < 61)
     		enemyDamage *= 2;
     	enemyHealth *= 2;
+    }
+    if(game.global.challengeActive == 'Lead') {
+    	enemyDamage *= 2.5;
+    	enemyHealth *= 7;
     }
     enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
     enoughDamage = (baseDamage * 4 > enemyHealth);
@@ -1402,6 +1408,10 @@ function autoMap() {
     	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
     	//enemyDamage *= 2;
     	enemyHealth *= 2;
+    	}
+    	if(game.global.challengeActive == 'Lead') {
+    		enemyDamage *= 2.5;
+    		enemyHealth *= 2.5;
     	}
     	if(game.global.totalVoidMaps == 0 || !needToVoid)
     		doVoids = false;
