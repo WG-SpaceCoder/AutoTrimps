@@ -1623,8 +1623,10 @@ function autoMap() {
                 mapsClicked();
             } 
             //don't map on even worlds if on Lead, except if person is dumb and wants to void on even	
-       	    else if(game.global.challengeActive == 'Lead' && !doVoids && (game.global.world % 2 == 0)) return;
-            
+       	    else if(game.global.challengeActive == 'Lead' && !doVoids && (game.global.world % 2 == 0)) {
+       	    	mapsClicked();
+       	    	return;
+       	    }
             else if (shouldDoMap == "create") {
             	//create a siphonology level map if shouldFarm and not prestiging (void map diff check consideration here?)
                 if(shouldDoMaps && shouldFarm && !needPrestige) document.getElementById("mapLevelInput").value = game.global.world - game.portal.Siphonology.level;
