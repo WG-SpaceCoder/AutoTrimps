@@ -21,6 +21,7 @@ var breedFire = false;
 var shouldFarm = false;
 var enoughDamage = false;
 var enoughHealth = false;
+var newCoord = false;
 
 var noFight = 0;
 
@@ -908,6 +909,7 @@ function buyUpgrades() {
         if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < (Math.floor(game.upgrades.Gigastation.done * getPageSetting('DeltaGigastation')) + getPageSetting('FirstGigastation')) : game.buildings.Warpstation.owned < getPageSetting('FirstGigastation'))) continue;
         if ((!game.upgrades.Scientists.done && upgrade != 'Battle') ? (available && upgrade == 'Scientists' && game.upgrades.Scientists.allowed) : (available)) {
             buyUpgrade(upgrade, true, true);
+            if(upgrade == 'Coordination') newCoord = true;
             //debug('bought upgrade ' + upgrade);
         }
     }
@@ -1092,8 +1094,9 @@ function autoLevelEquipment() {
     	enemyDamage *= 2.5;
     	enemyHealth *= 7;
     }
-    enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
-    enoughDamage = (baseDamage * 4 > enemyHealth);
+    //change name to make sure these are local to the function
+    var enoughHealthE = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
+    var enoughDamageE = (baseDamage * 4 > enemyHealth);
 
     for (var equipName in equipmentList) {
         var equip = equipmentList[equipName];
@@ -1154,14 +1157,14 @@ function autoLevelEquipment() {
             var DaThing = equipmentList[Best[stat].Name];
             document.getElementById(Best[stat].Name).style.color = Best[stat].Wall ? 'orange' : 'red';
             //If we're considering an attack item, we want to buy weapons if we don't have enough damage, or if we don't need health (so we default to buying some damage)
-            if (getPageSetting('BuyWeapons') && DaThing.Stat == 'attack' && (!enoughDamage || enoughHealth)) {
+            if (getPageSetting('BuyWeapons') && DaThing.Stat == 'attack' && (!enoughDamageE || enoughHealthE)) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
                     buyEquipment(Best[stat].Name, null, true);
                 }
             }
             //If we're considering a health item, buy it if we don't have enough health, otherwise we default to buying damage
-            if (getPageSetting('BuyArmor') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealth) {
+            if (getPageSetting('BuyArmor') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealthE) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
                     buyEquipment(Best[stat].Name, null, true);
@@ -1419,8 +1422,8 @@ function autoMap() {
     	if(game.global.totalVoidMaps == 0 || !needToVoid)
     		doVoids = false;
     	
-        var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
-        var enoughDamage = (baseDamage * 4 > enemyHealth);
+        enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
+        enoughDamage = (baseDamage * 4 > enemyHealth);
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
         
@@ -1515,8 +1518,7 @@ function autoMap() {
 	        	}
 	        	break;
         	}
-        //don't map on even worlds if on Lead, except if person is dumb and wants to void on even	
-        if(game.global.challengeActive == 'Lead' && !doVoids && (game.global.world % 2 == 0)) return;
+
 
             if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
                 if (theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
@@ -1581,6 +1583,13 @@ function autoMap() {
         //repeat button management
         if (!game.global.preMapsActive) {
             if (game.global.mapsActive) {
+            	//if we bought a new coordination and we're in a map and have a new army ready, force abandon to get updated damage numbers
+            	if(newCoord && game.global.repeatMap && game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) {
+            		mapsClicked();
+            		mapsClicked();
+            		newCoord = false;
+            	}
+            	
                 //if we are doing the right map, and it's not a norecycle (unique) map, and we aren't going to hit max map bonus
                 if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle && (game.global.mapBonus < 9 || shouldFarm || stackingTox)) {
                     var targetPrestige = autoTrimpSettings.Prestige.selected;
@@ -1612,7 +1621,11 @@ function autoMap() {
         } else if (game.global.preMapsActive) {
             if (shouldDoMap == "world") {
                 mapsClicked();
-            } else if (shouldDoMap == "create") {
+            } 
+            //don't map on even worlds if on Lead, except if person is dumb and wants to void on even	
+       	    else if(game.global.challengeActive == 'Lead' && !doVoids && (game.global.world % 2 == 0)) return;
+            
+            else if (shouldDoMap == "create") {
             	//create a siphonology level map if shouldFarm and not prestiging (void map diff check consideration here?)
                 if(shouldDoMaps && shouldFarm && !needPrestige) document.getElementById("mapLevelInput").value = game.global.world - game.portal.Siphonology.level;
                 else document.getElementById("mapLevelInput").value = game.global.world;
@@ -1965,6 +1978,7 @@ function mainLoop() {
         lowLevelFight = game.resources.trimps.maxSoldiers < (game.resources.trimps.owned - game.resources.trimps.employed) * 0.5 && (game.resources.trimps.owned - game.resources.trimps.employed) > game.resources.trimps.realMax() * 0.1 && game.global.world < 5 && game.global.sLevel > 0;
         if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || lowLevelFight )) {
             fightManual();
+            newCoord = false;
             // debug('triggered fight');
         }
     }
