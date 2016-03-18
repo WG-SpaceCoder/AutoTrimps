@@ -1788,6 +1788,11 @@ function autoPortal() {
 				doPortal('Toxicity');
 			}
 			break;
+		case "Lead":
+			if(game.global.world > 180 && !game.global.challengeActive) {
+				pushData();
+				doPortal('Lead');
+			}
 		case "Custom":
 			if(game.global.world > getPageSetting('CustomAutoPortal') && !game.global.challengeActive) {
 				pushData();
