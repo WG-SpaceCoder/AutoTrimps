@@ -1333,7 +1333,7 @@ function autoStance() {
         var bHealth = baseHealth/2;
  
     }
-    	var drainChallenge = game.global.challengeActive == 'Nom' || game.global.challengeActive == "Toxicity" || game.global.challengeActive == 'Lead';
+    	var drainChallenge = game.global.challengeActive == 'Nom' || game.global.challengeActive == "Toxicity";
     
     	if (game.global.challengeActive == "Electricity" || game.global.challengeActive == "Mapocalypse") {
 			dDamage+= dHealth * game.global.radioStacks * 0.1;
@@ -1356,8 +1356,11 @@ function autoStance() {
 			xDamage += game.global.soldierHealth * 0.2;
 			bDamage += game.global.soldierHealth * 0.2;
 		}
-
-		
+	//double attack is OK if the buff isn't double attack, or we will survive a double attack, or we are going to one-shot them (so they won't be able to double attack)
+	var doubleAttackOK = game.global.voidBuff != 'doubleAttack' || ((newSquadRdy && dHealth > dDamage * 2) || dHealth - missingHealth > dDamage * 2) || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2);
+	var leadDamage = game.challenges.Lead.stacks * 0.0003;
+	//lead attack ok if challenge isn't lead, or we are going to one shot them, or we can survive the lead damage
+	var leadAttackOK = game.global.challengeActive != 'Lead' || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) || ((newSquadRdy && dHealth > dDamage + (dHealth * leadDamage)) || (dHealth - missingHealth > dDamage + (dHealth * leadDamage)));
 		//add voidcrit?
 		//this thing is getting too messy - any more special crap and this needs a bunch of flag variables or something
 	if (!game.global.preMapsActive && game.global.soldierHealth > 0) {
@@ -1366,7 +1369,7 @@ function autoStance() {
 				setFormation(2);
 			}
 			//regular checks if voidBuff isn't double attack, or we are going to one-shot. Double damage checks if voidBuff is doubleattack
-		} else if (game.upgrades.Dominance.done && ((((newSquadRdy && dHealth > dDamage) || dHealth - missingHealth > dDamage) && (game.global.voidBuff != 'doubleAttack' || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2))) || ((newSquadRdy && dHealth > dDamage * 2) || dHealth - missingHealth > dDamage * 2))) {
+		} else if (game.upgrades.Dominance.done && ((newSquadRdy && dHealth > dDamage) || dHealth - missingHealth > dDamage) && doubleAttackOK && leadAttackOK) {
 			if (game.global.formation != 2) {
 				setFormation(2);
 			}
