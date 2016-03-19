@@ -1298,6 +1298,11 @@ function autoStance() {
         var enemyHealth = enemy.health;
         //think this is fluctuation in calculateDamage();
         var enemyDamage = enemy.attack * 1.19;
+        if (game.global.challengeActive == 'Lead') {
+			dDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
+			xDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
+			bDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
+        }
         var pierceMod = 0;
         if (game.global.challengeActive == "Lead" && ((game.global.world % 2) == 0)) pierceMod += (game.challenges.Lead.stacks * 0.0005);
         var dDamage = enemyDamage - baseBlock / 2 > enemyDamage * (0.2 + pierceMod) ? enemyDamage - baseBlock / 2 : enemyDamage * (0.2 + pierceMod);
@@ -1315,6 +1320,11 @@ function autoStance() {
         var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow');
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.19;
+        if (game.global.challengeActive == 'Lead') {
+			dDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
+			xDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
+			bDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
+        }
         var dDamage = enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0;
         var dHealth = baseHealth/2;
         var xDamage = enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0;
@@ -1323,12 +1333,13 @@ function autoStance() {
         var bHealth = baseHealth/2;
  
     }
+    	var drainChallenge = game.global.challengeActive == 'Nom' || game.global.challengeActive == "Toxicity" || game.global.challengeActive == 'Lead';
     
     	if (game.global.challengeActive == "Electricity" || game.global.challengeActive == "Mapocalypse") {
 			dDamage+= dHealth * game.global.radioStacks * 0.1;
 			xDamage+= xHealth * game.global.radioStacks * 0.1;
 			bDamage+= bHealth * game.global.radioStacks * 0.1;
-		} else if (game.global.challengeActive == "Nom" || game.global.challengeActive == "Toxicity") {
+		} else if (drainChallenge) {
 			dDamage += dHealth/20;
 			xDamage += xHealth/20;
 			bDamage += bHealth/20;
@@ -1345,20 +1356,12 @@ function autoStance() {
 			xDamage += game.global.soldierHealth * 0.2;
 			bDamage += game.global.soldierHealth * 0.2;
 		}
-		else if (game.global.challengeActive == 'Lead') {
-			dDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
-			xDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
-			bDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
-			dDamage += dHealth/20;
-			xDamage += xHealth/20;
-			bDamage += bHealth/20;
-		}
+
 		
 		//add voidcrit?
-
 		//this thing is getting too messy - any more special crap and this needs a bunch of flag variables or something
 	if (!game.global.preMapsActive && game.global.soldierHealth > 0) {
-		if (!enemyFast && game.upgrades.Dominance.done && enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) && (newSquadRdy || (dHealth - missingHealth > 0 && (game.global.challengeActive != 'Nom' && game.global.challengeActive != "Toxicity")) || ((game.global.challengeActive == 'Nom' || game.global.challengeActive == "Toxicity") && dHealth - missingHealth > dHealth/20))) {
+		if (!enemyFast && game.upgrades.Dominance.done && enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) && (newSquadRdy || (dHealth - missingHealth > 0 && !drainChallenge) || (drainChallenge && dHealth - missingHealth > dHealth/20))) {
 			if (game.global.formation != 2) {
 				setFormation(2);
 			}
