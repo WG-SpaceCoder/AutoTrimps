@@ -1299,9 +1299,9 @@ function autoStance() {
         //think this is fluctuation in calculateDamage();
         var enemyDamage = enemy.attack * 1.19;
         if (game.global.challengeActive == 'Lead') {
-			dDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
-			xDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
-			bDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
+			dDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+			xDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+			bDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
         }
         var pierceMod = 0;
         if (game.global.challengeActive == "Lead" && ((game.global.world % 2) == 0)) pierceMod += (game.challenges.Lead.stacks * 0.0005);
@@ -1321,9 +1321,9 @@ function autoStance() {
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.19;
         if (game.global.challengeActive == 'Lead') {
-			dDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
-			xDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
-			bDamage *= (1 + (game.challenges.Lead.stacks * 0.03));
+			dDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+			xDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+			bDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
         }
         var dDamage = enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0;
         var dHealth = baseHealth/2;
@@ -1410,7 +1410,7 @@ function autoMap() {
         	shouldFarm = shouldFarm ? getEnemyMaxHealth(game.global.world) / baseDamage > 10 : getEnemyMaxHealth(game.global.world) / baseDamage > 15;
         }
 
-	needToVoid = getPageSetting('VoidMaps') > 0 && game.global.totalVoidMaps > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')));
+	needToVoid = getPageSetting('VoidMaps') > 0 && game.global.totalVoidMaps > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids'))) && (game.global.challengeActive != 'Lead' || game.global.lastClearedCell > 95);
     if (game.global.mapsUnlocked) {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
         var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
@@ -1588,7 +1588,7 @@ function autoMap() {
         }
         
                  //don't map on even worlds if on Lead, except if person is dumb and wants to void on even	
-       	 if(game.global.challengeActive == 'Lead' && !doVoids && (game.global.world % 2 == 0)) {
+       	 if(game.global.challengeActive == 'Lead' && !doVoids && (game.global.world % 2 == 0 || game.global.lastClearedCell < 50)) {
        	 		if(game.global.preMapsActive)
        	    		mapsClicked();
        	    	return;
