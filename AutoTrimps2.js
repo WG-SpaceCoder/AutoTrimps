@@ -1304,7 +1304,7 @@ function autoStance() {
 			bDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
         }
         var pierceMod = 0;
-        if (game.global.challengeActive == "Lead" && ((game.global.world % 2) == 0)) pierceMod += (game.challenges.Lead.stacks * 0.0005);
+        if (game.global.challengeActive == "Lead" && ((game.global.world % 2) == 0)) pierceMod += (game.challenges.Lead.stacks * 0.001);
         var dDamage = enemyDamage - baseBlock / 2 > enemyDamage * (0.2 + pierceMod) ? enemyDamage - baseBlock / 2 : enemyDamage * (0.2 + pierceMod);
         var dHealth = baseHealth/2;
         var xDamage = enemyDamage - baseBlock > enemyDamage * (0.2 + pierceMod) ? enemyDamage - baseBlock : enemyDamage * (0.2 + pierceMod);
