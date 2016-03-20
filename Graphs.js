@@ -55,13 +55,6 @@ var tips = document.createElement('div');
 tips.innerHTML = 'Tips: You can zoom by dragging a box around an area. You can turn series off by clicking them on the legend.';
 document.getElementById('graphParent').appendChild(tips);
 
-    var heHour = document.createElement("SPAN");
-    heHour.setAttribute("class", "ownedArea");
-    heHour.setAttribute("style", "display: block; opacity: 1; color:white;");
-    heHour.setAttribute("id", "customHeHour");
-    gameHe = document.getElementById('helium');
-    gameHe.appendChild(heHour);
-
 
 function clearData(portal) {
     if(portal) {
@@ -319,7 +312,7 @@ function setGraphData(graph) {
     }
 }
 
-
+/*
 function updateCustomStats() {
     var timeThisPortal = new Date().getTime() - game.global.portalTime;
     timeThisPortal /= 3600000;
@@ -327,7 +320,7 @@ function updateCustomStats() {
     var heHr = prettify(Math.floor(game.resources.helium.owned / timeThisPortal));
     document.getElementById('customHeHour').innerHTML = heHr + "/Hr";
 }
-
+*/
 
 
 
