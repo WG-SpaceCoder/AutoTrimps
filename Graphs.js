@@ -336,4 +336,3 @@ if (tmpGraphData !== null) {
 
 
 setInterval(gatherInfo, 1000);
-setInterval(updateCustomStats, 1000);
