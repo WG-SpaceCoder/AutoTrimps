@@ -169,7 +169,12 @@ function gatherInfo() {
     if (allSaveData === null) {
         allSaveData = [];
     }
-
+    if(allSaveData[allSaveData.length -1].portal != game.global.totalPortals && game.global.world < 5) {
+    	for(var r in filteredLoot) {
+    		filteredLoot.looted[r] = 0;
+    		filteredLoot.produced[r] = 0;
+    	}
+    }
     if (allSaveData.length === 0) {
         pushData();
     } else if (allSaveData[allSaveData.length - 1].world != game.global.world) {
