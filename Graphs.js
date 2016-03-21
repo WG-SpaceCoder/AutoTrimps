@@ -171,8 +171,9 @@ function gatherInfo() {
     }
     if(allSaveData[allSaveData.length -1].portal != game.global.totalPortals && game.global.world < 5) {
     	for(var r in filteredLoot) {
-    		filteredLoot.looted[r] = 0;
-    		filteredLoot.produced[r] = 0;
+    		for(var b in filteredLoot[r]){
+    			filteredLoot[r][b] = 0;
+    		}
     	}
     }
     if (allSaveData.length === 0) {
