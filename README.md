@@ -7,11 +7,6 @@ Automation script for the idle incremental game Trimps
 <b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
 
 <b>Recent changes:</b><br>
-####DATE
-- Added support for Lead challenge. While on this challenge, automaps will only enter maps when in an odd-numbered zone past cell 50. It is of course highly recommended that you complete void maps on an odd-numbered zone, but the script will NOT enforce that (in case you botch it). Void maps will be done at cell 97 of the zone chosen.
-- The script will now check to see if a new coordination has been bought and if so will abandon an army if in maps in order to update the army's damage numbers.
-- Geneticists will now only be hired while in damage stance (nostance or dominance)
-- The helium/hr code has been removed from graphs due to it being added in the base game.
 
 3/18/2016
 - Fixed an issue that could cause the script to use up all available fragments (and all subsequently acquired fragments) making maps while trying to farm for voids.
