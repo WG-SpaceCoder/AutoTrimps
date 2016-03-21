@@ -1303,6 +1303,11 @@ function autoStance() {
 			xDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
 			bDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
         }
+        if (game.global.challengeActive == 'Watch') {
+        	dDamage *= 1.25;
+        	xDamage *= 1.25;
+        	bDamage *= 1.25;
+        }
         var pierceMod = 0;
         if (game.global.challengeActive == "Lead" && ((game.global.world % 2) == 0)) pierceMod += (game.challenges.Lead.stacks * 0.001);
         var dDamage = enemyDamage - baseBlock / 2 > enemyDamage * (0.2 + pierceMod) ? enemyDamage - baseBlock / 2 : enemyDamage * (0.2 + pierceMod);
@@ -1324,6 +1329,11 @@ function autoStance() {
 			dDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
 			xDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
 			bDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+        }
+        if (game.global.challengeActive == 'Watch') {
+        	dDamage *= 1.25;
+        	xDamage *= 1.25;
+        	bDamage *= 1.25;
         }
         var dDamage = enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0;
         var dHealth = baseHealth/2;
