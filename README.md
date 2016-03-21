@@ -6,6 +6,12 @@ Automation script for the idle incremental game Trimps
 
 ## Recent changes
 
+3/21/2016
+- Added support for Lead and Watch challenges. During Lead challenge, the script will only enter maps in odd zones past cell 50. Void maps will be completed at cell 97. Void maps should be done on an odd zone but the script will NOT enforce that.
+- Geneticists will now only be hired while in damage stance (dominance if available or nostance)
+- He/hr display has been removed from graphs as it was added to base game.
+- HIGHLY EXPERIMENTAL, NOT RELEASED: I have been messing around with a graphs function to track loot gains by their sources (production/jest/chrono vs looted) for the purposes of determining heirloom staff mod values. I'm not comfortable putting this in the main release yet as it overwrites a few core game functions (namely the main function that distributes resources). If you would like to try it out, load the spin branch script, which will point to the graphs.js with it active. If you don't know what I just said or how to do it, it might not be for you at this time.
+
 3/18/2016
 - Fixed an issue that could cause the script to use up all available fragments (and all subsequently acquired fragments) making maps while trying to farm for voids.
 - (actually sometime 3/16 I think) Fixed an issue that could cause farming mode to get stuck on if you had farming disabled with the advanced option.
