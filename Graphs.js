@@ -314,7 +314,7 @@ function setGraphData(graph) {
             xTitle = 'Portal';
             yTitle = 'Void Maps'
             break;
-           /* 
+            
             case 'Loot Sources':
             graphData = [];
             graphData[0] = {name: 'Metal', data: lootData.metal};
@@ -325,7 +325,7 @@ function setGraphData(graph) {
             xTitle = 'Time';
             yTitle = 'Ratio Looted:Produced'
             break;
-            */
+            
     }
     if (oldData != JSON.stringify(graphData)) {
         setGraph(title, xTitle, yTitle, valueSuffix, graphData);
