@@ -1,12 +1,10 @@
 # AutoTrimps
 Automation script for the idle incremental game Trimps  
 
+**Installation instructions at the bottom of this README**
+**Please backup your game via export before and during use to prevent losing your save due to corruption!**
 
-<b> Installation instructions at the bottom of this readme</b>
-
-<b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
-
-<b>Recent changes:</b><br>
+## Recent changes
 
 3/18/2016
 - Fixed an issue that could cause the script to use up all available fragments (and all subsequently acquired fragments) making maps while trying to farm for voids.
@@ -31,11 +29,11 @@ Automation script for the idle incremental game Trimps
 - Fixed a bug where the script could portal before doing void maps if your army was too strong after finishing a challenge.
 
 3/7/2016
-- Auto Heirlooms feature added. When enabled, the script will evaluate and 'carry' the best heirlooms, as well as suggest upgrades for equipped heirlooms based on their effect per cost. <b> For carrying, the script will only compare and swap out higher rarity/better items with the SAME TYPE. This means if you want to keep the best shield and staff, you need to already have a shield and staff in there. </b>As of right now, the evaluations are based ONLY on the following mods (listed by their precedence/weighting):<br>
-Shield: Void Map Drop Chance/Trimp Attack, Crit Chance/Crit Damage<br>
-Staff: Miner Efficiency, Lumberjack/Farmer/Dragimp Efficiency<br>
-This also means that recommended upgrades are only suggested for these mods (as compared to any other of the evaluated mods present). If you have an item with only one evaluated mod, it will always be the 'recommended' upgrade. For the purposes of carrying, rarity trumps all of the stat evaluations.
-I believe the evaluations for the damage stats (crit and trimp attack), are based on fairly accurate calculations of the overall effect on your dps (if you are good at this kind of math stuff I would love for you to scruitinize the calculations). Other stats are evaluated on a sort of weighting system, with Void Map Drop Chance weighted at 1 (equal to the evaluations of dps stats, therefore all of the considered shield stats are currently weighted equally). Staff stats are weighted as miner effiency .75 and farmer/lumber/dragimp as .5 (though they are only weighed against other staff stats right now).
+- Auto Heirlooms feature added. When enabled, the script will evaluate and 'carry' the best heirlooms, as well as suggest upgrades for equipped heirlooms based on their effect per cost. **For carrying, the script will only compare and swap out higher rarity/better items with the SAME TYPE. This means if you want to keep the best shield and staff, you need to already have a shield and staff in there.** As of right now, the evaluations are based ONLY on the following mods (listed by their precedence/weighting):
+  - Shield: Void Map Drop Chance/Trimp Attack, Crit Chance/Crit Damage
+  - Staff: Miner Efficiency, Lumberjack/Farmer/Dragimp Efficiency
+  - This also means that recommended upgrades are only suggested for these mods (as compared to any other of the evaluated mods present). If you have an item with only one evaluated mod, it will always be the 'recommended' upgrade. For the purposes of carrying, rarity trumps all of the stat evaluations.
+  - I believe the evaluations for the damage stats (crit and trimp attack), are based on fairly accurate calculations of the overall effect on your dps (if you are good at this kind of math stuff I would love for you to scrutinize the calculations). Other stats are evaluated on a sort of weighting system, with Void Map Drop Chance weighted at 1 (equal to the evaluations of dps stats, therefore all of the considered shield stats are currently weighted equally). Staff stats are weighted as miner efficiency .75 and farmer/lumber/dragimp as .5 (though they are only weighed against other staff stats right now).
 - It should be noted with this patch introducing ways to increase your critical hits and damage by quite a bit, that the script has never (and currently does not) consider crits in any of its damage calculations for you. It does not seem to have a place in the standard speed-running portion of a run, and should just naturally give you better performance during 'farming' phases and void maps. As with any feature/subject, I am open to discussion/suggestions.
 - The custom autoPortal setting now includes an associated challenge selection. This should facilitate running challenges but continuing to a higher desired level to run void maps for heirlooms.
 - All automatic tooltip closing should now be gone, thanks to some source code edits by Greensatellite.
@@ -63,10 +61,9 @@ I believe the evaluations for the damage stats (crit and trimp attack), are base
 - autoMaps will now abandon the army for the purposes of prestige mapping and void mapping
 - Added special conditions to the void maps difficulty check for toxicity and balance
 - Added an advanced setting for void maps difficulty check. It is the number of hits in dominance stance you want to be able to take before attempting a void map. Higher values make the script get you stronger before trying. Defaults to 2 if user has entered 0 or less.
-- <strike>Void maps difficulty check has become more stringint by a factor of 4 (wants to be able to take 4 hits in dominance as opposed to 1 before)</strike>
+- <strike>Void maps difficulty check has become more `stringint` by a factor of 4 (wants to be able to take 4 hits in dominance as opposed to 1 before)</strike>
 - Void maps difficulty check should now factor in Balance and Toxicity stacks modifiers.
 - Fixed a few bugs with void maps, including one that would cause them to be skipped completely.
-
 
 2/24/2016
 - New option for Trapping trimps. When on, it will turn on auto-build traps, automatically build and collect traps when needed. For those that don't really need traps, interference if you happen to keep it on should be minimal.
@@ -99,16 +96,15 @@ I believe the evaluations for the damage stats (crit and trimp attack), are base
 - Fixed a bug where autostance was using dominance before it was available
 
 2/21/2016
- - Void maps option. For now just a manual entry of what zone you want all your void maps completed. If you are on a tox run, it will get max tox stacks first.
- - New option for number of wormholes to purchase
- - New option for breed firing (see below)
- - Tooltips are no longer spam closed on buying upgrades or buildings.
- - Fix for gateway/collector housing issues. Building logic will no longer consider purchasing gateways if they cannot be afforded right now. This will hopefully prevent the suspension of all housing purchases to collect fragments to buy a gateway.
- - (Experimental)Several logic changes to improve helium per hour, mostly focused around avoiding pauses to wait for breeding to fill the bar. Included in this is a new option that will fire all lumberjacks and miners to get them breeding when needed. 
- - Adjusted Automation settings sizes to be slightly smaller, 6 per row
- - Adjusted colors for dark theme. Must reload while dark theme is active.
- - Misc bugfixes
-
+- Void maps option. For now just a manual entry of what zone you want all your void maps completed. If you are on a tox run, it will get max tox stacks first.
+- New option for number of wormholes to purchase
+- New option for breed firing (see below)
+- Tooltips are no longer spam closed on buying upgrades or buildings.
+- Fix for gateway/collector housing issues. Building logic will no longer consider purchasing gateways if they cannot be afforded right now. This will hopefully prevent the suspension of all housing purchases to collect fragments to buy a gateway.
+- (Experimental)Several logic changes to improve helium per hour, mostly focused around avoiding pauses to wait for breeding to fill the bar. Included in this is a new option that will fire all lumberjacks and miners to get them breeding when needed. 
+- Adjusted Automation settings sizes to be slightly smaller, 6 per row
+- Adjusted colors for dark theme. Must reload while dark theme is active.
+- Misc bugfixes
 
 2-16-2016
 - Graphs now only update on-demand. This means when clicking the graphs button, or clicking the new refresh button while in the graphs.
@@ -116,50 +112,41 @@ I believe the evaluations for the damage stats (crit and trimp attack), are base
 - Removed the resources graph and replaced it with a zone clear time graph. This graph shows your zone clear time in seconds. The x- axis value should correspond to the clear time for that zone (value at x-axis 10 is how long it took you to clear zone 10, in seconds).
 - Graphs module should be able to be used stand-alone
 
-some older date 2/10/2016?
-
+Some older date 2/10/2016?
 - Added option to include a challenge in helium per hour autoPortal setting. For example with electricity runs where your helium/hr can continue to grow after clearing the challenge, you would select Helium Per Hour as your autoportal setting, and choose Electricity from the second dropdown that appears. AutoPortal won't portal with a challenge active, so any zones prior to finishing a challenge where your he/hr dropped won't cause a portal, but any after finishing the challenge will.
-
 - (Experimental) Added an auto-portal option that unlocks after you clear zone 80. Support for repeatable challenges, helium per hour, and custom zone portals. Electricity and crushed options will require automaps to be on.
-
 - Added a clear data button to graphs which will clear all data, excluding the current portal.
-
 - Made some adjustments to geneticist timer code to avoid long delays waiting for breed bar to fill after purchasing large amounts of housing.
-
 - Nom and Toxicity breed timer now set at 15 sec when using Manage breed timer option.
+- On a toxicity run, manually entering the following into the console will force the script to get max toxicity stacks on all zones 60 and above, for a max helium run for bone portal: `heliumGrowing = true`. Make sure to set it back to false after your long run(or reload).
 
-- On a toxicity run, manually entering the following into the console will force the script to get max toxicity stacks on all zones 60 and above, for a max helium run for bone portal:   heliumGrowing = true      Make sure to set it back to false after your long run(or reload).
-  
-#Installation  
-<b>Please backup your game via export before and during use to prevent losing your save due to corruption!  </b><br>
+## Installation
+**Please backup your game via export before and during use to prevent losing your save due to corruption!**
 
-If you would like to use only the graphs module, replace AutoTrimps2.js with Graphs.js in the bookmark or your userscript.
+If you would like to use only the graphs module, replace `AutoTrimps2.js` with `Graphs.js` in the bookmark or your userscript.
 
+- Install greasemonkey/tampermonkey
+- Open the tampermonkey dashboard and go to utilities – in the URL box paste https://raw.githubusercontent.com/zininzinin/AutoTrimps/gh-pages/user.js and import
+- Alternatively, paste the contents of `user.js` into a user script - go to https://trimps.github.io
+- You will know you have the script loaded if you see the Automation and Graphs buttons in the game menu at the bottom
 
--install greasemonkey/tampermonkey  
--Open the tampermonkey dashboard and go to utilities
--in the URL box paste https://raw.githubusercontent.com/zininzinin/AutoTrimps/gh-pages/user.js and import  
--alternatively, paste the contents of user.js into a user script
--go to https://trimps.github.io  
--you will know you have the script loaded if you see the Automation and Graphs buttons in the game menu at the bottom
-  
 V2 is now bookmark compatible. Create new bookmark and set its target to:
-```
+
+```js
 javascript:with(document)(head.appendChild(createElement('script')).src='https://zininzinin.github.io/AutoTrimps/AutoTrimps2.js')._
 ```
+
 You can also paste V2 into the console of the page. Geez so many options :/
 
 Feel free to submit any bugs/suggestions as issues here on github.
-  
-I'm going to open up my discord channel for chat. Here is the link if you would like to come hang and chat about AutoTrimps:  
-https://discord.gg/0VbWe0dxB9kIfV2C  
 
+I'm going to open up my discord channel for chat. Here is the link if you would like to come hang and chat about AutoTrimps: https://discord.gg/0VbWe0dxB9kIfV2C
 
-<b>Colors for upgrades highlights</b>
+## Colors for upgrades highlights
 
-Red text on Equip - it's best in its category in terms of stat per resource. This also compares Gyms with Shields.
-White border - upgrade is not yet available
-Yellow border - upgrade is available, but not affordable
-Orange border - upgrade is available, affordable, but will actually reduce stat in qestion
-Red border - you have enough resources to level equip after upgrade to surpass it's current stats.
-Upgrade texts are also colored accordingly.
+- Red text on Equip - it's best in its category in terms of stat per resource. This also compares Gyms with Shields.
+- White border - upgrade is not yet available
+- Yellow border - upgrade is available, but not affordable
+- Orange border - upgrade is available, affordable, but will actually reduce stat in question
+- Red border - you have enough resources to level equip after upgrade to surpass it's current stats.
+- Upgrade texts are also colored accordingly.
