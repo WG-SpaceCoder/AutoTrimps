@@ -345,7 +345,7 @@ var lootData = {
     metal: [], wood:[], food:[], gems:[]
 };
 function filterLoot (loot, amount, jest, fromGather) {
-    if(loot == 'science' || loot == 'fragments') return;
+    if(loot != 'wood' || loot != 'metal' || loot != 'food' || loot != 'gems') return;
     if(jest) {
         filteredLoot.produced[loot] += amount;
         filteredLoot.looted[loot] -= amount;
