@@ -170,14 +170,14 @@ function gatherInfo() {
         allSaveData = [];
     }
     //clear filtered loot data upon portaling. <5 check to hopefully throw out bone portal shenanigans
-  /*  if(allSaveData[allSaveData.length -1].totalPortals != game.global.totalPortals && game.global.world < 5) {
+    if(allSaveData[allSaveData.length -1].totalPortals != game.global.totalPortals && game.global.world < 5) {
     	for(var r in filteredLoot) {
     		for(var b in filteredLoot[r]){
     			filteredLoot[r][b] = 0;
     		}
     	}
     }
-    */
+    
     if (allSaveData.length === 0) {
         pushData();
     } else if (allSaveData[allSaveData.length - 1].world != game.global.world) {
@@ -340,7 +340,7 @@ function updateCustomStats() {
     var heHr = prettify(Math.floor(game.resources.helium.owned / timeThisPortal));
     document.getElementById('customHeHour').innerHTML = heHr + "/Hr";
 }
-
+*/
 var filteredLoot = {
     'produced': {metal: 0, wood: 0, food: 0, gems: 0},
     'looted': {metal: 0, wood: 0, food: 0, gems: 0}
@@ -429,7 +429,7 @@ function addResCheckMax(what, number, noStat, fromGather, nonFilteredLoot) {
 }
 
 //END game function overwrite
-*/
+
 var allSaveData = [];
 var graphData = [];
 var tmpGraphData = JSON.parse(localStorage.getItem('allSaveData'));
