@@ -1919,7 +1919,7 @@ function manageGenes() {
 //Logic Loop////////////////////////////
 ////////////////////////////////////////
 
-initializeAutoTrimps();
+
 
 //This is totally cheating Only use for debugging
 // game.settings.speed = 1;
@@ -1999,5 +1999,6 @@ function mainLoop() {
 }
 
 function delayStart() {
-    setInterval(mainLoop, runInterval);
+	initializeAutoTrimps();
+    	setInterval(mainLoop, runInterval);
 }
