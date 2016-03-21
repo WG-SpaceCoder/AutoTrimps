@@ -440,4 +440,4 @@ if (tmpGraphData !== null) {
 
 
 setInterval(gatherInfo, 1000);
-//setInterval(getLootData, 30000);
+
