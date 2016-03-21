@@ -169,7 +169,8 @@ function gatherInfo() {
     if (allSaveData === null) {
         allSaveData = [];
     }
-    if(allSaveData[allSaveData.length -1].portal != game.global.totalPortals && game.global.world < 5) {
+    //clear filtered loot data upon portaling. <5 check to hopefully throw out bone portal shenanigans
+    if(allSaveData[allSaveData.length -1].totalPortals != game.global.totalPortals && game.global.world < 5) {
     	for(var r in filteredLoot) {
     		for(var b in filteredLoot[r]){
     			filteredLoot[r][b] = 0;
@@ -345,10 +346,12 @@ var filteredLoot = {
 var lootData = {
     metal: [], wood:[], food:[], gems:[]
 };
+//track loot gained. jest == from jest/chronoimp
 function filterLoot (loot, amount, jest, fromGather) {
     if(loot != 'wood' || loot != 'metal' || loot != 'food' || loot != 'gems') return;
     if(jest) {
         filteredLoot.produced[loot] += amount;
+        //subtract from looted because this loot will go through addResCheckMax which will add it to looted
         filteredLoot.looted[loot] -= amount;
     }
     else if (fromGather) filteredLoot.produced[loot] += amount;
