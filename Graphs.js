@@ -348,7 +348,7 @@ var lootData = {
 };
 //track loot gained. jest == from jest/chronoimp
 function filterLoot (loot, amount, jest, fromGather) {
-    if(loot != 'wood' || loot != 'metal' || loot != 'food' || loot != 'gems') return;
+    if(loot != 'wood' && loot != 'metal' && loot != 'food' && loot != 'gems') return;
     if(jest) {
         filteredLoot.produced[loot] += amount;
         //subtract from looted because this loot will go through addResCheckMax which will add it to looted
