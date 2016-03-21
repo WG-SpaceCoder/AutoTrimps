@@ -515,6 +515,20 @@ function evaluateMods(loom, location, upgrade) {
 					}
 				}
 				break;
+			case 'gemsDrop':
+				tempEff = 0.75*loom.mods[m][1]/100;
+				eff += tempEff;
+				if(upgrade) {
+					steps = game.heirlooms.defaultSteps[loom.rarity];
+					tempEff = (0.75*steps[2]/100)/((game.heirlooms.Staff.gemsDrop.currentBonus/100) + 1);
+					tempEff = tempEff / getModUpgradeCost(loom, m);
+					if(tempEff > bestUpgrade.effect) {
+						bestUpgrade.effect = tempEff;
+						bestUpgrade.name = 'gemsDrop';
+						bestUpgrade.index = m;
+					}
+				}
+				break;
 			case 'FarmerSpeed':
 				tempEff = 0.5*loom.mods[m][1]/100;
 				eff += tempEff;
@@ -544,7 +558,7 @@ function evaluateMods(loom, location, upgrade) {
 				}
 				break;
 			case 'DragimpSpeed':
-				tempEff = 0.5*loom.mods[m][1]/100;
+				tempEff = 0.75*loom.mods[m][1]/100;
 				eff += tempEff;
 				if(upgrade) {
 					steps = game.heirlooms.defaultSteps[loom.rarity];
