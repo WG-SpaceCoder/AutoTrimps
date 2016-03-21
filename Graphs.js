@@ -308,7 +308,8 @@ function setGraphData(graph) {
             break;
             
             case 'Loot Sources':
-            graphData = [name: 'Loot Sources', data: lootData];
+            	graphData = [];
+            graphData[0] = {name: 'Loot Sources', data: lootData};
             title = 'Loot Sources';
             xTitle = 'Time';
             yTitle = 'Ratio Looted:Produced'
