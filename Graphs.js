@@ -363,7 +363,9 @@ function getLootData() {
     var loots = ['metal', 'wood', 'food', 'gems'];
     for(var r in loots){
         var name = loots[r];
-        lootData[name].push(filteredLoot.looted[name]/filteredLoot.produced[name]);
+        //avoid /0 NaN
+        if(filteredLoot.produced[name])
+        	lootData[name].push(filteredLoot.looted[name]/filteredLoot.produced[name]);
         if(lootData[name].length > 20)lootData[name].shift();
     }
 }
