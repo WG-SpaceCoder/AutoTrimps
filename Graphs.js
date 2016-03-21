@@ -315,7 +315,7 @@ function setGraphData(graph) {
             break;
             
             case 'Loot Sources':
-            	graphData = [];
+            graphData = [];
             graphData[0] = {name: 'Metal', data: lootData.metal};
             graphData[1] = {name: 'Wood', data: lootData.wood};
             graphData[2] = {name: 'Food', data: lootData.food};
