@@ -16,7 +16,7 @@ settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
 document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style="display: none;"><div id="graph" style="margin-bottom: 2vw;margin-top: 2vw;"></div></div>';
 
 //Create the dropdown for what graph to show
-var graphList = ['HeliumPerHour', 'Helium', 'Clear Time', 'Void Maps'];
+var graphList = ['HeliumPerHour', 'Helium', 'Clear Time', 'Void Maps', 'Loot Sources'];
 var btn = document.createElement("select");
 btn.id = 'graphSelection';
 if(game.options.menu.darkTheme.enabled == 2) btn.setAttribute("style", "color: #C8C8C8");
@@ -54,13 +54,6 @@ document.getElementById('graphParent').appendChild(btn2);
 var tips = document.createElement('div');
 tips.innerHTML = 'Tips: You can zoom by dragging a box around an area. You can turn series off by clicking them on the legend.';
 document.getElementById('graphParent').appendChild(tips);
-
-    var heHour = document.createElement("SPAN");
-    heHour.setAttribute("class", "ownedArea");
-    heHour.setAttribute("style", "display: block; opacity: 1; color:white;");
-    heHour.setAttribute("id", "customHeHour");
-    gameHe = document.getElementById('helium');
-    gameHe.appendChild(heHour);
 
 
 function clearData(portal) {
@@ -176,7 +169,15 @@ function gatherInfo() {
     if (allSaveData === null) {
         allSaveData = [];
     }
-
+    //clear filtered loot data upon portaling. <5 check to hopefully throw out bone portal shenanigans
+  /*  if(allSaveData[allSaveData.length -1].totalPortals != game.global.totalPortals && game.global.world < 5) {
+    	for(var r in filteredLoot) {
+    		for(var b in filteredLoot[r]){
+    			filteredLoot[r][b] = 0;
+    		}
+    	}
+    }
+    */
     if (allSaveData.length === 0) {
         pushData();
     } else if (allSaveData[allSaveData.length - 1].world != game.global.world) {
@@ -313,13 +314,25 @@ function setGraphData(graph) {
             xTitle = 'Portal';
             yTitle = 'Void Maps'
             break;
+           /* 
+            case 'Loot Sources':
+            graphData = [];
+            graphData[0] = {name: 'Metal', data: lootData.metal};
+            graphData[1] = {name: 'Wood', data: lootData.wood};
+            graphData[2] = {name: 'Food', data: lootData.food};
+            graphData[3] = {name: 'Gems', data: lootData.gems};
+            title = 'Loot Sources';
+            xTitle = 'Time';
+            yTitle = 'Ratio Looted:Produced'
+            break;
+            */
     }
     if (oldData != JSON.stringify(graphData)) {
         setGraph(title, xTitle, yTitle, valueSuffix, graphData);
     }
 }
 
-
+/*
 function updateCustomStats() {
     var timeThisPortal = new Date().getTime() - game.global.portalTime;
     timeThisPortal /= 3600000;
@@ -328,11 +341,95 @@ function updateCustomStats() {
     document.getElementById('customHeHour').innerHTML = heHr + "/Hr";
 }
 
+var filteredLoot = {
+    'produced': {metal: 0, wood: 0, food: 0, gems: 0},
+    'looted': {metal: 0, wood: 0, food: 0, gems: 0}
+}
+var lootData = {
+    metal: [], wood:[], food:[], gems:[]
+};
+//track loot gained. jest == from jest/chronoimp
+function filterLoot (loot, amount, jest, fromGather) {
+    if(loot != 'wood' && loot != 'metal' && loot != 'food' && loot != 'gems') return;
+    if(jest) {
+        filteredLoot.produced[loot] += amount;
+        //subtract from looted because this loot will go through addResCheckMax which will add it to looted
+        filteredLoot.looted[loot] -= amount;
+    }
+    else if (fromGather) filteredLoot.produced[loot] += amount;
+    else filteredLoot.looted[loot] += amount;
+    //console.log('item is: ' + loot + ' amount is: ' + amount);
+}
 
+function getLootData() {
+    var loots = ['metal', 'wood', 'food', 'gems'];
+    for(var r in loots){
+        var name = loots[r];
+        //avoid /0 NaN
+        if(filteredLoot.produced[name])
+        	lootData[name].push(filteredLoot.looted[name]/filteredLoot.produced[name]);
+        if(lootData[name].length > 20)lootData[name].shift();
+    }
+}
 
+setInterval(getLootData, 30000);
 
+//overwriting default game functions!!!!!!!!!!!!!!!!!!!!!!
+game.badGuys.Jestimp.loot = 
+function() {
+    var elligible = ["food", "wood", "metal", "science"];
+				if (game.jobs.Dragimp.owned > 0) elligible.push("gems");
+				if (game.jobs.Explorer.locked == 0) elligible.push("fragments");
+				var roll = Math.floor(Math.random() * elligible.length);
+				var item = elligible[roll];
+				var amt = simpleSeconds(item, 45);
+				amt = scaleToCurrentMap(amt);
+				addResCheckMax(item, amt);
+				filterLoot(item, amt, true);
+				message("That Jestimp gave you " + prettify(amt) + " " + item + "!", "Loot", "*dice", "exotic");
+				game.unlocks.impCount.Jestimp++;
+};
 
+game.badGuys.Chronoimp.loot = 
+function () {
+				var elligible = ["food", "wood", "metal", "science"];
+				if (game.jobs.Dragimp.owned > 0) elligible.push("gems");
+				if (game.jobs.Explorer.locked == 0) elligible.push("fragments");
+				var cMessage = "That Chronoimp dropped ";
+				for (var x = 0; x < elligible.length; x++){
+					var item = elligible[x];
+					var amt = simpleSeconds(item, 5);
+					amt = scaleToCurrentMap(amt);
+					addResCheckMax(item, amt, null, null, true);
+					filterLoot(item, amt, true);
+					cMessage += prettify(amt) + " " + item;
+					if (x == (elligible.length - 1)) cMessage += "!";
+					else if (x == (elligible.length - 2)) cMessage += ", and ";
+					else cMessage += ", ";
+				}
+				message(cMessage, "Loot", "hourglass", "exotic");
+				game.unlocks.impCount.Chronoimp++;
+};
 
+function addResCheckMax(what, number, noStat, fromGather, nonFilteredLoot) {
+    filterLoot(what, number, null, fromGather);
+    var res = game.resources[what];
+	if (res.max == -1) {
+		res.owned += number;
+		if (!noStat && what == "gems") game.stats.gemsCollected.value += number;
+		return;
+	}
+	var newMax = res.max + (res.max * game.portal.Packrat.modifier * game.portal.Packrat.level);
+	newMax = calcHeirloomBonus("Shield", "storageSize", newMax);
+    if (res.owned + number <= newMax) res.owned += number;
+    else res.owned = newMax;
+	if (nonFilteredLoot && game.options.menu.useAverages.enabled){
+		addAvg(what, number);
+	}
+}
+
+//END game function overwrite
+*/
 var allSaveData = [];
 var graphData = [];
 var tmpGraphData = JSON.parse(localStorage.getItem('allSaveData'));
@@ -343,4 +440,4 @@ if (tmpGraphData !== null) {
 
 
 setInterval(gatherInfo, 1000);
-setInterval(updateCustomStats, 1000);
+

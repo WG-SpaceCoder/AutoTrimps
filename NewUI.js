@@ -54,8 +54,8 @@ createSetting('VoidMaps', 'Void Maps', 'The zone at which you want all your void
 // createSetting('', '', '', 'value', '30');
 //Dropdown + context sensitive
 createSetting('Prestige', 'Prestige', 'Acquire prestiges through the selected item (inclusive) as soon as they are available in maps. Forces equip first mode. Automap must be enabled.', 'dropdown', 'Off', ['Off', 'Supershield', 'Dagadder', 'Bootboost', 'Megamace', 'Hellishmet', 'Polierarm', 'Pantastic', 'Axeidic', 'Smoldershoulder', 'Greatersword', 'Bestplate', 'Harmbalest', 'GambesOP']);
-createSetting('AutoPortal', 'Auto Portal', 'Automatically portal. Will NOT auto-portal if you have a challenge active. ', 'dropdown', 'Off', ['Off', 'Helium Per Hour', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity', 'Custom']);
-createSetting('HeliumHourChallenge', 'Challenge for Helium per Hour and Custom', 'Automatically portal with this challenge when using helium per hour or custom autoportal.', 'dropdown', 'None', ['None', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity']);
+createSetting('AutoPortal', 'Auto Portal', 'Automatically portal. Will NOT auto-portal if you have a challenge active. ', 'dropdown', 'Off', ['Off', 'Helium Per Hour', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity', 'Watch', 'Lead', 'Custom']);
+createSetting('HeliumHourChallenge', 'Challenge for Helium per Hour and Custom', 'Automatically portal with this challenge when using helium per hour or custom autoportal.', 'dropdown', 'None', ['None', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity', 'Watch', 'Lead']);
 createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after clearing this level', 'value', '200');
 
 //advanced settings
@@ -343,7 +343,7 @@ function updateCustomButtons() {
     
     var status = document.getElementById('autoMapStatus');
     if(!autoTrimpSettings.RunMapsWhenStuck.enabled) status.innerHTML = 'Off';
-   else if(needPrestige) status.innerHTML = 'Prestige';
+   else if(needPrestige && !doVoids) status.innerHTML = 'Prestige';
    else if(doVoids && voidCheckPercent == 0) status.innerHTML = 'Void Maps: ' + game.global.totalVoidMaps + ' remaining';
    else if(needToVoid && !doVoids && game.global.totalVoidMaps > 0 && !stackingTox) status.innerHTML = 'Prepping for Voids';
    else if(doVoids && voidCheckPercent > 0) status.innerHTML = 'Farming to do Voids: ' + voidCheckPercent + '%';

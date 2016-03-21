@@ -21,6 +21,7 @@ var breedFire = false;
 var shouldFarm = false;
 var enoughDamage = false;
 var enoughHealth = false;
+var newCoord = false;
 
 var noFight = 0;
 
@@ -873,10 +874,10 @@ function getBreedTime(remaining) {
 function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
-    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
-    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
     toggleSettingsMenu();
     toggleSettingsMenu();
 }
@@ -908,6 +909,7 @@ function buyUpgrades() {
         if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < (Math.floor(game.upgrades.Gigastation.done * getPageSetting('DeltaGigastation')) + getPageSetting('FirstGigastation')) : game.buildings.Warpstation.owned < getPageSetting('FirstGigastation'))) continue;
         if ((!game.upgrades.Scientists.done && upgrade != 'Battle') ? (available && upgrade == 'Scientists' && game.upgrades.Scientists.allowed) : (available)) {
             buyUpgrade(upgrade, true, true);
+            if(upgrade == 'Coordination') newCoord = true;
             //debug('bought upgrade ' + upgrade);
         }
     }
@@ -1080,14 +1082,21 @@ function autoLevelEquipment() {
     };
     var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
     var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
+    
+    //below challenge multiplier not necessarily accurate, just fudge factors
     if(game.global.challengeActive == "Toxicity") {
     	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
     	if(game.global.world < 61)
     		enemyDamage *= 2;
     	enemyHealth *= 2;
     }
-    enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
-    enoughDamage = (baseDamage * 4 > enemyHealth);
+    if(game.global.challengeActive == 'Lead') {
+    	enemyDamage *= 2.5;
+    	enemyHealth *= 7;
+    }
+    //change name to make sure these are local to the function
+    var enoughHealthE = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
+    var enoughDamageE = (baseDamage * 4 > enemyHealth);
 
     for (var equipName in equipmentList) {
         var equip = equipmentList[equipName];
@@ -1148,14 +1157,14 @@ function autoLevelEquipment() {
             var DaThing = equipmentList[Best[stat].Name];
             document.getElementById(Best[stat].Name).style.color = Best[stat].Wall ? 'orange' : 'red';
             //If we're considering an attack item, we want to buy weapons if we don't have enough damage, or if we don't need health (so we default to buying some damage)
-            if (getPageSetting('BuyWeapons') && DaThing.Stat == 'attack' && (!enoughDamage || enoughHealth)) {
+            if (getPageSetting('BuyWeapons') && DaThing.Stat == 'attack' && (!enoughDamageE || enoughHealthE)) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
                     buyEquipment(Best[stat].Name, null, true);
                 }
             }
             //If we're considering a health item, buy it if we don't have enough health, otherwise we default to buying damage
-            if (getPageSetting('BuyArmor') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealth) {
+            if (getPageSetting('BuyArmor') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealthE) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
                     buyEquipment(Best[stat].Name, null, true);
@@ -1287,12 +1296,25 @@ function autoStance() {
         }
         var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow' || game.global.voidBuff == 'doubleAttack');
         var enemyHealth = enemy.health;
+        //think this is fluctuation in calculateDamage();
         var enemyDamage = enemy.attack * 1.19;
-        var dDamage = enemyDamage - baseBlock / 2 > enemyDamage * 0.2 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2;
+        if (game.global.challengeActive == 'Lead') {
+			dDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+			xDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+			bDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+        }
+        if (game.global.challengeActive == 'Watch') {
+        	dDamage *= 1.25;
+        	xDamage *= 1.25;
+        	bDamage *= 1.25;
+        }
+        var pierceMod = 0;
+        if (game.global.challengeActive == "Lead" && ((game.global.world % 2) == 0)) pierceMod += (game.challenges.Lead.stacks * 0.001);
+        var dDamage = enemyDamage - baseBlock / 2 > enemyDamage * (0.2 + pierceMod) ? enemyDamage - baseBlock / 2 : enemyDamage * (0.2 + pierceMod);
         var dHealth = baseHealth/2;
-        var xDamage = enemyDamage - baseBlock > enemyDamage * 0.2 ? enemyDamage - baseBlock : enemyDamage * 0.2;
+        var xDamage = enemyDamage - baseBlock > enemyDamage * (0.2 + pierceMod) ? enemyDamage - baseBlock : enemyDamage * (0.2 + pierceMod);
         var xHealth = baseHealth;
-        var bDamage = enemyDamage - baseBlock * 4 > enemyDamage * 0.1 ? enemyDamage - baseBlock * 4 : enemyDamage * 0.1;
+        var bDamage = enemyDamage - baseBlock * 4 > enemyDamage * (0.1 + pierceMod) ? enemyDamage - baseBlock * 4 : enemyDamage * (0.1 + pierceMod);
         var bHealth = baseHealth/2;
     } else if (game.global.mapsActive && !game.global.preMapsActive) {
         if (typeof game.global.mapGridArray[game.global.lastClearedMapCell + 1] === 'undefined') {
@@ -1303,6 +1325,16 @@ function autoStance() {
         var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow');
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.19;
+        if (game.global.challengeActive == 'Lead') {
+			dDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+			xDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+			bDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+        }
+        if (game.global.challengeActive == 'Watch') {
+        	dDamage *= 1.25;
+        	xDamage *= 1.25;
+        	bDamage *= 1.25;
+        }
         var dDamage = enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0;
         var dHealth = baseHealth/2;
         var xDamage = enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : 0;
@@ -1311,12 +1343,13 @@ function autoStance() {
         var bHealth = baseHealth/2;
  
     }
+    	var drainChallenge = game.global.challengeActive == 'Nom' || game.global.challengeActive == "Toxicity";
     
     	if (game.global.challengeActive == "Electricity" || game.global.challengeActive == "Mapocalypse") {
 			dDamage+= dHealth * game.global.radioStacks * 0.1;
 			xDamage+= xHealth * game.global.radioStacks * 0.1;
 			bDamage+= bHealth * game.global.radioStacks * 0.1;
-		} else if (game.global.challengeActive == "Nom" || game.global.challengeActive == "Toxicity") {
+		} else if (drainChallenge) {
 			dDamage += dHealth/20;
 			xDamage += xHealth/20;
 			bDamage += bHealth/20;
@@ -1333,17 +1366,20 @@ function autoStance() {
 			xDamage += game.global.soldierHealth * 0.2;
 			bDamage += game.global.soldierHealth * 0.2;
 		}
-		
+	//double attack is OK if the buff isn't double attack, or we will survive a double attack, or we are going to one-shot them (so they won't be able to double attack)
+	var doubleAttackOK = game.global.voidBuff != 'doubleAttack' || ((newSquadRdy && dHealth > dDamage * 2) || dHealth - missingHealth > dDamage * 2) || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2);
+	var leadDamage = game.challenges.Lead.stacks * 0.0003;
+	//lead attack ok if challenge isn't lead, or we are going to one shot them, or we can survive the lead damage
+	var leadAttackOK = game.global.challengeActive != 'Lead' || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) || ((newSquadRdy && dHealth > dDamage + (dHealth * leadDamage)) || (dHealth - missingHealth > dDamage + (dHealth * leadDamage)));
 		//add voidcrit?
-
 		//this thing is getting too messy - any more special crap and this needs a bunch of flag variables or something
 	if (!game.global.preMapsActive && game.global.soldierHealth > 0) {
-		if (!enemyFast && game.upgrades.Dominance.done && enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) && (newSquadRdy || (dHealth - missingHealth > 0 && (game.global.challengeActive != 'Nom' && game.global.challengeActive != "Toxicity")) || ((game.global.challengeActive == 'Nom' || game.global.challengeActive == "Toxicity") && dHealth - missingHealth > dHealth/20))) {
+		if (!enemyFast && game.upgrades.Dominance.done && enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) && (newSquadRdy || (dHealth - missingHealth > 0 && !drainChallenge) || (drainChallenge && dHealth - missingHealth > dHealth/20))) {
 			if (game.global.formation != 2) {
 				setFormation(2);
 			}
 			//regular checks if voidBuff isn't double attack, or we are going to one-shot. Double damage checks if voidBuff is doubleattack
-		} else if (game.upgrades.Dominance.done && ((((newSquadRdy && dHealth > dDamage) || dHealth - missingHealth > dDamage) && (game.global.voidBuff != 'doubleAttack' || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2))) || ((newSquadRdy && dHealth > dDamage * 2) || dHealth - missingHealth > dDamage * 2))) {
+		} else if (game.upgrades.Dominance.done && ((newSquadRdy && dHealth > dDamage) || dHealth - missingHealth > dDamage) && doubleAttackOK && leadAttackOK) {
 			if (game.global.formation != 2) {
 				setFormation(2);
 			}
@@ -1376,13 +1412,15 @@ var needPrestige = false;
 var voidCheckPercent = 0;
 
 function autoMap() {
-	//if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 15
+	//allow script to handle abandoning
+        if(game.options.menu.alwaysAbandon.enabled == 1) toggleSetting('alwaysAbandon');
+        //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 15
         //add crit in somehow?
         if(!getPageSetting('DisableFarm')) {
         	shouldFarm = shouldFarm ? getEnemyMaxHealth(game.global.world) / baseDamage > 10 : getEnemyMaxHealth(game.global.world) / baseDamage > 15;
         }
-        
-	needToVoid = getPageSetting('VoidMaps') > 0 && game.global.totalVoidMaps > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids')));
+
+	needToVoid = getPageSetting('VoidMaps') > 0 && game.global.totalVoidMaps > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids'))) && (game.global.challengeActive != 'Lead' || game.global.lastClearedCell > 95);
     if (game.global.mapsUnlocked) {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
         var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
@@ -1393,11 +1431,15 @@ function autoMap() {
     	//enemyDamage *= 2;
     	enemyHealth *= 2;
     	}
+    	if(game.global.challengeActive == 'Lead') {
+    		enemyDamage *= 2.5;
+    		enemyHealth *= 2.5;
+    	}
     	if(game.global.totalVoidMaps == 0 || !needToVoid)
     		doVoids = false;
     	
-        var enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
-        var enoughDamage = (baseDamage * 4 > enemyHealth);
+        enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
+        enoughDamage = (baseDamage * 4 > enemyHealth);
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
         
@@ -1487,11 +1529,12 @@ function autoMap() {
 	        	shouldDoMap = theMap.id;
 	        	if(game.global.mapsActive && game.global.challengeActive == "Nom") {
 	        		if(game.global.mapGridArray[game.global.lastClearedMapCell + 1].nomStacks > 6) {
-	        			mapsClicked();
+	        			mapsClicked(true);
 	        		}
 	        	}
 	        	break;
         	}
+
 
             if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
                 if (theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
@@ -1553,9 +1596,23 @@ function autoMap() {
                 }
             }
         }
+        
+                 //don't map on even worlds if on Lead, except if person is dumb and wants to void on even	
+       	 if(game.global.challengeActive == 'Lead' && !doVoids && (game.global.world % 2 == 0 || game.global.lastClearedCell < 50)) {
+       	 		if(game.global.preMapsActive)
+       	    		mapsClicked();
+       	    	return;
+       	    }
         //repeat button management
         if (!game.global.preMapsActive) {
             if (game.global.mapsActive) {
+            	//if we bought a new coordination and we're in a map and have a new army ready, force abandon to get updated damage numbers
+            	if(newCoord && game.global.repeatMap && game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) {
+            		mapsClicked();
+            		mapsClicked();
+            		newCoord = false;
+            	}
+            	
                 //if we are doing the right map, and it's not a norecycle (unique) map, and we aren't going to hit max map bonus
                 if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle && (game.global.mapBonus < 9 || shouldFarm || stackingTox)) {
                     var targetPrestige = autoTrimpSettings.Prestige.selected;
@@ -1587,7 +1644,8 @@ function autoMap() {
         } else if (game.global.preMapsActive) {
             if (shouldDoMap == "world") {
                 mapsClicked();
-            } else if (shouldDoMap == "create") {
+            } 
+            else if (shouldDoMap == "create") {
             	//create a siphonology level map if shouldFarm and not prestiging (void map diff check consideration here?)
                 if(shouldDoMaps && shouldFarm && !needPrestige) document.getElementById("mapLevelInput").value = game.global.world - game.portal.Siphonology.level;
                 else document.getElementById("mapLevelInput").value = game.global.world;
@@ -1778,6 +1836,16 @@ function autoPortal() {
 				doPortal('Toxicity');
 			}
 			break;
+		case "Watch":
+			if(game.global.world > 180 && !game.global.challengeActive) {
+				pushData();
+				doPortal('Watch');
+			}
+		case "Lead":
+			if(game.global.world > 180 && !game.global.challengeActive) {
+				pushData();
+				doPortal('Lead');
+			}
 		case "Custom":
 			if(game.global.world > getPageSetting('CustomAutoPortal') && !game.global.challengeActive) {
 				pushData();
@@ -1816,13 +1884,14 @@ function manageGenes() {
         	//if(shouldFarm && !game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '30';
         	autoTrimpSettings.GeneticistTimer.value = '11';
         }
-        else autoTrimpSettings.GeneticistTimer.value = '30.5';
+        else autoTrimpSettings.GeneticistTimer.value = '30';
     }
+    var inDamageStance = game.upgrades.Dominance.done ? game.global.formation == 2 : game.global.formation == 0;
     var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
     //if we need to hire geneticists
     //Don't hire geneticists if total breed time remaining is greater than our target breed time
     //Don't hire geneticists if we have already reached 30 anti stacks (put off further delay to next trimp group)
-    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked && targetBreed > getBreedTime(true) && (game.global.lastBreedTime/1000 + getBreedTime(true) < 30) && game.resources.trimps.soldiers > 0) {
+    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked && targetBreed > getBreedTime(true) && (game.global.lastBreedTime/1000 + getBreedTime(true) < 30) && game.resources.trimps.soldiers > 0 && inDamageStance) {
     	//insert 10% of total food limit here? or cost vs tribute?
         //if there's no free worker spots, fire a farmer
         if (fWorkers < 1 && canAffordJob('Geneticist', false)) {
@@ -1865,7 +1934,7 @@ function manageGenes() {
 //Logic Loop////////////////////////////
 ////////////////////////////////////////
 
-initializeAutoTrimps();
+
 
 //This is totally cheating Only use for debugging
 // game.settings.speed = 1;
@@ -1935,6 +2004,7 @@ function mainLoop() {
         lowLevelFight = game.resources.trimps.maxSoldiers < (game.resources.trimps.owned - game.resources.trimps.employed) * 0.5 && (game.resources.trimps.owned - game.resources.trimps.employed) > game.resources.trimps.realMax() * 0.1 && game.global.world < 5 && game.global.sLevel > 0;
         if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || lowLevelFight )) {
             fightManual();
+            newCoord = false;
             // debug('triggered fight');
         }
     }
@@ -1944,5 +2014,6 @@ function mainLoop() {
 }
 
 function delayStart() {
-    setInterval(mainLoop, runInterval);
+	initializeAutoTrimps();
+    	setInterval(mainLoop, runInterval);
 }
