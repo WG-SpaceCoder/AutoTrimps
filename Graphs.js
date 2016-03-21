@@ -309,7 +309,10 @@ function setGraphData(graph) {
             
             case 'Loot Sources':
             	graphData = [];
-            graphData[0] = {name: 'Loot Sources', data: lootData};
+            graphData[0] = {name: 'Metal', data: lootData.metal};
+            graphData[1] = {name: 'Wood', data: lootData.wood};
+            graphData[2] = {name: 'Food', data: lootData.food};
+            graphData[3] = {name: 'Gems', data: lootData.gems};
             title = 'Loot Sources';
             xTitle = 'Time';
             yTitle = 'Ratio Looted:Produced'
