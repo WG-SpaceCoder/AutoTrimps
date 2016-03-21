@@ -1836,6 +1836,11 @@ function autoPortal() {
 				doPortal('Toxicity');
 			}
 			break;
+		case "Watch":
+			if(game.global.world > 180 && !game.global.challengeActive) {
+				pushData();
+				doPortal('Watch');
+			}
 		case "Lead":
 			if(game.global.world > 180 && !game.global.challengeActive) {
 				pushData();
