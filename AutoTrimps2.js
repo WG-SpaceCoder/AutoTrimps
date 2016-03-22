@@ -2024,7 +2024,6 @@ function mainLoop() {
         }
     }
 	if(game.resources.trimps.soldiers == 0) noFight ++;
-    saveSettings();
 
 }
 
