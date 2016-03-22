@@ -9,6 +9,7 @@ Automation script for the idle incremental game Trimps
 3/21/2016-2
 - Fixed a bug that could cause autoportal function to fall-though to custom auto-portal when selecting Watch or Lead
 - Added gems drops to mods efficiency calculations at .75 weight. Increased dragimp efficiency weighting to .75. This puts metalDrop, metalEfficiency, gemDrop, and gemEfficiency all weighted the same at .75. Farmer/lumberjack efficiency are at .5. Nothing else is considered (for staffs).
+- Settings now only save when you change a setting along with some other tweaks to loading and initializing the scripts.
 
 3/21/2016
 - Added support for Lead and Watch challenges. During Lead challenge, the script will only enter maps in odd zones past cell 50. Void maps will be completed at cell 97. Void maps should be done on an odd zone but the script will NOT enforce that.
