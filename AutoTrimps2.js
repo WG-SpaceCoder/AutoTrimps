@@ -997,7 +997,6 @@ function setTitle() {
     //for the dummies like me who always forget to turn automaps back on after portaling
     if(getPageSetting('RunUniqueMaps') && !game.upgrades.Battle.done && autoTrimpSettings.RunMapsWhenStuck.enabled == false) {
         settingChanged("RunMapsWhenStuck");
-        updateCustomButtons();
     }
 }
 
@@ -1960,7 +1959,7 @@ function manageGenes() {
 //     game.settings.speed = 2;
 // }, 1000);
 
-setTimeout(delayStart, 2500);
+setTimeout(delayStart, 2000);
 
 function mainLoop() {
 	game.global.addonUser = true;
@@ -2009,7 +2008,6 @@ function mainLoop() {
     //auto-close breaking the world textbox
     if(document.getElementById('tipTitle').innerHTML == 'The Improbability') cancelTooltip();
     autoLevelEquipment();
-    updateCustomButtons();
 
     if (getPageSetting('AutoFight')) {
         //Manually fight instead of using builtin auto-fight
@@ -2032,5 +2030,9 @@ function mainLoop() {
 
 function delayStart() {
 	initializeAutoTrimps();
-    	setInterval(mainLoop, runInterval);
+	setTimeout(delayStartAgain, 2000);
+}
+function delayStartAgain(){
+	 setInterval(mainLoop, runInterval);
+	 setInterval(updateCustomButtons, 10000);
 }
