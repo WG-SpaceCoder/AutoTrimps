@@ -1856,11 +1856,13 @@ function autoPortal() {
 				pushData();
 				doPortal('Watch');
 			}
+			break;
 		case "Lead":
 			if(game.global.world > 180 && !game.global.challengeActive) {
 				pushData();
 				doPortal('Lead');
 			}
+			break;
 		case "Custom":
 			if(game.global.world > getPageSetting('CustomAutoPortal') && !game.global.challengeActive) {
 				pushData();
