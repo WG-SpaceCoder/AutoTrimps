@@ -85,6 +85,11 @@ createSetting('VoidCheck', 'Void Difficulty Check', 'How many hits to be able to
 createSetting('DisableFarm', 'Disable Farming', 'Disables the farming section of the automaps algorithm. This will cause it to always return to the zone upon reaching 10 map stacks.', 'boolean', null, null, 'advancedSettings');
 createSetting('PauseScript', 'Pause AutoTrimps', 'Pause AutoTrimps (not including the graphs module)', 'boolean', null, null, 'advancedSettings');
 
+    //update dropdown selections
+    document.getElementById('Prestige').value = autoTrimpSettings.Prestige.selected;
+    document.getElementById('AutoPortal').value = autoTrimpSettings.AutoPortal.selected;
+    document.getElementById('HeliumHourChallenge').value = autoTrimpSettings.HeliumHourChallenge.selected;
+    document.getElementById('CustomAutoPortal').value = autoTrimpSettings.CustomAutoPortal.selected;
 
 function automationMenuInit() {
 
@@ -336,10 +341,7 @@ function updateCustomButtons() {
     //challenge for he/hr setting
     if (autoTrimpSettings.AutoPortal.selected == "Helium Per Hour" || autoTrimpSettings.AutoPortal.selected == "Custom") document.getElementById("HeliumHourChallenge").style.display = '';
     else document.getElementById("HeliumHourChallenge").style.display = 'none';
-    //update dropdown selections
-    document.getElementById('Prestige').value = autoTrimpSettings.Prestige.selected;
-    document.getElementById('AutoPortal').value = autoTrimpSettings.AutoPortal.selected;
-    document.getElementById('HeliumHourChallenge').value = autoTrimpSettings.HeliumHourChallenge.selected;
+
     
     var status = document.getElementById('autoMapStatus');
     if(!autoTrimpSettings.RunMapsWhenStuck.enabled) status.innerHTML = 'Off';
