@@ -251,6 +251,7 @@ function settingChanged(id) {
     	autoTrimpSettings[id].selected = document.getElementById(id).value;
     }
     updateCustomButtons();
+    saveSettings();
 }
 
 
@@ -313,6 +314,7 @@ function autoSetValue(id) {
     var txtNum = (num > -1) ? prettify(num) : 'Infinite';
     autoTrimpSettings[id].value = num;
     document.getElementById(id).textContent = ranstring + ': ' + txtNum;
+    saveSettings();
 }
 
 function updateValueFields() {
