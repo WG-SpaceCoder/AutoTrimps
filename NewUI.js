@@ -250,6 +250,7 @@ function settingChanged(id) {
     if (autoTrimpSettings[id].type == 'dropdown') {
     	autoTrimpSettings[id].selected = document.getElementById(id).value;
     }
+    updateCustomButtons();
 }
 
 
