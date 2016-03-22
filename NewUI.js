@@ -324,6 +324,18 @@ function updateValueFields() {
             if (elem != null) elem.textContent = autoTrimpSettings[setting].name + ': ' + ((autoTrimpSettings[setting].value > -1) ? prettify(autoTrimpSettings[setting].value) : 'Infinite');
         }
     }
+    //automaps status
+        var status = document.getElementById('autoMapStatus');
+    if(!autoTrimpSettings.RunMapsWhenStuck.enabled) status.innerHTML = 'Off';
+   else if(needPrestige && !doVoids) status.innerHTML = 'Prestige';
+   else if(doVoids && voidCheckPercent == 0) status.innerHTML = 'Void Maps: ' + game.global.totalVoidMaps + ' remaining';
+   else if(needToVoid && !doVoids && game.global.totalVoidMaps > 0 && !stackingTox) status.innerHTML = 'Prepping for Voids';
+   else if(doVoids && voidCheckPercent > 0) status.innerHTML = 'Farming to do Voids: ' + voidCheckPercent + '%';
+   else if(shouldFarm && !doVoids) status.innerHTML = 'Farming';
+   else if(stackingTox) status.innerHTML = 'Getting Tox Stacks';
+   else if(!enoughDamage) status.innerHTML = 'Want more damage';
+   else if (!enoughHealth) status.innerHTML = 'Want more health';
+   else if (enoughHealth && enoughDamage) status.innerHTML = 'Advancing';
 }
 
 function updateCustomButtons() {
@@ -347,17 +359,6 @@ function updateCustomButtons() {
     document.getElementById('HeliumHourChallenge').value = autoTrimpSettings.HeliumHourChallenge.selected;
     document.getElementById('CustomAutoPortal').value = autoTrimpSettings.CustomAutoPortal.selected;
     
-    var status = document.getElementById('autoMapStatus');
-    if(!autoTrimpSettings.RunMapsWhenStuck.enabled) status.innerHTML = 'Off';
-   else if(needPrestige && !doVoids) status.innerHTML = 'Prestige';
-   else if(doVoids && voidCheckPercent == 0) status.innerHTML = 'Void Maps: ' + game.global.totalVoidMaps + ' remaining';
-   else if(needToVoid && !doVoids && game.global.totalVoidMaps > 0 && !stackingTox) status.innerHTML = 'Prepping for Voids';
-   else if(doVoids && voidCheckPercent > 0) status.innerHTML = 'Farming to do Voids: ' + voidCheckPercent + '%';
-   else if(shouldFarm && !doVoids) status.innerHTML = 'Farming';
-   else if(stackingTox) status.innerHTML = 'Getting Tox Stacks';
-   else if(!enoughDamage) status.innerHTML = 'Want more damage';
-   else if (!enoughHealth) status.innerHTML = 'Want more health';
-   else if (enoughHealth && enoughDamage) status.innerHTML = 'Advancing';
 
 }
 
