@@ -19,8 +19,8 @@ var bestBuilding;
 var scienceNeeded;
 var breedFire = false;
 var shouldFarm = false;
-var enoughDamage = false;
-var enoughHealth = false;
+var enoughDamage = true;
+var enoughHealth = true;
 var newCoord = false;
 
 var noFight = 0;
