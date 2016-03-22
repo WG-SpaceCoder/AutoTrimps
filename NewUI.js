@@ -86,6 +86,7 @@ createSetting('DisableFarm', 'Disable Farming', 'Disables the farming section of
 createSetting('PauseScript', 'Pause AutoTrimps', 'Pause AutoTrimps (not including the graphs module)', 'boolean', null, null, 'advancedSettings');
 
 
+
 function automationMenuInit() {
 
     var settingBtnSrch = document.getElementsByClassName("btn btn-default");
@@ -249,6 +250,8 @@ function settingChanged(id) {
     if (autoTrimpSettings[id].type == 'dropdown') {
     	autoTrimpSettings[id].selected = document.getElementById(id).value;
     }
+    updateCustomButtons();
+    saveSettings();
 }
 
 
@@ -311,6 +314,7 @@ function autoSetValue(id) {
     var txtNum = (num > -1) ? prettify(num) : 'Infinite';
     autoTrimpSettings[id].value = num;
     document.getElementById(id).textContent = ranstring + ': ' + txtNum;
+    saveSettings();
 }
 
 function updateValueFields() {
@@ -336,10 +340,12 @@ function updateCustomButtons() {
     //challenge for he/hr setting
     if (autoTrimpSettings.AutoPortal.selected == "Helium Per Hour" || autoTrimpSettings.AutoPortal.selected == "Custom") document.getElementById("HeliumHourChallenge").style.display = '';
     else document.getElementById("HeliumHourChallenge").style.display = 'none';
+    
     //update dropdown selections
     document.getElementById('Prestige').value = autoTrimpSettings.Prestige.selected;
     document.getElementById('AutoPortal').value = autoTrimpSettings.AutoPortal.selected;
     document.getElementById('HeliumHourChallenge').value = autoTrimpSettings.HeliumHourChallenge.selected;
+    document.getElementById('CustomAutoPortal').value = autoTrimpSettings.CustomAutoPortal.selected;
     
     var status = document.getElementById('autoMapStatus');
     if(!autoTrimpSettings.RunMapsWhenStuck.enabled) status.innerHTML = 'Off';
