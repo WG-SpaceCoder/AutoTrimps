@@ -2034,5 +2034,6 @@ function delayStart() {
 }
 function delayStartAgain(){
 	 setInterval(mainLoop, runInterval);
-	 setInterval(updateCustomButtons, 10000);
+	 updateCustomButtons();
+	 //setInterval(updateCustomButtons, 10000);
 }
