@@ -113,8 +113,14 @@ function setGraph(title, xTitle, yTitle, valueSuffix, series, yType) {
         },
         yAxis: {
             title: {
-                text: yTitle,
-                type: yType,
+                text: yTitle
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }],
+            type: yType,
             dateTimeLabelFormats: { //force all formats to be hour:minute:second
             second: '%H:%M:%S',
             minute: '%H:%M:%S',
@@ -124,12 +130,6 @@ function setGraph(title, xTitle, yTitle, valueSuffix, series, yType) {
             month: '%H:%M:%S',
             year: '%H:%M:%S'
         }
-            },
-            plotLines: [{
-                value: 0,
-                width: 1,
-                color: '#808080'
-            }]
         },
         tooltip: {
             valueSuffix: valueSuffix
@@ -372,7 +372,7 @@ function setGraphData(graph) {
             break;
     }
     if (oldData != JSON.stringify(graphData)) {
-        setGraph(title, xTitle, yTitle, valueSuffix, graphData);
+        setGraph(title, xTitle, yTitle, valueSuffix, graphData, yType);
     }
 }
 
