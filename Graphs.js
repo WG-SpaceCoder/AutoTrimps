@@ -16,7 +16,7 @@ settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
 document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style="display: none;"><div id="graph" style="margin-bottom: 2vw;margin-top: 2vw;"></div></div>';
 
 //Create the dropdown for what graph to show
-var graphList = ['HeliumPerHour', 'Helium', 'Clear Time', 'Void Maps', 'Loot Sources'];
+var graphList = ['HeliumPerHour', 'Helium', 'Clear Time', 'Void Maps', 'Loot Sources', 'Run Time'];
 var btn = document.createElement("select");
 btn.id = 'graphSelection';
 if(game.options.menu.darkTheme.enabled == 2) btn.setAttribute("style", "color: #C8C8C8");
@@ -86,7 +86,7 @@ function autoPlusGraphMenu() {
     toggleSettingsMenu();
 }
 var chart1;
-function setGraph(title, xTitle, yTitle, valueSuffix, series) {
+function setGraph(title, xTitle, yTitle, valueSuffix, series, yType) {
     chart1 = new Highcharts.Chart({
         chart: {
             renderTo: 'graph',
@@ -114,6 +114,7 @@ function setGraph(title, xTitle, yTitle, valueSuffix, series) {
         yAxis: {
             title: {
                 text: yTitle
+                type: yType
             },
             plotLines: [{
                 value: 0,
@@ -195,7 +196,7 @@ function drawGraph() {
 }
 
 function setGraphData(graph) {
-    var title, xTitle, yTitle, valueSuffix, series;
+    var title, xTitle, yTitle, yType, valueSuffix, series;
     var oldData = JSON.stringify(graphData);
     valueSuffix = '';
     switch (graph) {
@@ -232,6 +233,7 @@ function setGraphData(graph) {
             title = 'Time to clear zone';
             xTitle = 'Zone';
             yTitle = 'Clear Time';
+            yType = 'Linear';
             valueSuffix = 'Seconds';
             break;
         case 'Helium':
@@ -250,6 +252,7 @@ function setGraphData(graph) {
             title = 'Helium';
             xTitle = 'Zone';
             yTitle = 'Helium'
+            yType = 'Linear';
             break;
         case 'HeliumPerHour':
             var currentPortal = -1;
@@ -283,6 +286,7 @@ function setGraphData(graph) {
             title = 'Helium/Hour';
             xTitle = 'Zone';
             yTitle = 'Helium';
+            yType = 'Linear';
             break;
             
             case 'Void Maps':
@@ -314,6 +318,7 @@ function setGraphData(graph) {
             title = 'Void Maps Per Portal';
             xTitle = 'Portal';
             yTitle = 'Void Maps';
+            yType = 'Linear';
             break;
            /* 
             case 'Loot Sources':
@@ -327,6 +332,35 @@ function setGraphData(graph) {
             yTitle = 'Ratio Looted:Produced'
             break;
             */
+            
+            case 'Run Time':
+            var currentPortal = -1;
+            var theChallenge = '';
+            graphData = [];
+            for (var i in allSaveData) {
+                if (allSaveData[i].totalPortals != currentPortal) {
+                    if(currentPortal == -1) {
+                        theChallenge = allSaveData[i].challenge;
+                        currentPortal = allSaveData[i].totalPortals;
+                        graphData.push({
+                        name: 'Run Time',
+                        data: [],
+                        type: 'column'
+                    });
+                        continue;
+                    }
+                    var theOne = allSaveData[i-1];
+                    var runTime = theOne.currentTime - theOne.portalTime;
+                    graphData[0].data.push([theOne.totalPortals, runTime]);
+                    theChallenge = allSaveData[i].challenge;
+                    currentPortal = allSaveData[i].totalPortals;
+                }
+            }
+            title = 'Total Run Time';
+            xTitle = 'Portal';
+            yTitle = 'Time';
+            yType = datetime;
+            break;
     }
     if (oldData != JSON.stringify(graphData)) {
         setGraph(title, xTitle, yTitle, valueSuffix, graphData);
