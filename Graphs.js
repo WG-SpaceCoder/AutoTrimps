@@ -359,7 +359,7 @@ function setGraphData(graph) {
             title = 'Total Run Time';
             xTitle = 'Portal';
             yTitle = 'Time';
-            yType = datetime;
+            yType = 'datetime';
             break;
     }
     if (oldData != JSON.stringify(graphData)) {
