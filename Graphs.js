@@ -113,7 +113,7 @@ function setGraph(title, xTitle, yTitle, valueSuffix, series, yType) {
         },
         yAxis: {
             title: {
-                text: yTitle
+                text: yTitle,
                 type: yType
             },
             plotLines: [{
