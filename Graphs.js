@@ -114,7 +114,16 @@ function setGraph(title, xTitle, yTitle, valueSuffix, series, yType) {
         yAxis: {
             title: {
                 text: yTitle,
-                type: yType
+                type: yType,
+            dateTimeLabelFormats: { //force all formats to be hour:minute:second
+            second: '%H:%M:%S',
+            minute: '%H:%M:%S',
+            hour: '%H:%M:%S',
+            day: '%H:%M:%S',
+            week: '%H:%M:%S',
+            month: '%H:%M:%S',
+            year: '%H:%M:%S'
+        }
             },
             plotLines: [{
                 value: 0,
