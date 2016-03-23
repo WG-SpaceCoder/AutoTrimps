@@ -231,7 +231,8 @@ function setGraphData(graph) {
             }
             title = 'Time to clear zone';
             xTitle = 'Zone';
-            yTitle = 'Clear Time'
+            yTitle = 'Clear Time';
+            valueSuffix = 'Seconds';
             break;
         case 'Helium':
             var currentPortal = -1;
@@ -281,7 +282,7 @@ function setGraphData(graph) {
             }
             title = 'Helium/Hour';
             xTitle = 'Zone';
-            yTitle = 'Helium'
+            yTitle = 'Helium';
             break;
             
             case 'Void Maps':
@@ -312,7 +313,7 @@ function setGraphData(graph) {
             }
             title = 'Void Maps Per Portal';
             xTitle = 'Portal';
-            yTitle = 'Void Maps'
+            yTitle = 'Void Maps';
             break;
            /* 
             case 'Loot Sources':
