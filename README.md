@@ -6,6 +6,9 @@ Automation script for the idle incremental game Trimps
 
 ## Recent changes
 
+3/22/2016
+- Prestige setting will now default to Polierarm instead of Off. Added some clarification about its function to the tooltip.
+
 3/21/2016-2
 - Fixed a bug that could cause autoportal function to fall-though to custom auto-portal when selecting Watch or Lead
 - Added gems drops to mods efficiency calculations at .75 weight. Increased dragimp efficiency weighting to .75. This puts metalDrop, metalEfficiency, gemDrop, and gemEfficiency all weighted the same at .75. Farmer/lumberjack efficiency are at .5. Nothing else is considered (for staffs).
