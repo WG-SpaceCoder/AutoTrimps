@@ -131,7 +131,9 @@ function setGraph(title, xTitle, yTitle, tooltip, series, yType) {
             year: '%H:%M:%S'
         }
         },
-        tooltip: tooltip,
+        tooltip: {
+        	pointFormatter: tooltip,
+        },
         legend: {
             layout: 'vertical',
             align: 'right',
@@ -370,14 +372,13 @@ function setGraphData(graph) {
             xTitle = 'Portal';
             yTitle = 'Time';
             yType = 'datetime';
-            tooltip = {
-            	pointFormatter: function () {
+            tooltip =  function () {
                 var ser = this.series;
                 return '<span style="color:' + ser.color + '" >●</span> ' +
                         ser.name + ': <b>' +
                         Highcharts.dateFormat('%H:%M:%S', this.y) + '</b><br>';
-            },
-            }
+            
+            };
             break;
     }
     if (oldData != JSON.stringify(graphData)) {
