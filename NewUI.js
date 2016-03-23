@@ -132,7 +132,11 @@ function automationMenuInit() {
 
     //create container for settings buttons
     document.getElementById("settingsRow").innerHTML += '<div id="autoSettings" style="display: none;margin-bottom: 2vw;margin-top: 2vw;"></div>';
-   
+   //shrink padding for fight buttons to help fit automaps button/status
+   	var btns = document.getElementsByClassName("fightBtn");
+		for (var x = 0; x < btns.length; x++){
+			btns[x].style.padding = "0.01vw 0.01vw"
+		}
 
 }
 
