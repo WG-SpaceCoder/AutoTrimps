@@ -6,6 +6,10 @@ Automation script for the idle incremental game Trimps
 
 ## Recent changes
 
+3/23/2016
+- Added a run time graph that displays the total run time for each of your portals. 
+- Large numbers should now be thousands delimited
+
 3/22/2016
 - Prestige setting will now default to Polierarm instead of Off. Added some clarification about its function to the tooltip.
 
