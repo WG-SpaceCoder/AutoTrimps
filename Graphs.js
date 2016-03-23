@@ -243,7 +243,7 @@ function setGraphData(graph) {
             yTitle = 'Clear Time';
             yType = 'Linear';
             tooltip ={
-            valueSuffix: 'Seconds';
+            valueSuffix: 'Seconds'
             };
             break;
         case 'Helium':
