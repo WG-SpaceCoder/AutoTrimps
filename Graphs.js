@@ -86,7 +86,7 @@ function autoPlusGraphMenu() {
     toggleSettingsMenu();
 }
 var chart1;
-function setGraph(title, xTitle, yTitle, valueSuffix, series, yType) {
+function setGraph(title, xTitle, yTitle, tooltip, series, yType) {
     chart1 = new Highcharts.Chart({
         chart: {
             renderTo: 'graph',
@@ -131,9 +131,7 @@ function setGraph(title, xTitle, yTitle, valueSuffix, series, yType) {
             year: '%H:%M:%S'
         }
         },
-        tooltip: {
-            valueSuffix: valueSuffix
-        },
+        tooltip: tooltip,
         legend: {
             layout: 'vertical',
             align: 'right',
@@ -205,9 +203,10 @@ function drawGraph() {
 }
 
 function setGraphData(graph) {
-    var title, xTitle, yTitle, yType, valueSuffix, series;
+    var title, xTitle, yTitle, yType, valueSuffix, series, tooltip;
     var oldData = JSON.stringify(graphData);
     valueSuffix = '';
+    tooltip = {};
     switch (graph) {
         case 'Clear Time':
             var graphData = [];
@@ -243,7 +242,9 @@ function setGraphData(graph) {
             xTitle = 'Zone';
             yTitle = 'Clear Time';
             yType = 'Linear';
-            valueSuffix = 'Seconds';
+            tooltip ={
+            valueSuffix: 'Seconds';
+            };
             break;
         case 'Helium':
             var currentPortal = -1;
@@ -369,10 +370,18 @@ function setGraphData(graph) {
             xTitle = 'Portal';
             yTitle = 'Time';
             yType = 'datetime';
+            tooltip = {
+            	pointFormatter: function () {
+                var ser = this.series;
+                return '<span style="color:' + ser.color + '" >●</span> ' +
+                        ser.name + ': <b>' +
+                        Highcharts.dateFormat('%H:%M:%S', this.y) + '</b><br>';
+            },
+            }
             break;
     }
     if (oldData != JSON.stringify(graphData)) {
-        setGraph(title, xTitle, yTitle, valueSuffix, graphData, yType);
+        setGraph(title, xTitle, yTitle, tooltip, graphData, yType);
     }
 }
 
