@@ -213,7 +213,8 @@ function setGraphData(graph) {
     formatter =  function () {
         var ser = this.series;
         return '<span style="color:' + ser.color + '" >●</span> ' +
-                ser.name + ': <b>' + this.y + '</b><br>';
+                ser.name + ': <b>' + 
+                Highcharts.numberFormat(this.y, 0,'.', ',') + valueSuffix + '</b><br>';
             };
             
     switch (graph) {
