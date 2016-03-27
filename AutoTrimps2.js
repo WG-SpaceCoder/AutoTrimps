@@ -1642,8 +1642,8 @@ function autoMap() {
                     if (!game.global.switchToMaps && ((shouldFarm && game.global.lastClearedCell > 79) || !shouldFarm)) {
                          mapsClicked();
                     }
-                    //if (prestige mapping or need to do void maps) abandon army if (a new army is ready or need to void map and we're almost done with the zone)
-                    if(game.global.switchToMaps && (doVoids || needPrestige) && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || (doVoids && game.global.lastClearedCell > 95)))
+                    //if (prestige mapping or need to do void maps or on lead in odd world) abandon army if (a new army is ready or need to void map and we're almost done with the zone)
+                    if(game.global.switchToMaps && ((game.global.challengeActive == 'Lead' && game.global.world % 2 == 1) || doVoids || needPrestige) && ((shouldFarm && game.global.challengeActive == 'Lead') || game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || (doVoids && game.global.lastClearedCell > 95)))
                          	mapsClicked();
                 }
             }
