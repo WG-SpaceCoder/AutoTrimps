@@ -6,6 +6,9 @@ Automation script for the idle incremental game Trimps
 
 ## Recent changes
 
+3/27/2016
+- Fixed a bug where some Lead and Watch damage adjustments were not being taken into account correctly, causing autoStance to let Trimps die prematurely.
+
 3/23/2016
 - Added a run time graph that displays the total run time for each of your portals. 
 - Large numbers should now be thousands delimited
