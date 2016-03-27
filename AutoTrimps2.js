@@ -1313,14 +1313,10 @@ function autoStance() {
         //think this is fluctuation in calculateDamage();
         var enemyDamage = enemy.attack * 1.19;
         if (game.global.challengeActive == 'Lead') {
-			dDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
-			xDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
-			bDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+		enemyDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
         }
         if (game.global.challengeActive == 'Watch') {
-        	dDamage *= 1.25;
-        	xDamage *= 1.25;
-        	bDamage *= 1.25;
+        	enemyDamage *= 1.25;
         }
         var pierceMod = 0;
         if (game.global.challengeActive == "Lead" && ((game.global.world % 2) == 0)) pierceMod += (game.challenges.Lead.stacks * 0.001);
@@ -1340,14 +1336,10 @@ function autoStance() {
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.19;
         if (game.global.challengeActive == 'Lead') {
-			dDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
-			xDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
-			bDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+		enemyDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
         }
         if (game.global.challengeActive == 'Watch') {
-        	dDamage *= 1.25;
-        	xDamage *= 1.25;
-        	bDamage *= 1.25;
+        	enemyDamage *= 1.25;
         }
         var dDamage = enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : 0;
         var dHealth = baseHealth/2;
