@@ -628,6 +628,8 @@ function checkForMod(what, loom, location){
 	return false;
 }
 
+
+
 function evaluateEfficiency(equipName) {
     var equip = equipmentList[equipName];
     var gameResource = equip.Equip ? game.equipment[equipName] : game.buildings[equipName];
@@ -1866,6 +1868,42 @@ function autoPortal() {
 			
 	}
 	
+}
+
+function checkSettings() {
+	var portalLevel = -1;
+	switch(autoTrimpSettings.AutoPortal.selected) {
+		case "Off":
+		break;
+		case "Custom":
+		portalLevel = autoTrimpSettings.CustomAutoPortal.value + 1;
+		break;
+		case "Balance":
+		portalLevel = 41;
+		break;
+		case "Electricity":
+		portalLevel = 82;
+		break;
+		case "Crushed":
+		portalLevel = 126;
+		break;
+		case "Nom":
+		portalLevel = 146;
+		break;
+		case "Toxicity":
+		portalLevel = 166;
+		break;
+		case "Lead":
+		portalLevel = 181;
+		break;
+		case "Watch":
+		portalLevel = 181;
+		break;
+	}
+	if(portalLevel == -1)
+		return;
+	if(autoTrimpSettings.VoidMaps.value >= portalLevel)
+		tooltip('confirm', null, 'update', 'It looks like your void maps may be set to complete after your autoPortal. Your void maps may not be done at all in this case. Please verify your settings. Remember you can choose \'Custom\' autoPortal along with challenges for complete control over when you portal. <br><br> Estimated autoPortal level: ' + portalLevel , 'cancelTooltip()', 'Void Maps Conflict');
 }
 
 function doPortal(challenge) {
