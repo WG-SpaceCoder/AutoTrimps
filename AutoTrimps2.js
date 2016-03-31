@@ -229,12 +229,14 @@ function safeBuyBuilding(building) {
     }
     game.global.firing = false;
     //avoid slow building from clamping
-    if(building == 'Warpstation' && document.hidden){
+ 	//buy as many warpstations as we can afford
+    if(building == 'Warpstation'){
 	    	while(canAffordBuilding(building)) {
-	    		if (game.options.menu.pauseGame.enabled) break;
-		    	buyBuilding(building, true, true);
-		    	debug('Building ' + building);
+			game.global.buyAmt++;
 	    	}
+	    	game.global.buyAmt--;
+	    	buyBuilding(building, true, true);
+	    	debug('Building ' + game.global.buyAmt + ' ' + building + 's');
 	    	return;
     }
 	    debug('Building ' + building);
