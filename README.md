@@ -8,6 +8,7 @@ Automation script for the idle incremental game Trimps
 
 3/31/2016
 - Added a warning for incorrectly configured void maps and auto portals. If you have your void maps set to complete after the script thinks it will portal, it will warn you, and give you it's estimated portal level (I think I still remember what levels the autoPortals with difficulty checks complete, for example crushed at 126, but if you find a discrepancy please let me know). It will also warn of void maps set to complete on even levels during Lead challenge. The script has no knowledge of when it will portal when set on He/hr so it does not consider this case for the warning.
+- The script will now buy as many warpstations as it can afford at once in an attempt to help performance issues on some machines.
 
 3/27/2016
 - Fixed a bug where some Lead and Watch damage adjustments were not being taken into account correctly, causing autoStance to let Trimps die prematurely.
