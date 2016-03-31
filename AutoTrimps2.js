@@ -1588,7 +1588,7 @@ function autoMap() {
 
         }
         //shouldFarm is true here if: regular shouldFarm check set it, or voidMap difficulty check set it
-	if (shouldFarm && siphonMap == -1) shouldDoMap = "create";
+	if (shouldFarm && siphonMap == -1 && !needPrestige) shouldDoMap = "create";
 
         //map if we don't have health/dmg or we need to clear void maps or if we are prestige mapping, and our set item has a new prestige available 
         if (shouldDoMaps || doVoids || needPrestige) {
