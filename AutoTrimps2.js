@@ -1909,7 +1909,7 @@ function checkSettings() {
 		return;
 	}
 	if((leadCheck || game.global.challengeActive == 'Lead') && autoTrimpSettings.VoidMaps.value % 2 == 0)
-		tooltip('confirm', null, 'update', 'It looks like you may be on the Lead challenge or planning to run it and your void maps are set to complete on an even zone. You will receive double helium for completeing them in an odd numbered zone. Consider changing this.' + portalLevel , 'cancelTooltip()', 'Lead Challenge Void Maps');
+		tooltip('confirm', null, 'update', 'It looks like you may be on the Lead challenge or planning to run it and your void maps are set to complete on an even zone. You will receive double helium for completeing them in an odd numbered zone. Consider changing this.', 'cancelTooltip()', 'Lead Challenge Void Maps');
 }
 
 function doPortal(challenge) {
