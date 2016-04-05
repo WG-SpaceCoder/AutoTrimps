@@ -896,7 +896,7 @@ function initializeAutoTrimps() {
     javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
     //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
     //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
-    //why you no update
+    //why you no update, github aids
     toggleSettingsMenu();
     toggleSettingsMenu();
 }
