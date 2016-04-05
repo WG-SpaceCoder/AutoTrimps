@@ -6,7 +6,7 @@ if (autoTrimpSettings === undefined) {
 
 automationMenuInit();
 
-//Booleans
+//Booleans//
 
 createSetting('ManualGather', 'Auto Gather', 'Will automatically gather resources and build.', 'boolean');
 createSetting('AutoFight', 'Better Auto Fight', 'Will automatically handle fighting.', 'boolean');
