@@ -83,6 +83,7 @@ createSetting('MaxTox', 'Max Toxicity Stacks', 'Get maximum toxicity stacks befo
 createSetting('RunNewVoids', 'Run New Voids', 'Run new void maps acquired after the set void map zone.', 'boolean', null, null, 'advancedSettings');
 createSetting('VoidCheck', 'Void Difficulty Check', 'How many hits to be able to take from a void map boss in dominance stance before we attempt the map. Higher values will get you stronger before attempting.', 'value', '2', null, 'advancedSettings');
 createSetting('DisableFarm', 'Disable Farming', 'Disables the farming section of the automaps algorithm. This will cause it to always return to the zone upon reaching 10 map stacks.', 'boolean', null, null, 'advancedSettings');
+createSetting('CoordinationAbandon', 'Coordination Abandon', 'Abandon the army if a new army is available and we have a coordination that has not been updated in our attack numbers yet. <br>Note that this is done by default if we are in a map and repeat is on, to prevent from farming for too long if the new coordination will give us the damage we want.', 'boolean', null, null, 'advancedSettings');
 createSetting('PauseScript', 'Pause AutoTrimps', 'Pause AutoTrimps (not including the graphs module)', 'boolean', null, null, 'advancedSettings');
 
 
