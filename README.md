@@ -6,6 +6,9 @@ Automation script for the idle incremental game Trimps
 
 ## Recent changes
 
+4/5/2016
+- Added new advanced option Coordination Abandon to automatically abandon the army if a new army is ready and we have a new coordination that has not been accounted for in the current army.
+
 3/31/2016
 - Added a warning for incorrectly configured void maps and auto portals. If you have your void maps set to complete after the script thinks it will portal, it will warn you, and give you it's estimated portal level (I think I still remember what levels the autoPortals with difficulty checks complete, for example crushed at 126, but if you find a discrepancy please let me know). It will also warn of void maps set to complete on even levels during Lead challenge. The script has no knowledge of when it will portal when set on He/hr so it does not consider this case for the warning.
 - The script will now buy as many warpstations as it can afford at once in an attempt to help performance issues on some machines.
