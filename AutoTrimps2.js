@@ -1553,7 +1553,7 @@ function autoMap() {
 
 
             if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
-                if (theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
+                if (theMap.name == 'The Wall' && game.upgrades.Bounty.allowed == 0) {
                     shouldDoMap = theMap.id;
                     break;
                 }
