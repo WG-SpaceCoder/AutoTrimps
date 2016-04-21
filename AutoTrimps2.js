@@ -1423,11 +1423,12 @@ function autoMap() {
 	//allow script to handle abandoning
         if(game.options.menu.alwaysAbandon.enabled == 1) toggleSetting('alwaysAbandon');
         
-        if(getPageSetting('CoordinationAbandon') && newCoord && !needPrestige && game.global.mapsUnlocked && game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) {
+     /*   if(getPageSetting('CoordinationAbandon') && newCoord && !needPrestige && game.global.mapsUnlocked && game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) {
             	mapsClicked();
             	mapsClicked();
            	newCoord = false;
         }
+        */
         //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 15
         //add crit in somehow?
         if(!getPageSetting('DisableFarm')) {
