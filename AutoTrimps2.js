@@ -231,10 +231,8 @@ function safeBuyBuilding(building) {
     //avoid slow building from clamping
  	//buy as many warpstations as we can afford
     if(building == 'Warpstation'){
-	    	while(canAffordBuilding(building)) {
-			game.global.buyAmt++;
-	    	}
-	    	game.global.buyAmt--;
+		game.global.buyAmt = 'Max';
+		setMax(1);
 	    	buyBuilding(building, true, true);
 	    	debug('Building ' + game.global.buyAmt + ' ' + building + 's');
 	    	return;
@@ -263,7 +261,7 @@ function highlightHousing() {
         for (var house in unlockedHousing) {
             var building = game.buildings[unlockedHousing[house]];
             var cost = 0;
-            cost += getBuildingItemPrice(building, "gems");
+            cost += getBuildingItemPrice(building, "gems", false, 1);
             var ratio = cost / building.increase.by;
             //don't consider Gateway if we can't afford it right now - hopefully to prevent game waiting for fragments to buy gateway when collector could be bought right now
             if(unlockedHousing[house] == "Gateway" && !canAffordBuilding('Gateway')) continue;
@@ -297,8 +295,8 @@ game.global.buyAmt = oldBuy;
 }
 
 function buyFoodEfficientHousing() {
-    var houseWorth = game.buildings.House.locked ? 0 : game.buildings.House.increase.by / getBuildingItemPrice(game.buildings.House, "food");
-    var hutWorth = game.buildings.Hut.increase.by / getBuildingItemPrice(game.buildings.Hut, "food");
+    var houseWorth = game.buildings.House.locked ? 0 : game.buildings.House.increase.by / getBuildingItemPrice(game.buildings.House, "food", false, 1);
+    var hutWorth = game.buildings.Hut.increase.by / getBuildingItemPrice(game.buildings.Hut, "food", false, 1);
     var hutAtMax = (game.buildings.Hut.owned >= autoTrimpSettings.MaxHut.value && autoTrimpSettings.MaxHut.value != -1);
     //if hutworth is more, but huts are maxed , still buy up to house max
     if ((houseWorth > hutWorth || hutAtMax) && canAffordBuilding('House') && (game.buildings.House.owned < autoTrimpSettings.MaxHouse.value || autoTrimpSettings.MaxHouse.value == -1)) {
@@ -710,7 +708,7 @@ function Effect(gameResource, equip) {
 function Cost(gameResource, equip) {
 	preBuy();
 	game.global.buyAmt = 1;
-    var price = parseFloat(getBuildingItemPrice(gameResource, equip.Resource, equip.Equip));
+    var price = parseFloat(getBuildingItemPrice(gameResource, equip.Resource, equip.Equip, 1));
     if (equip.Equip) price = Math.ceil(price * (Math.pow(1 - game.portal.Artisanistry.modifier, game.portal.Artisanistry.level)));
     postBuy();
     return price;
@@ -990,7 +988,7 @@ function buyBuildings() {
     //only buy nurseries if enabled,   and we need to lower our breed time, or our target breed time is 0, or we aren't trying to manage our breed time before geneticists, and they aren't locked
     //even if we are trying to manage breed timer pre-geneticists, start buying nurseries once geneticists are unlocked AS LONG AS we can afford a geneticist (to prevent nurseries from outpacing geneticists soon after they are unlocked)
     if ((targetBreed < getBreedTime() || targetBreed == 0 || !getPageSetting('ManageBreedtimer') || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
-        if ((getPageSetting('MaxNursery') > game.buildings.Nursery.owned || getPageSetting('MaxNursery') == -1) && (getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") || game.buildings.Warpstation.locked) && (getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Collector, "gems") || game.buildings.Collector.locked || !game.buildings.Warpstation.locked)) {
+        if ((getPageSetting('MaxNursery') > game.buildings.Nursery.owned || getPageSetting('MaxNursery') == -1) && (getBuildingItemPrice(game.buildings.Nursery, "gems", false, 1) < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems", false, 1) || game.buildings.Warpstation.locked) && (getBuildingItemPrice(game.buildings.Nursery, "gems", false, 1) < 0.05 * getBuildingItemPrice(game.buildings.Collector, "gems", false, 1) || game.buildings.Collector.locked || !game.buildings.Warpstation.locked)) {
             safeBuyBuilding('Nursery');
         }
     }
