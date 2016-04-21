@@ -204,7 +204,7 @@ function createSetting(id, name, description, type, defaultValue, list, containe
                 value: defaultValue
             };
         }
-        btn.setAttribute('class', 'noselect settingBtn btn-info');
+        btn.setAttribute('class', 'noselect settingsBtn btn-info');
         btn.setAttribute("onclick", 'autoSetValueToolTip("' + id + '", "' + name + '")');
         btn.setAttribute("onmouseover", 'tooltip(\"' + name + '\", \"customText\", event, \"' + description + '\")');
         btn.setAttribute("onmouseout", 'tooltip("hide")');
@@ -227,7 +227,7 @@ function createSetting(id, name, description, type, defaultValue, list, containe
         btn.id = id;
         if(game.options.menu.darkTheme.enabled == 2) btn.setAttribute("style", "color: #C8C8C8");
         else btn.setAttribute("style", "color:black");
-        btn.setAttribute("class", "settingBtn");
+        btn.setAttribute("class", "settingsBtn");
         btn.setAttribute("onmouseover", 'tooltip(\"' + name + '\", \"customText\", event, \"' + description + '\")');
         btn.setAttribute("onmouseout", 'tooltip("hide")');
         btn.setAttribute("onchange", 'settingChanged("' + id + '")');
