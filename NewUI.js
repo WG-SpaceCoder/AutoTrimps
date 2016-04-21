@@ -249,7 +249,7 @@ function createSetting(id, name, description, type, defaultValue, list, containe
 function settingChanged(id) {
     if (autoTrimpSettings[id].type == 'boolean') {
         autoTrimpSettings[id].enabled = !autoTrimpSettings[id].enabled;
-        document.getElementById(id).setAttribute('class', 'settingBtn settingBtn' + autoTrimpSettings[id].enabled);
+        document.getElementById(id).setAttribute('class', 'settingsBtn settingBtn' + autoTrimpSettings[id].enabled);
         updateCustomButtons();
     }
     if (autoTrimpSettings[id].type == 'dropdown') {
