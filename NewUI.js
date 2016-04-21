@@ -186,7 +186,7 @@ function createSetting(id, name, description, type, defaultValue, list, containe
                 enabled: false
             };
         }
-        btn.setAttribute('class', 'settingBtn settingBtn' + autoTrimpSettings[id].enabled);
+        btn.setAttribute('class', 'settingsBtn settingBtn' + autoTrimpSettings[id].enabled);
         btn.setAttribute("onclick", 'settingChanged("' + id + '")');
         btn.setAttribute("onmouseover", 'tooltip(\"' + name + '\", \"customText\", event, \"' + description + '\")');
         btn.setAttribute("onmouseout", 'tooltip("hide")');
