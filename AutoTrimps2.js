@@ -1310,7 +1310,7 @@ function autoStance() {
         } else {
             enemy = game.global.gridArray[game.global.lastClearedCell + 1];
         }
-        var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow' || game.global.voidBuff == 'doubleAttack');
+        var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow' );
         var enemyHealth = enemy.health;
         //think this is fluctuation in calculateDamage();
         var enemyDamage = enemy.attack * 1.19;
@@ -1334,7 +1334,7 @@ function autoStance() {
         } else {
             var enemy = game.global.mapGridArray[game.global.lastClearedMapCell + 1];
         }
-        var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow');
+        var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow'|| game.global.voidBuff == 'doubleAttack');
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.19;
         if (game.global.challengeActive == 'Lead') {
