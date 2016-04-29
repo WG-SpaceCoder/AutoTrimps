@@ -6,6 +6,9 @@ Automation script for the idle incremental game Trimps
 
 ## Recent changes
 
+4/28/2016
+- The script will no longer run while the perks screen is up to try to prevent reported NaN issue.
+
 4/5/2016
 - Added new advanced option Coordination Abandon to automatically abandon the army if a new army is ready and we have a new coordination that has not been accounted for in the current army.
 
