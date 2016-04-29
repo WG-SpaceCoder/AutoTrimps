@@ -2008,6 +2008,7 @@ setTimeout(delayStart, 2000);
 function mainLoop() {
 	game.global.addonUser = true;
 	if(getPageSetting('PauseScript')) return;
+	if(game.global.viewingUpgrades) return;
     setTitle();
     setScienceNeeded();
     updateValueFields();
