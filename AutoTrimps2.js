@@ -905,7 +905,7 @@ function easyMode() {
     if (game.resources.trimps.realMax() > 3000000) {
         autoTrimpSettings.FarmerRatio.value = '3';
         autoTrimpSettings.LumberjackRatio.value = '1';
-        autoTrimpSettings.MinerRatio.value = '4';
+        autoTrimpSettings.MinerRatio.value = '5';
     } else if (game.resources.trimps.realMax() > 300000) {
         autoTrimpSettings.FarmerRatio.value = '3';
         autoTrimpSettings.LumberjackRatio.value = '3';
