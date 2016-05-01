@@ -914,9 +914,9 @@ function easyMode() {
     }
   
   if (game.global.world > 40) {
-    autoTrimpSettings.BuyWeapons.value = true;
-  } else {
     autoTrimpSettings.BuyWeapons.value = false;
+  } else {
+    autoTrimpSettings.BuyWeapons.value = true;
   }
 }
 
