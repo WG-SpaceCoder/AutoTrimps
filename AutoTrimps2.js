@@ -1050,7 +1050,7 @@ game.global.buyAmt = oldBuy;
 freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
     if (getPageSetting('HireScientists') && !game.jobs.Scientist.locked) {
     //if earlier in the game, buy a small amount of scientists
-    if (game.jobs.Farmer.owned < 250000 && !breedFire) {
+    if (game.jobs.Farmer.owned < 250000000 && !breedFire) {
         var buyScientists = Math.floor((scientistRatio / totalRatio * totalDistributableWorkers) - game.jobs.Scientist.owned);
         //bandaid to prevent situation where 1 scientist is bought, causing floor calculation to drop by 1, making next calculation -1 and entering hiring/firing loop
         //proper fix is including scientists in totalDistributableWorkers and the scientist ratio in the total ratio, but then it waits for 4 jobs
