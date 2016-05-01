@@ -915,6 +915,12 @@ function easyMode() {
         autoTrimpSettings.LumberjackRatio.value = '1';
         autoTrimpSettings.MinerRatio.value = '1';
     }
+  
+  if (game.global.world > 40) {
+    autoTrimpSettings.BuyWeapons = true;
+  } else {
+    autoTrimpSettings.BuyWeapons = false;
+  }
 }
 
 //Buys all available non-equip upgrades listed in var upgradeList
