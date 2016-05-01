@@ -892,10 +892,10 @@ function getBreedTime(remaining) {
 function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
-    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
-    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://finite2.github.io/AutoTrimps/NewUI.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://finite2.github.io/AutoTrimps/Graphs.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/finite2/AutoTrimps/spin/NewUI.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/finite2/AutoTrimps/spin/Graphs.js')._;
     //why you no update
     toggleSettingsMenu();
     toggleSettingsMenu();
