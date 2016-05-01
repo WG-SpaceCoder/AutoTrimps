@@ -231,10 +231,8 @@ function safeBuyBuilding(building) {
     //avoid slow building from clamping
  	//buy as many warpstations as we can afford
     if(building == 'Warpstation'){
-	    	while(canAffordBuilding(building)) {
-			game.global.buyAmt++;
-	    	}
-	    	game.global.buyAmt--;
+		game.global.buyAmt = 'Max';
+		setMax(1);
 	    	buyBuilding(building, true, true);
 	    	debug('Building ' + game.global.buyAmt + ' ' + building + 's');
 	    	return;
@@ -263,7 +261,7 @@ function highlightHousing() {
         for (var house in unlockedHousing) {
             var building = game.buildings[unlockedHousing[house]];
             var cost = 0;
-            cost += getBuildingItemPrice(building, "gems");
+            cost += getBuildingItemPrice(building, "gems", false, 1);
             var ratio = cost / building.increase.by;
             //don't consider Gateway if we can't afford it right now - hopefully to prevent game waiting for fragments to buy gateway when collector could be bought right now
             if(unlockedHousing[house] == "Gateway" && !canAffordBuilding('Gateway')) continue;
@@ -297,8 +295,8 @@ game.global.buyAmt = oldBuy;
 }
 
 function buyFoodEfficientHousing() {
-    var houseWorth = game.buildings.House.locked ? 0 : game.buildings.House.increase.by / getBuildingItemPrice(game.buildings.House, "food");
-    var hutWorth = game.buildings.Hut.increase.by / getBuildingItemPrice(game.buildings.Hut, "food");
+    var houseWorth = game.buildings.House.locked ? 0 : game.buildings.House.increase.by / getBuildingItemPrice(game.buildings.House, "food", false, 1);
+    var hutWorth = game.buildings.Hut.increase.by / getBuildingItemPrice(game.buildings.Hut, "food", false, 1);
     var hutAtMax = (game.buildings.Hut.owned >= autoTrimpSettings.MaxHut.value && autoTrimpSettings.MaxHut.value != -1);
     //if hutworth is more, but huts are maxed , still buy up to house max
     if ((houseWorth > hutWorth || hutAtMax) && canAffordBuilding('House') && (game.buildings.House.owned < autoTrimpSettings.MaxHouse.value || autoTrimpSettings.MaxHouse.value == -1)) {
@@ -710,7 +708,7 @@ function Effect(gameResource, equip) {
 function Cost(gameResource, equip) {
 	preBuy();
 	game.global.buyAmt = 1;
-    var price = parseFloat(getBuildingItemPrice(gameResource, equip.Resource, equip.Equip));
+    var price = parseFloat(getBuildingItemPrice(gameResource, equip.Resource, equip.Equip, 1));
     if (equip.Equip) price = Math.ceil(price * (Math.pow(1 - game.portal.Artisanistry.modifier, game.portal.Artisanistry.level)));
     postBuy();
     return price;
@@ -892,11 +890,19 @@ function getBreedTime(remaining) {
 function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
+<<<<<<< HEAD
     javascript: with(document)(head.appendChild(createElement('script')).src = 'https://finite2.github.io/AutoTrimps/NewUI.js')._;
     javascript: with(document)(head.appendChild(createElement('script')).src = 'https://finite2.github.io/AutoTrimps/Graphs.js')._;
     //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/finite2/AutoTrimps/spin/NewUI.js')._;
     //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/finite2/AutoTrimps/spin/Graphs.js')._;
     //why you no update
+=======
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
+    //why you no update, github aids
+>>>>>>> refs/remotes/zininzinin/gh-pages
     toggleSettingsMenu();
     toggleSettingsMenu();
 }
@@ -996,7 +1002,7 @@ function buyBuildings() {
     //only buy nurseries if enabled,   and we need to lower our breed time, or our target breed time is 0, or we aren't trying to manage our breed time before geneticists, and they aren't locked
     //even if we are trying to manage breed timer pre-geneticists, start buying nurseries once geneticists are unlocked AS LONG AS we can afford a geneticist (to prevent nurseries from outpacing geneticists soon after they are unlocked)
     if ((targetBreed < getBreedTime() || targetBreed == 0 || !getPageSetting('ManageBreedtimer') || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
-        if ((getPageSetting('MaxNursery') > game.buildings.Nursery.owned || getPageSetting('MaxNursery') == -1) && (getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems") || game.buildings.Warpstation.locked) && (getBuildingItemPrice(game.buildings.Nursery, "gems") < 0.05 * getBuildingItemPrice(game.buildings.Collector, "gems") || game.buildings.Collector.locked || !game.buildings.Warpstation.locked)) {
+        if ((getPageSetting('MaxNursery') > game.buildings.Nursery.owned || getPageSetting('MaxNursery') == -1) && (getBuildingItemPrice(game.buildings.Nursery, "gems", false, 1) < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems", false, 1) || game.buildings.Warpstation.locked) && (getBuildingItemPrice(game.buildings.Nursery, "gems", false, 1) < 0.05 * getBuildingItemPrice(game.buildings.Collector, "gems", false, 1) || game.buildings.Collector.locked || !game.buildings.Warpstation.locked)) {
             safeBuyBuilding('Nursery');
         }
     }
@@ -1318,7 +1324,7 @@ function autoStance() {
         } else {
             enemy = game.global.gridArray[game.global.lastClearedCell + 1];
         }
-        var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow' || game.global.voidBuff == 'doubleAttack');
+        var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow' );
         var enemyHealth = enemy.health;
         //think this is fluctuation in calculateDamage();
         var enemyDamage = enemy.attack * 1.19;
@@ -1342,7 +1348,7 @@ function autoStance() {
         } else {
             var enemy = game.global.mapGridArray[game.global.lastClearedMapCell + 1];
         }
-        var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow');
+        var enemyFast = game.global.challengeActive != 'Nom' && (game.badGuys[enemy.name].fast || game.global.challengeActive == 'Slow'|| game.global.voidBuff == 'doubleAttack');
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.19;
         if (game.global.challengeActive == 'Lead') {
@@ -1430,6 +1436,13 @@ var voidCheckPercent = 0;
 function autoMap() {
 	//allow script to handle abandoning
         if(game.options.menu.alwaysAbandon.enabled == 1) toggleSetting('alwaysAbandon');
+        
+     /*   if(getPageSetting('CoordinationAbandon') && newCoord && !needPrestige && game.global.mapsUnlocked && game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) {
+            	mapsClicked();
+            	mapsClicked();
+           	newCoord = false;
+        }
+        */
         //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 15
         //add crit in somehow?
         if(!getPageSetting('DisableFarm')) {
@@ -1441,7 +1454,7 @@ function autoMap() {
         var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
         var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
       
-        needPrestige = (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5);
+        needPrestige = (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5 && game.global.mapsUnlocked && game.global.challengeActive != "Frugal");
         if(game.global.challengeActive == "Toxicity") {
     	//ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
     	//enemyDamage *= 2;
@@ -1479,7 +1492,7 @@ function autoMap() {
         //leaving it in for now. Manually setting heliumGrowing to true in console should allow it to be used for a maximum total helium gained tox run (for bone trader)
         
         //stack tox stacks if heliumGrowing has been set to true, or of we need to clear our void maps
-        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 96 && game.challenges.Toxicity.stacks < 1500 && ((getPageSetting('MaxTox') && game.global.world > 59) || needToVoid)) {
+        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 93 && game.challenges.Toxicity.stacks < 1500 && ((getPageSetting('MaxTox') && game.global.world > 59) || needToVoid)) {
 		    shouldDoMaps = true;
 		    stackingTox = true;
 		    //force abandon army
@@ -1553,7 +1566,7 @@ function autoMap() {
 
 
             if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
-                if (theMap.name == 'The Wall' && game.upgrades.Bounty.done == 0) {
+                if (theMap.name == 'The Wall' && game.upgrades.Bounty.allowed == 0) {
                     shouldDoMap = theMap.id;
                     break;
                 }
@@ -1623,11 +1636,12 @@ function autoMap() {
         if (!game.global.preMapsActive) {
             if (game.global.mapsActive) {
             	//if we bought a new coordination and we're in a map and have a new army ready, force abandon to get updated damage numbers
-            	if(newCoord && game.global.repeatMap && game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) {
+          /*  	if(newCoord && game.global.repeatMap && game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) {
             		mapsClicked();
             		mapsClicked();
             		newCoord = false;
             	}
+            	*/
             	
                 //if we are doing the right map, and it's not a norecycle (unique) map, and we aren't going to hit max map bonus
                 if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle && (game.global.mapBonus < 9 || shouldFarm || stackingTox)) {
@@ -1951,7 +1965,7 @@ function manageGenes() {
     //if we need to hire geneticists
     //Don't hire geneticists if total breed time remaining is greater than our target breed time
     //Don't hire geneticists if we have already reached 30 anti stacks (put off further delay to next trimp group)
-    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked && targetBreed > getBreedTime(true) && (game.global.lastBreedTime/1000 + getBreedTime(true) < 30) && game.resources.trimps.soldiers > 0 && inDamageStance) {
+    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked && targetBreed > getBreedTime(true) && (game.global.lastBreedTime/1000 + getBreedTime(true) < 30) && game.resources.trimps.soldiers > 0 && inDamageStance && !breedFire) {
     	//insert 10% of total food limit here? or cost vs tribute?
         //if there's no free worker spots, fire a farmer
         if (fWorkers < 1 && canAffordJob('Geneticist', false)) {
@@ -2008,6 +2022,7 @@ setTimeout(delayStart, 2000);
 function mainLoop() {
 	game.global.addonUser = true;
 	if(getPageSetting('PauseScript')) return;
+	if(game.global.viewingUpgrades) return;
     setTitle();
     setScienceNeeded();
     updateValueFields();
