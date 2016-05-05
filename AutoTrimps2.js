@@ -1513,7 +1513,7 @@ function autoMap() {
             	//clear void maps if we need to
             if(theMap.location == 'Void' && needToVoid) {
                 	//if we are on toxicity, don't clear until we will have max stacks at the last cell.
-	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
+	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < (1500 - theMap.size)) break;
 	            	doVoids = true;
 	            	//check to make sure we won't get 1-shot in nostance by boss
 	            	var eAttack = getEnemyMaxAttack(game.global.world, theMap.size, 'Voidsnimp', theMap.difficulty);
