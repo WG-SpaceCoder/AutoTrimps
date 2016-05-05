@@ -1523,7 +1523,7 @@ function autoMap() {
 	            		eAttack *= 2;
 	            		if(stacks) {
 	            			for (i = 0; i < stacks; i++ ) {
-	            				ourHealth *= 0.99;
+	            				ourHealth *= 1.01;
 	            			}
 	            		}
 	            	}
