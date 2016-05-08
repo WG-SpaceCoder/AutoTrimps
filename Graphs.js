@@ -338,7 +338,6 @@ function setGraphData(graph) {
             yTitle = 'Void Maps';
             yType = 'Linear';
             break;
-           /* 
             case 'Loot Sources':
             graphData = [];
             graphData[0] = {name: 'Metal', data: lootData.metal};
@@ -349,7 +348,6 @@ function setGraphData(graph) {
             xTitle = 'Time';
             yTitle = 'Ratio Looted:Produced'
             break;
-            */
             
             case 'Run Time':
             var currentPortal = -1;
