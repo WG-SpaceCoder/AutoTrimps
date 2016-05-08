@@ -392,7 +392,7 @@ function setGraphData(graph) {
     }
 }
 
-/*
+
 function updateCustomStats() {
     var timeThisPortal = new Date().getTime() - game.global.portalTime;
     timeThisPortal /= 3600000;
@@ -489,7 +489,7 @@ function addResCheckMax(what, number, noStat, fromGather, nonFilteredLoot) {
 }
 
 //END game function overwrite
-*/
+
 var allSaveData = [];
 var graphData = [];
 var tmpGraphData = JSON.parse(localStorage.getItem('allSaveData'));
