@@ -1382,11 +1382,11 @@ function autoStance() {
 			if(xHealth > baseBlock)
 			xDamage = enemyDamage*5 - baseBlock > 0 ? enemyDamage*5 - baseBlock : 0;
 		}
-		else if (game.global.voidBuff == "bleed") {
-			dDamage += game.global.soldierHealth * 0.2;
-			xDamage += game.global.soldierHealth * 0.2;
-			bDamage += game.global.soldierHealth * 0.2;
-		}
+	if (game.global.voidBuff == "bleed") {
+		dDamage += game.global.soldierHealth * 0.2;
+		xDamage += game.global.soldierHealth * 0.2;
+		bDamage += game.global.soldierHealth * 0.2;
+	}
 	//double attack is OK if the buff isn't double attack, or we will survive a double attack, or we are going to one-shot them (so they won't be able to double attack)
 	var doubleAttackOK = game.global.voidBuff != 'doubleAttack' || ((newSquadRdy && dHealth > dDamage * 2) || dHealth - missingHealth > dDamage * 2) || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2);
 	var leadDamage = game.challenges.Lead.stacks * 0.0003;
@@ -1526,7 +1526,7 @@ function autoMap() {
             	//clear void maps if we need to
             if(theMap.location == 'Void' && needToVoid) {
                 	//if we are on toxicity, don't clear until we will have max stacks at the last cell.
-	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < 1400) break;
+	            	if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < (1500 - theMap.size)) break;
 	            	doVoids = true;
 	            	//check to make sure we won't get 1-shot in nostance by boss
 	            	var eAttack = getEnemyMaxAttack(game.global.world, theMap.size, 'Voidsnimp', theMap.difficulty);
