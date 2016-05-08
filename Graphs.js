@@ -425,9 +425,12 @@ function getLootData() {
     for(var r in loots){
         var name = loots[r];
         //avoid /0 NaN
-        if(filteredLoot.produced[name])
-        	lootData[name].push(100 * filteredLoot.looted[name]/(filteredLoot.produced[name] + filteredLoot.looted[name]);
-        if(lootData[name].length > 20) lootData[name].shift();
+        if (filteredLoot.produced[name]) {
+        	lootData[name].push(100 * filteredLoot.looted[name]/(filteredLoot.produced[name] + filteredLoot.looted[name]));
+        }
+        if(lootData[name].length > 20) {
+          lootData[name].shift();
+        }
     }
 }
 
