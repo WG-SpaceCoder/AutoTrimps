@@ -269,7 +269,7 @@ function setGraphData(graph) {
             }
             title = 'Helium';
             xTitle = 'Zone';
-            yTitle = 'Helium'
+            yTitle = 'Helium';
             yType = 'Linear';
             break;
         case 'HeliumPerHour':
@@ -346,7 +346,11 @@ function setGraphData(graph) {
             graphData[3] = {name: 'Gems', data: lootData.gems};
             title = 'Loot Sources';
             xTitle = 'Time';
-            yTitle = 'Ratio Looted:Produced'
+            yTitle = 'percentage looted (of all loot)';
+            valueSuffix = '%';
+            formatter = function () {
+              return Highcharts.numberFormat(this.y,1);
+            }
             break;
 
             
@@ -428,13 +432,13 @@ function getLootData() {
         if (filteredLoot.produced[name]) {
         	lootData[name].push(100 * filteredLoot.looted[name]/(filteredLoot.produced[name] + filteredLoot.looted[name]));
         }
-        if(lootData[name].length > 20) {
+        if(lootData[name].length > 80) {
           lootData[name].shift();
-        }
     }
 }
 
-setInterval(getLootData, 30000);
+Lootinterval = 30000;
+setInterval(getLootData, Lootinterval);
 
 //overwriting default game functions!!!!!!!!!!!!!!!!!!!!!!
 game.badGuys.Jestimp.loot = 
