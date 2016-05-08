@@ -348,6 +348,7 @@ function setGraphData(graph) {
             xTitle = 'Time';
             yTitle = 'Ratio Looted:Produced'
             break;
+
             
             case 'Run Time':
             var currentPortal = -1;
@@ -425,8 +426,8 @@ function getLootData() {
         var name = loots[r];
         //avoid /0 NaN
         if(filteredLoot.produced[name])
-        	lootData[name].push(filteredLoot.looted[name]/filteredLoot.produced[name]);
-        if(lootData[name].length > 20)lootData[name].shift();
+        	lootData[name].push(100 * filteredLoot.looted[name]/(filteredLoot.produced[name] + filteredLoot.looted[name]);
+        if(lootData[name].length > 20) lootData[name].shift();
     }
 }
 
