@@ -431,13 +431,13 @@ function getLootData() {
     if (filteredLoot.produced[name]) {
       lootData[name].push(100 * filteredLoot.looted[name]/(filteredLoot.produced[name] + filteredLoot.looted[name]));
     }
-    if(lootData[name].length > 80) {
+    if(lootData[name].length > 540) {
       lootData[name].shift();
     }
   }
 }
 
-Lootinterval = 30000;
+var Lootinterval = 10000;
 setInterval(getLootData, Lootinterval);
 
 //overwriting default game functions!!!!!!!!!!!!!!!!!!!!!!
