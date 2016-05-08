@@ -181,14 +181,13 @@ function gatherInfo() {
         allSaveData = [];
     }
     //clear filtered loot data upon portaling. <5 check to hopefully throw out bone portal shenanigans
-  /*  if(allSaveData[allSaveData.length -1].totalPortals != game.global.totalPortals && game.global.world < 5) {
+    if(allSaveData[allSaveData.length -1].totalPortals != game.global.totalPortals && game.global.world < 5) {
     	for(var r in filteredLoot) {
     		for(var b in filteredLoot[r]){
     			filteredLoot[r][b] = 0;
     		}
     	}
     }
-    */
     if (allSaveData.length === 0) {
         pushData();
     } else if (allSaveData[allSaveData.length - 1].world != game.global.world) {
@@ -350,7 +349,7 @@ function setGraphData(graph) {
             valueSuffix = '%';
             formatter = function () {
               return Highcharts.numberFormat(this.y,1);
-            }
+            };
             break;
 
             
@@ -425,16 +424,17 @@ function filterLoot (loot, amount, jest, fromGather) {
 }
 
 function getLootData() {
-    var loots = ['metal', 'wood', 'food', 'gems'];
-    for(var r in loots){
-        var name = loots[r];
-        //avoid /0 NaN
-        if (filteredLoot.produced[name]) {
-        	lootData[name].push(100 * filteredLoot.looted[name]/(filteredLoot.produced[name] + filteredLoot.looted[name]));
-        }
-        if(lootData[name].length > 80) {
-          lootData[name].shift();
+  var loots = ['metal', 'wood', 'food', 'gems'];
+  for(var r in loots){
+    var name = loots[r];
+    //avoid /0 NaN
+    if (filteredLoot.produced[name]) {
+      lootData[name].push(100 * filteredLoot.looted[name]/(filteredLoot.produced[name] + filteredLoot.looted[name]));
     }
+    if(lootData[name].length > 80) {
+      lootData[name].shift();
+    }
+  }
 }
 
 Lootinterval = 30000;
