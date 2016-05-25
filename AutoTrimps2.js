@@ -1721,7 +1721,10 @@ function autoMap() {
                     selectMap(game.global.mapsOwnedArray[highestMap].id);
                     runMap();
                 } else {
-                    buyMap();
+                	if(buyMap() == -2){
+                		recycleBelow(true);
+                		 buyMap();
+                	}
                 }
                 //if we already have a map picked, run it
             } else {
