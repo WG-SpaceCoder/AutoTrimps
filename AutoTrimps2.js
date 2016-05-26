@@ -235,9 +235,11 @@ function safeBuyBuilding(building) {
 		setMax(1);
 	    	buyBuilding(building, true, true);
 	    	debug('Building ' + game.global.buyAmt + ' ' + building + 's');
+	    	message('Building ' + game.global.buyAmt + ' ' + building + 's', "Loot", "*droplet");
 	    	return;
     }
 	    debug('Building ' + building);
+	    message('Building ' + building, "Loot", "*droplet");
 	    buyBuilding(building, true, true);
     
     
@@ -889,6 +891,7 @@ function getBreedTime(remaining) {
 
 function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
+    message('Autotrimps Loaded')
     loadPageVariables();
     javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
     javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
@@ -1162,6 +1165,7 @@ function autoLevelEquipment() {
             ) {
                 var upgrade = equipmentList[equipName].Upgrade;
                 debug('Upgrading ' + upgrade);
+                message('Upgrading ' + upgrade, "Loot", "*droplet");
                 buyUpgrade(upgrade, true, true);
             }
         }
@@ -1176,6 +1180,7 @@ function autoLevelEquipment() {
             if (getPageSetting('BuyWeapons') && DaThing.Stat == 'attack' && (!enoughDamageE || enoughHealthE)) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
+                    message('Leveling equipment ' + Best[stat].Name, "Loot", "*droplet");
                     buyEquipment(Best[stat].Name, null, true);
                 }
             }
@@ -1183,6 +1188,7 @@ function autoLevelEquipment() {
             if (getPageSetting('BuyArmor') && (DaThing.Stat == 'health' || DaThing.Stat == 'block') && !enoughHealthE) {
                 if (DaThing.Equip && !Best[stat].Wall && canAffordBuilding(Best[stat].Name, null, null, true)) {
                     debug('Leveling equipment ' + Best[stat].Name);
+                    message('Leveling equipment ' + Best[stat].Name, "Loot", "*droplet");
                     buyEquipment(Best[stat].Name, null, true);
                 }
             }
