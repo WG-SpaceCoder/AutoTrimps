@@ -944,7 +944,6 @@ function buyStorage() {
         'Forge': 'metal'
     };
     for (var B in Bs) {
-<<<<<<< HEAD
     	var jest = 0;
     	var owned = game.resources[Bs[B]].owned;
     	var max = game.resources[Bs[B]].max * packMod;
@@ -954,7 +953,6 @@ function buyStorage() {
 	    	jest = scaleToCurrentMap(jest);
     	}
         if (owned > max * 0.25 || owned + jest > max * 0.25) {
-=======
         var jest = 0;
         var owned = game.resources[Bs[B]].owned;
         var max = game.resources[Bs[B]].max * packMod;
@@ -964,7 +962,6 @@ function buyStorage() {
             jest = scaleToCurrentMap(jest);
         }
         if (owned > max * 0.9 || owned + jest > max * 0.9) {
->>>>>>> refs/remotes/zininzinin/gh-pages
             // debug('Buying ' + B + '(' + Bs[B] + ') at ' + Math.floor(game.resources[Bs[B]].owned / (game.resources[Bs[B]].max * packMod * 0.99) * 100) + '%');
             if (canAffordBuilding(B)) {
                 safeBuyBuilding(B);
