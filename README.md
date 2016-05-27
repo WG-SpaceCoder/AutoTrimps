@@ -5,6 +5,8 @@ Automation script for the idle incremental game Trimps
 **Please backup your game via export before and during use to prevent losing your save due to corruption!**
 
 ## Recent changes
+5/26/2016
+- The scipt now prints purchases to the ingame message window. (Needs improvement)
 
 4/28/2016
 - The script will no longer run while the perks screen is up to try to prevent reported NaN issue.
