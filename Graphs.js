@@ -328,7 +328,9 @@ function setGraphData(graph) {
             if(allSaveData[i].voids > totalVoids) {
                  totalVoids = allSaveData[i].voids;
              }
+          console.log(totalVoids);
         }
+        
         title = 'Void Maps Per Portal';
         xTitle = 'Portal';
         yTitle = 'Void Maps';
@@ -361,6 +363,7 @@ function setGraphData(graph) {
                  totalNull = allSaveData[i].nulli;
              }
         }
+      console.log(totalNull);
         title = 'Nullifium Gained Per Portal';
         xTitle = 'Portal';
         yTitle = 'Nullifium Gained';
