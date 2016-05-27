@@ -944,15 +944,6 @@ function buyStorage() {
         'Forge': 'metal'
     };
     for (var B in Bs) {
-    	var jest = 0;
-    	var owned = game.resources[Bs[B]].owned;
-    	var max = game.resources[Bs[B]].max * packMod;
-    	max = calcHeirloomBonus("Shield", "storageSize", max);
-    	if(game.global.mapsActive && game.unlocks.imps.Jestimp) {
-	    	jest = simpleSeconds(Bs[B], 45);
-	    	jest = scaleToCurrentMap(jest);
-    	}
-        if (owned > max * 0.25 || owned + jest > max * 0.25) {
         var jest = 0;
         var owned = game.resources[Bs[B]].owned;
         var max = game.resources[Bs[B]].max * packMod;
