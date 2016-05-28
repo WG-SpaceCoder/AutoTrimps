@@ -890,20 +890,23 @@ function getBreedTime(remaining) {
 function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
-    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
-    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
-    //why you no update, github aids
-    toggleSettingsMenu();
-    toggleSettingsMenu();
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://finite2.github.io/AutoTrimps/NewUI.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://finite2.github.io/AutoTrimps/Graphs.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/finite2/AutoTrimps/spin/NewUI.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/finite2/AutoTrimps/spin/Graphs.js')._;
+    //why you no update
+    // toggleSettingsMenu();
 }
 
 function easyMode() {
-    if (game.resources.trimps.realMax() > 3000000) {
+    if (game.resources.trimps.realMax() > 10000000) {
+        autoTrimpSettings.FarmerRatio.value = '1';
+        autoTrimpSettings.LumberjackRatio.value = '1';
+        autoTrimpSettings.MinerRatio.value = '10';
+    } if (game.resources.trimps.realMax() > 3000000) {
         autoTrimpSettings.FarmerRatio.value = '3';
         autoTrimpSettings.LumberjackRatio.value = '1';
-        autoTrimpSettings.MinerRatio.value = '4';
+        autoTrimpSettings.MinerRatio.value = '5';
     } else if (game.resources.trimps.realMax() > 300000) {
         autoTrimpSettings.FarmerRatio.value = '3';
         autoTrimpSettings.LumberjackRatio.value = '3';
@@ -1041,7 +1044,7 @@ game.global.buyAmt = oldBuy;
 freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
     if (getPageSetting('HireScientists') && !game.jobs.Scientist.locked) {
     //if earlier in the game, buy a small amount of scientists
-    if (game.jobs.Farmer.owned < 250000 && !breedFire) {
+    if (game.jobs.Farmer.owned < 250000000 && !breedFire) {
         var buyScientists = Math.floor((scientistRatio / totalRatio * totalDistributableWorkers) - game.jobs.Scientist.owned);
         //bandaid to prevent situation where 1 scientist is bought, causing floor calculation to drop by 1, making next calculation -1 and entering hiring/firing loop
         //proper fix is including scientists in totalDistributableWorkers and the scientist ratio in the total ratio, but then it waits for 4 jobs
@@ -1420,324 +1423,317 @@ var needPrestige = false;
 var voidCheckPercent = 0;
 
 function autoMap() {
-    //allow script to handle abandoning
-        if(game.options.menu.alwaysAbandon.enabled == 1) toggleSetting('alwaysAbandon');
+  //allow script to handle abandoning
+  if(game.options.menu.alwaysAbandon.enabled == 1) {
+    toggleSetting('alwaysAbandon');
+  }
 
-     /*   if(getPageSetting('CoordinationAbandon') && newCoord && !needPrestige && game.global.mapsUnlocked && game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) {
-                mapsClicked();
-                mapsClicked();
-               newCoord = false;
-        }
-        */
-        //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 15
-        //add crit in somehow?
-        if(!getPageSetting('DisableFarm')) {
-            shouldFarm = shouldFarm ? getEnemyMaxHealth(game.global.world) / baseDamage > 10 : getEnemyMaxHealth(game.global.world) / baseDamage > 15;
-        }
+  if(!getPageSetting('DisableFarm')) {
+      shouldFarm = shouldFarm ? getEnemyMaxHealth(game.global.world) / baseDamage > 10 : getEnemyMaxHealth(game.global.world) / baseDamage > 15;
+  }
 
-    needToVoid = getPageSetting('VoidMaps') > 0 && game.global.totalVoidMaps > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids'))) && (game.global.challengeActive != 'Lead' || game.global.lastClearedCell > 95);
-    if (game.global.mapsUnlocked) {
-        var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
-        var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
+  needToVoid = getPageSetting('VoidMaps') > 0 && game.global.totalVoidMaps > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids'))) && (game.global.challengeActive != 'Lead' || game.global.lastClearedCell > 95);
+  if (game.global.mapsUnlocked) {
+    var enemyDamage = getEnemyMaxAttack(game.global.world + 1, 30, 'Snimp', .85);
+    var enemyHealth = getEnemyMaxHealth(game.global.world + 1);
 
-        needPrestige = (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5 && game.global.mapsUnlocked && game.global.challengeActive != "Frugal");
-        if(game.global.challengeActive == "Toxicity") {
-        //ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
-        //enemyDamage *= 2;
-        enemyHealth *= 2;
-        }
-        if(game.global.challengeActive == 'Lead') {
-            enemyDamage *= 2.5;
-            enemyHealth *= 2.5;
-        }
-        if(game.global.totalVoidMaps == 0 || !needToVoid)
-            doVoids = false;
+    needPrestige = (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5 && game.global.mapsUnlocked && game.global.challengeActive != "Frugal");
+    if(game.global.challengeActive == "Toxicity") {
+    //ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
+    //enemyDamage *= 2;
+    enemyHealth *= 2;
+    }
+    if(game.global.challengeActive == 'Lead') {
+        enemyDamage *= 2.5;
+        enemyHealth *= 2.5;
+    }
+    if(game.global.totalVoidMaps == 0 || !needToVoid) {
+        doVoids = false;
+    }
 
-        enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
-        enoughDamage = (baseDamage * 4 > enemyHealth);
-        var shouldDoMaps = !enoughHealth || !enoughDamage;
-        var shouldDoMap = "world";
+    enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
+    enoughDamage = (baseDamage * 4 > enemyHealth);
+    var shouldDoMaps = !enoughHealth || !enoughDamage;
+    var shouldDoMap = "world";
 
 
 
-        //if we are at max map bonus, and we don't need to farm, don't do maps
-        if(game.global.mapBonus == 10 && !shouldFarm) shouldDoMaps = false;
-        //if we are prestige mapping, force equip first mode
-        if(autoTrimpSettings.Prestige.selected != "Off" && game.options.menu.mapLoot.enabled != 1) toggleSetting('mapLoot');
-        //if player has selected arbalest or gambeson but doesn't have them unlocked, just unselect it for them! It's magic!
-        if(document.getElementById('Prestige').selectedIndex > 11 && game.global.slowDone == false) {
-            document.getElementById('Prestige').selectedIndex = 11;
-            autoTrimpSettings.Prestige.selected = "Bestplate";
-        }
+    //if we are at max map bonus, and we don't need to farm, don't do maps
+    if (game.global.mapBonus == 10 && !shouldFarm) {
+      shouldDoMaps = false;
+    }
+    //if we are prestige mapping, force equip first mode
+    if(autoTrimpSettings.Prestige.selected != "Off" && game.options.menu.mapLoot.enabled != 1) { 
+      toggleSetting('mapLoot');
+    }
+    //if player has selected arbalest or gambeson but doesn't have them unlocked, just unselect it for them! It's magic!
+    if(document.getElementById('Prestige').selectedIndex > 11 && game.global.slowDone == false) {
+        document.getElementById('Prestige').selectedIndex = 11;
+        autoTrimpSettings.Prestige.selected = "Bestplate";
+    }
 
+    //If on toxicity and reached the last cell, calculate if max tox stacks will give us better He/hr (assumes max agility)
+    //at looting 54, I have found this only to trigger in lower zones, (20-72 or so) and not been worth it for overall he/hr. Higher looting should trigger it in progressively higher zones, but probably never worth it
+    //leaving it in for now. Manually setting heliumGrowing to true in console should allow it to be used for a maximum total helium gained tox run (for bone trader)
 
-
-
-        //If on toxicity and reached the last cell, calculate if max tox stacks will give us better He/hr (assumes max agility)
-        //at looting 54, I have found this only to trigger in lower zones, (20-72 or so) and not been worth it for overall he/hr. Higher looting should trigger it in progressively higher zones, but probably never worth it
-        //leaving it in for now. Manually setting heliumGrowing to true in console should allow it to be used for a maximum total helium gained tox run (for bone trader)
-
-        //stack tox stacks if heliumGrowing has been set to true, or of we need to clear our void maps
-        if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 93 && game.challenges.Toxicity.stacks < 1500 && ((getPageSetting('MaxTox') && game.global.world > 59) || needToVoid)) {
-            shouldDoMaps = true;
-            stackingTox = true;
-            //force abandon army
-            if(!game.global.mapsActive && !game.global.preMapsActive) {
-                mapsClicked();
-                mapsClicked();
-            }
-
-        }
-        else stackingTox = false;
-
-        var obj = {};
-        var siphonMap = -1;
-        for (var map in game.global.mapsOwnedArray) {
-            if (!game.global.mapsOwnedArray[map].noRecycle) {
-                obj[map] = game.global.mapsOwnedArray[map].level;
-                if(game.global.mapsOwnedArray[map].level == (game.global.world - game.portal.Siphonology.level))
-                    siphonMap = map;
-            }
-        }
-        var keysSorted = Object.keys(obj).sort(function(a, b) {
-            return obj[b] - obj[a]
-        });
-        //if there are no non-unique maps, there will be nothing in keysSorted, so set to create a map
-        if (keysSorted[0]) var highestMap = keysSorted[0];
-        else shouldDoMap = "create";
-
-
-
-        for (var map in game.global.mapsOwnedArray) {
-            var theMap = game.global.mapsOwnedArray[map];
-                //clear void maps if we need to
-            if(theMap.location == 'Void' && needToVoid) {
-                    //if we are on toxicity, don't clear until we will have max stacks at the last cell.
-                    if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < (1500 - theMap.size)) break;
-                    doVoids = true;
-                    //check to make sure we won't get 1-shot in nostance by boss
-                    var eAttack = getEnemyMaxAttack(game.global.world, theMap.size, 'Voidsnimp', theMap.difficulty);
-                    var ourHealth = baseHealth;
-                    if(game.global.challengeActive == 'Balance') {
-                        var stacks = game.challenges.Balance.balanceStacks ? (game.challenges.Balance.balanceStacks > theMap.size) ? theMap.size : game.challenges.Balance.balanceStacks : false;
-                        eAttack *= 2;
-                        if(stacks) {
-                            for (i = 0; i < stacks; i++ ) {
-                                ourHealth *= 1.01;
-                            }
-                        }
-                    }
-                    if(game.global.challengeActive == 'Toxicity') eAttack *= 5;
-                    //break to prevent finishing map to finish a challenge?
-                    //continue to check for doable map?
-                    var diff = parseInt(getPageSetting('VoidCheck')) > 0 ? parseInt(getPageSetting('VoidCheck')) : 2;
-                    if(ourHealth/diff < eAttack - baseBlock) {
-                        shouldFarm = true;
-                        voidCheckPercent = Math.round((ourHealth/diff)/(eAttack-baseBlock)*100);
-                        break;
-                    }
-                    else {
-                        voidCheckPercent = 0;
-                        if(getPageSetting('DisableFarm'))
-                            shouldFarm = false;
-                    }
-                shouldDoMap = theMap.id;
-                if(game.global.mapsActive && game.global.challengeActive == "Nom") {
-                    if(game.global.mapGridArray[game.global.lastClearedMapCell + 1].nomStacks > 6) {
-                        mapsClicked(true);
-                    }
-                }
-                break;
-            }
-
-
-            if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
-                if (theMap.name == 'The Wall' && game.upgrades.Bounty.allowed == 0) {
-                    shouldDoMap = theMap.id;
-                    break;
-                }
-                if (theMap.name == 'Dimension of Anger' && document.getElementById("portalBtn").style.display == "none") {
-                    var doaDifficulty = Math.ceil(theMap.difficulty / 2);
-                    if(game.global.world < 20 + doaDifficulty) continue;
-                    shouldDoMap = theMap.id;
-                    break;
-                }
-                //run the prison only if we are 'cleared' to run level 80 + 1 level per 200% difficulty. Could do more accurate calc if needed
-                if(theMap.name == 'The Prison' && (game.global.challengeActive == "Electricity" || game.global.challengeActive == "Mapocalypse")) {
-                    var prisonDifficulty = Math.ceil(theMap.difficulty / 2);
-                    doPrison = true;
-                    if(game.global.world >= 80 + prisonDifficulty) {
-                        shouldDoMap = theMap.id;
-                        break;
-                    }
-                }
-                if(theMap.name == 'The Block' && !game.upgrades.Shieldblock.allowed && (game.global.challengeActive == "Scientist" || game.global.challengeActive == "Trimp" || getPageSetting('BuyShieldblock'))) {
-                    shouldDoMap = theMap.id;
-                    break;
-                }
-                if(theMap.name == 'Trimple of Doom' && game.global.challengeActive == "Meditate") {
-                    shouldDoMap = theMap.id;
-                    break;
-                }
-                if(theMap.name == 'Bionic Wonderland' && game.global.challengeActive == "Crushed" ) {
-                    var wonderlandDifficulty = Math.ceil(theMap.difficulty / 2);
-                    if(game.global.world >= 125 + wonderlandDifficulty) {
-                    doWonderland = true;
-                        shouldDoMap = theMap.id;
-                        break;
-                    }
-                }
-                //other unique maps here
-            }
-
-
-        }
-        //shouldFarm is true here if: regular shouldFarm check set it, or voidMap difficulty check set it
-    if (shouldFarm && siphonMap == -1 && !needPrestige) shouldDoMap = "create";
-
-        //map if we don't have health/dmg or we need to clear void maps or if we are prestige mapping, and our set item has a new prestige available
-        if (shouldDoMaps || doVoids || needPrestige) {
-            //shouldDoMap = world here if we haven't set it to create yet, meaning we found appropriate high level map, or siphon map
-            //if shouldDoMap != world, it already has a map ID and will be run below
-            if (shouldDoMap == "world") {
-                //if shouldFarm is true, use a siphonology adjusted map, as long as we aren't trying to prestige
-                if (shouldDoMaps && shouldFarm && !needPrestige) shouldDoMap = game.global.mapsOwnedArray[siphonMap].id;
-                else if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
-                    shouldDoMap = game.global.mapsOwnedArray[highestMap].id;
-                } else {
-                    //if we dont' have an appropriate max level map, or a siphon map, we need to make one
-                    //if(!shouldDoMaps) shouldDoMap = "world";
-                    shouldDoMap = "create";
-                }
-            }
+    //stack tox stacks if heliumGrowing has been set to true, or of we need to clear our void maps
+    if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 93 && game.challenges.Toxicity.stacks < 1500 && ((getPageSetting('MaxTox') && game.global.world > 59) || needToVoid)) {
+        shouldDoMaps = true;
+        stackingTox = true;
+        //force abandon army
+        if(!game.global.mapsActive && !game.global.preMapsActive) {
+            mapsClicked();
+            mapsClicked();
         }
 
-                 //don't map on even worlds if on Lead, except if person is dumb and wants to void on even
-            if(game.global.challengeActive == 'Lead' && !doVoids && (game.global.world % 2 == 0 || game.global.lastClearedCell < 50)) {
-                    if(game.global.preMapsActive)
-                       mapsClicked();
-                   return;
-               }
-        //repeat button management
-        if (!game.global.preMapsActive) {
-            if (game.global.mapsActive) {
-                //if we bought a new coordination and we're in a map and have a new army ready, force abandon to get updated damage numbers
-          /*      if(newCoord && game.global.repeatMap && game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) {
-                    mapsClicked();
-                    mapsClicked();
-                    newCoord = false;
-                }
-                */
+    } else {
+      stackingTox = false;
+    }
 
-                //if we are doing the right map, and it's not a norecycle (unique) map, and we aren't going to hit max map bonus
-                if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle && (game.global.mapBonus < 9 || shouldFarm || stackingTox)) {
-                    var targetPrestige = autoTrimpSettings.Prestige.selected;
-                    //make sure repeat map is on
-                    if (!game.global.repeatMap) {
-                        repeatClicked();
-                    }
-                    //if we aren't here for dmg/hp, and we see the prestige we are after on the last cell of this map, and it's the last one available, turn off repeat to avoid an extra map cycle
-                    if (!shouldDoMaps && (game.global.mapGridArray[game.global.mapGridArray.length - 1].special == targetPrestige && game.mapUnlocks[targetPrestige].last >= game.global.world - 9 )) {
-                        repeatClicked();
-                    }
-                } else {
-                    //otherwise, make sure repeat map is off
-                    if (game.global.repeatMap) {
-                        repeatClicked();
-                    }
-                }
-            } else if (!game.global.mapsActive) {
-                if (shouldDoMap != "world") {
-                    //if shouldFarm, don't switch until after megafarming
-                    if (!game.global.switchToMaps && ((shouldFarm && game.global.lastClearedCell > 79) || !shouldFarm)) {
-                         mapsClicked();
-                    }
-                    //if (prestige mapping or need to do void maps or on lead in odd world) abandon army if (a new army is ready or need to void map and we're almost done with the zone)
-                    if(game.global.switchToMaps && ((game.global.challengeActive == 'Lead' && game.global.world % 2 == 1) || doVoids || needPrestige) && ((shouldFarm && game.global.challengeActive == 'Lead') || game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || (doVoids && game.global.lastClearedCell > 95)))
-                             mapsClicked();
-                }
-            }
-        } else if (game.global.preMapsActive) {
-            if (shouldDoMap == "world") {
-                mapsClicked();
-            }
-            else if (shouldDoMap == "create") {
-                //create a siphonology level map if not prestiging (void map diff check consideration here?)
-                var mapLevel = game.global.world;
-                if(shouldDoMaps && !needPrestige) {
-                    mapLevel -= game.portal.Siphonology.level;
-                }
-                // Ensure the wanted map level is at least 6
-                mapLevel = Math.max(6, mapLevel);
-                document.getElementById("mapLevelInput").value = mapLevel;
-                if (game.global.world > 70) {
-                    sizeAdvMapsRange.value = 9;
-                    adjustMap('size', 9);
-                    difficultyAdvMapsRange.value = 9;
-                    adjustMap('difficulty', 9);
-                    lootAdvMapsRange.value = 9;
-                    adjustMap('loot', 9);
-
-                    biomeAdvMapsSelect.value = "Mountain";
-                    updateMapCost();
-                } else if (game.global.world < 16) {
-                    sizeAdvMapsRange.value = 9;
-                    adjustMap('size', 9);
-                    difficultyAdvMapsRange.value = 0;
-                    adjustMap('difficulty', 0);
-                    lootAdvMapsRange.value = 0;
-                    adjustMap('loot', 0);
-
-                    biomeAdvMapsSelect.value = "Random";
-                    updateMapCost();
-                } else {
-                    sizeAdvMapsRange.value = 9;
-                    adjustMap('size', 9);
-                    difficultyAdvMapsRange.value = 9;
-                    adjustMap('difficulty', 9);
-                    lootAdvMapsRange.value = 0;
-                    adjustMap('loot', 0);
-
-                    biomeAdvMapsSelect.value = "Random";
-                    updateMapCost();
-                }
-                //if we are farming (for resources), make sure it's metal, and put low priority on size
-                if(shouldFarm) {
-                    biomeAdvMapsSelect.value = "Mountain";
-                    while (sizeAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
-                            sizeAdvMapsRange.value = sizeAdvMapsRange.value - 1;
-                    }
-                    while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
-                        lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
-                    }
-                }
-        else {
-                    while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
-                        lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
-                    }
-                    //prioritize size over difficulty? Not sure. high Helium that just wants prestige = yes.
-                    //Really just trying to prevent prestige mapping from getting stuck
-                    while (difficultyAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
-                        difficultyAdvMapsRange.value = difficultyAdvMapsRange.value - 1;
-                    }
-        }
-        //if we can't afford the map we designed, pick our highest map
-                if (updateMapCost(true) > game.resources.fragments.owned) {
-                    selectMap(game.global.mapsOwnedArray[highestMap].id);
-                    runMap();
-                } else {
-                    if(buyMap() == -2){
-                        recycleBelow(true);
-                         buyMap();
-                    }
-                }
-                //if we already have a map picked, run it
-            } else {
-                selectMap(shouldDoMap);
-                runMap();
+    var obj = {};
+    var siphonMap = -1;
+    for (var map in game.global.mapsOwnedArray) {
+        if (!game.global.mapsOwnedArray[map].noRecycle) {
+            obj[map] = game.global.mapsOwnedArray[map].level;
+            if(game.global.mapsOwnedArray[map].level == (game.global.world - game.portal.Siphonology.level)) {
+                siphonMap = map;
             }
         }
     }
+    var keysSorted = Object.keys(obj).sort(function(a, b) {
+        return obj[b] - obj[a];
+    });
+    //if there are no non-unique maps, there will be nothing in keysSorted, so set to create a map
+    if (keysSorted[0]) {
+      var highestMap = keysSorted[0];
+    } else {
+      shouldDoMap = "create";
+    }
+
+    // running unique maps
+    for (var map in game.global.mapsOwnedArray) {
+        var theMap = game.global.mapsOwnedArray[map];
+        //clear void maps if we need to
+        if(theMap.location == 'Void' && needToVoid) {
+          //if we are on toxicity, don't clear until we will have max stacks at the last cell.
+          if(game.global.challengeActive == 'Toxicity' && game.challenges.Toxicity.stacks < (1500 - theMap.size)) {
+            break;
+          }
+          doVoids = true;
+          //check to make sure we won't get 1-shot in nostance by boss
+          var eAttack = getEnemyMaxAttack(game.global.world, theMap.size, 'Voidsnimp', theMap.difficulty);
+          var ourHealth = baseHealth;
+          if(game.global.challengeActive == 'Balance') {
+            var stacks = game.challenges.Balance.balanceStacks ? (game.challenges.Balance.balanceStacks > theMap.size) ? theMap.size : game.challenges.Balance.balanceStacks : false;
+            eAttack *= 2;
+            if(stacks) {
+              for (i = 0; i < stacks; i++ ) {
+                ourHealth *= 1.01;
+              }
+            }
+          }
+          if(game.global.challengeActive == 'Toxicity') {
+            eAttack *= 5;
+          }
+          //break to prevent finishing map to finish a challenge?
+          //continue to check for doable map?
+          var diff = parseInt(getPageSetting('VoidCheck')) > 0 ? parseInt(getPageSetting('VoidCheck')) : 2;
+          if(ourHealth/diff < eAttack - baseBlock) {
+              shouldFarm = true;
+              voidCheckPercent = Math.round((ourHealth/diff)/(eAttack-baseBlock)*100);
+              break;
+          }
+          else {
+              voidCheckPercent = 0;
+              if(getPageSetting('DisableFarm'))
+                  shouldFarm = false;
+          }
+            shouldDoMap = theMap.id;
+            if(game.global.mapsActive && game.global.challengeActive == "Nom") {
+                if(game.global.mapGridArray[game.global.lastClearedMapCell + 1].nomStacks > 6) {
+                    mapsClicked(true);
+                }
+            }
+            break;
+        }
+
+
+        if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
+            if (theMap.name == 'The Wall' && game.upgrades.Bounty.allowed == 0) {
+                shouldDoMap = theMap.id;
+                break;
+            }
+            if (theMap.name == 'Dimension of Anger' && document.getElementById("portalBtn").style.display == "none") {
+                var doaDifficulty = Math.ceil(theMap.difficulty / 2);
+                if(game.global.world < 20 + doaDifficulty) {
+                  continue;
+                }
+                shouldDoMap = theMap.id;
+                break;
+            }
+            //run the prison only if we are 'cleared' to run level 80 + 1 level per 200% difficulty. Could do more accurate calc if needed
+            if(theMap.name == 'The Prison' && (game.global.challengeActive == "Electricity" || game.global.challengeActive == "Mapocalypse")) {
+                var prisonDifficulty = Math.ceil(theMap.difficulty / 2);
+                doPrison = true;
+                if(game.global.world >= 80 + prisonDifficulty) {
+                    shouldDoMap = theMap.id;
+                    break;
+                }
+            }
+            if(theMap.name == 'The Block' && !game.upgrades.Shieldblock.allowed && (game.global.challengeActive == "Scientist" || game.global.challengeActive == "Trimp" || getPageSetting('BuyShieldblock'))) {
+                shouldDoMap = theMap.id;
+                break;
+            }
+            if(theMap.name == 'Trimple of Doom' && game.global.challengeActive == "Meditate") {
+                shouldDoMap = theMap.id;
+                break;
+            }
+            if(theMap.name == 'Bionic Wonderland' && game.global.challengeActive == "Crushed" ) {
+                var wonderlandDifficulty = Math.ceil(theMap.difficulty / 2);
+                if(game.global.world >= 125 + wonderlandDifficulty) {
+                doWonderland = true;
+                    shouldDoMap = theMap.id;
+                    break;
+                }
+            }
+            //other unique maps here
+        }
+    }
+    //shouldFarm is true here if: regular shouldFarm check set it, or voidMap difficulty check set it
+    if (shouldFarm && siphonMap == -1 && !needPrestige) { 
+      shouldDoMap = "create";
+    }
+    //map if we don't have health/dmg or we need to clear void maps or if we are prestige mapping, and our set item has a new prestige available
+    if (shouldDoMaps || doVoids || needPrestige) {
+      //shouldDoMap = world here if we haven't set it to create yet, meaning we found appropriate high level map, or siphon map
+      //if shouldDoMap != world, it already has a map ID and will be run below
+      if (shouldDoMap == "world") {
+          //if shouldFarm is true, use a siphonology adjusted map, as long as we aren't trying to prestige
+          if (shouldDoMaps && shouldFarm && !needPrestige) {
+            shouldDoMap = game.global.mapsOwnedArray[siphonMap].id;
+          } else if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
+            shouldDoMap = game.global.mapsOwnedArray[highestMap].id;
+          } else {
+            //if we dont' have an appropriate max level map, or a siphon map, we need to make one
+            //if(!shouldDoMaps) shouldDoMap = "world";
+            shouldDoMap = "create";
+          }
+        }
+    }
+    
+    
+    //don't map on even worlds if on Lead, except if person is dumb and wants to void on even
+    if(game.global.challengeActive == 'Lead' && !doVoids && (game.global.world % 2 == 0 || game.global.lastClearedCell < 50)) {
+      if(game.global.preMapsActive) {
+        mapsClicked();
+      }
+      return;
+    }
+    //repeat button management
+    if (!game.global.preMapsActive) {
+        if (game.global.mapsActive) {
+            //if we are doing the right map, and it's not a norecycle (unique) map, and we aren't going to hit max map bonus
+            if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle && (game.global.mapBonus < 9 || shouldFarm || stackingTox)) {
+              var targetPrestige = autoTrimpSettings.Prestige.selected;
+              //make sure repeat map is on
+              if (!game.global.repeatMap) {
+                repeatClicked();
+              }
+              //if we aren't here for dmg/hp, and we see the prestige we are after on the last cell of this map, and it's the last one available, turn off repeat to avoid an extra map cycle
+              if (!shouldDoMaps && (game.global.mapGridArray[game.global.mapGridArray.length - 1].special == targetPrestige && game.mapUnlocks[targetPrestige].last >= game.global.world - 9 )) {
+                repeatClicked();
+              }
+            } else {
+              //otherwise, make sure repeat map is off
+              if (game.global.repeatMap) {
+                repeatClicked();
+              }
+            }
+        } else if (!game.global.mapsActive) {
+            if (shouldDoMap != "world") {
+              //if shouldFarm, don't switch until after megafarming
+              if (!game.global.switchToMaps && ((shouldFarm && game.global.lastClearedCell > 79) || !shouldFarm)) {
+                   mapsClicked();
+              }
+              //if (prestige mapping or need to do void maps or on lead in odd world) abandon army if (a new army is ready or need to void map and we're almost done with the zone)
+              if(game.global.switchToMaps && ((game.global.challengeActive == 'Lead' && game.global.world % 2 == 1) || doVoids || needPrestige) && ((shouldFarm && game.global.challengeActive == 'Lead') || game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || (doVoids && game.global.lastClearedCell > 95))){
+                mapsClicked();
+              }
+            }
+        }
+    } else if (game.global.preMapsActive) {
+      if (shouldDoMap == "world") {
+        mapsClicked();
+      } else if (shouldDoMap == "create") {
+        //create a siphonology level map if not prestiging (void map diff check consideration here?)
+        var mapLevel = game.global.world;
+        if(shouldDoMaps && !needPrestige) {
+            // mapLevel -= game.portal.Siphonology.level;
+        }
+        // Ensure the wanted map level is at least 6
+        mapLevel = Math.max(6, mapLevel);
+        document.getElementById("mapLevelInput").value = mapLevel;
+        if (game.global.world > 70) {
+          sizeAdvMapsRange.value = 9;
+          adjustMap('size', 9);
+          difficultyAdvMapsRange.value = 9;
+          adjustMap('difficulty', 9);
+          lootAdvMapsRange.value = 9;
+          adjustMap('loot', 9);
+          biomeAdvMapsSelect.value = "Mountain";
+          updateMapCost();
+        } else if (game.global.world < 16) {
+          sizeAdvMapsRange.value = 9;
+          adjustMap('size', 9);
+          difficultyAdvMapsRange.value = 0;
+          adjustMap('difficulty', 0);
+          lootAdvMapsRange.value = 0;
+          adjustMap('loot', 0);
+          biomeAdvMapsSelect.value = "Random";
+            updateMapCost();
+        } else {
+          sizeAdvMapsRange.value = 9;
+          adjustMap('size', 9);
+          difficultyAdvMapsRange.value = 9;
+          adjustMap('difficulty', 9);
+          lootAdvMapsRange.value = 0;
+          adjustMap('loot', 0);
+          biomeAdvMapsSelect.value = "Random";
+          updateMapCost();
+        }
+        //if we are farming (for resources), make sure it's metal, and put low priority on size
+        if (shouldFarm) {
+          biomeAdvMapsSelect.value = "Mountain";
+          while (sizeAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+                  sizeAdvMapsRange.value = sizeAdvMapsRange.value - 1;
+          }
+          while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+              lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
+          }
+        } else {
+          while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+              lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
+          }
+          //prioritize size over difficulty? Not sure. high Helium that just wants prestige = yes.
+          //Really just trying to prevent prestige mapping from getting stuck
+          while (difficultyAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+              difficultyAdvMapsRange.value = difficultyAdvMapsRange.value - 1;
+          }
+        }
+        //if we can't afford the map we designed, pick our highest map
+        if (updateMapCost(true) > game.resources.fragments.owned) {
+          selectMap(game.global.mapsOwnedArray[highestMap].id);
+          runMap();
+        } else {
+          buyMap();
+        }
+        //if we already have a map picked, run it
+      } else {
+        selectMap(shouldDoMap);
+        runMap();
+      }
+    }
+  }
 }
 
 //calculate helium we will get from the end of this zone. If (stacks), return helium we will get with max tox stacks
