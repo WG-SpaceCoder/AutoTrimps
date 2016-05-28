@@ -890,23 +890,20 @@ function getBreedTime(remaining) {
 function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://finite2.github.io/AutoTrimps/NewUI.js')._;
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://finite2.github.io/AutoTrimps/Graphs.js')._;
-    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/finite2/AutoTrimps/spin/NewUI.js')._;
-    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/finite2/AutoTrimps/spin/Graphs.js')._;
-    //why you no update
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
+    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
+    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
+    //why you no update, github aids
+    toggleSettingsMenu();
     toggleSettingsMenu();
 }
 
 function easyMode() {
-    if (game.resources.trimps.realMax() > 10000000) {
-        autoTrimpSettings.FarmerRatio.value = '1';
-        autoTrimpSettings.LumberjackRatio.value = '1';
-        autoTrimpSettings.MinerRatio.value = '10';
-    } if (game.resources.trimps.realMax() > 3000000) {
+    if (game.resources.trimps.realMax() > 3000000) {
         autoTrimpSettings.FarmerRatio.value = '3';
         autoTrimpSettings.LumberjackRatio.value = '1';
-        autoTrimpSettings.MinerRatio.value = '5';
+        autoTrimpSettings.MinerRatio.value = '4';
     } else if (game.resources.trimps.realMax() > 300000) {
         autoTrimpSettings.FarmerRatio.value = '3';
         autoTrimpSettings.LumberjackRatio.value = '3';
@@ -1044,7 +1041,7 @@ game.global.buyAmt = oldBuy;
 freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
     if (getPageSetting('HireScientists') && !game.jobs.Scientist.locked) {
     //if earlier in the game, buy a small amount of scientists
-    if (game.jobs.Farmer.owned < 250000000 && !breedFire) {
+    if (game.jobs.Farmer.owned < 250000 && !breedFire) {
         var buyScientists = Math.floor((scientistRatio / totalRatio * totalDistributableWorkers) - game.jobs.Scientist.owned);
         //bandaid to prevent situation where 1 scientist is bought, causing floor calculation to drop by 1, making next calculation -1 and entering hiring/firing loop
         //proper fix is including scientists in totalDistributableWorkers and the scientist ratio in the total ratio, but then it waits for 4 jobs

@@ -357,7 +357,7 @@ function setGraphData(graph) {
                 totalNull = 0;
                 currentPortal = allSaveData[i].totalPortals;
             }
-            if(allSaveData[i].nulli > totalNull) {
+            if(allSaveData[i].nullifium > totalNull) {
                  totalNull = allSaveData[i].nullifium;
              }
         }
