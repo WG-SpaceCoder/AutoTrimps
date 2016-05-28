@@ -895,7 +895,7 @@ function initializeAutoTrimps() {
     //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/finite2/AutoTrimps/spin/NewUI.js')._;
     //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/finite2/AutoTrimps/spin/Graphs.js')._;
     //why you no update
-    toggleSettingsMenu();
+    // toggleSettingsMenu();
 }
 
 function easyMode() {
