@@ -365,6 +365,7 @@ function setGraphData(graph) {
         xTitle = 'Portal';
         yTitle = 'Nullifium Gained';
         yType = 'Linear';
+      console.log(graphData);
         break;
 
 
