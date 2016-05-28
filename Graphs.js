@@ -168,8 +168,7 @@ function pushData() {
         challenge: game.global.challengeActive,
         voids: game.global.totalVoidMaps,
         heirlooms: game.stats.totalHeirlooms,
-        nullifium: game.global.nullifium,
-        nulli: recycleAllExtraHeirlooms(true)
+        nullifium: recycleAllExtraHeirlooms(true),
     });
     //only keep 10 portals worth of runs to prevent filling storage
     clearData(10);
@@ -328,7 +327,6 @@ function setGraphData(graph) {
             if(allSaveData[i].voids > totalVoids) {
                  totalVoids = allSaveData[i].voids;
              }
-          console.log(totalVoids);
         }
         
         title = 'Void Maps Per Portal';
@@ -359,11 +357,10 @@ function setGraphData(graph) {
                 totalNull = 0;
                 currentPortal = allSaveData[i].totalPortals;
             }
-            if(allSaveData[i].voids > totalNull) {
-                 totalNull = allSaveData[i].nulli;
+            if(allSaveData[i].nulli > totalNull) {
+                 totalNull = allSaveData[i].nullifium;
              }
         }
-      console.log(totalNull);
         title = 'Nullifium Gained Per Portal';
         xTitle = 'Portal';
         yTitle = 'Nullifium Gained';
@@ -551,4 +548,3 @@ if (tmpGraphData !== null) {
 
 
 setInterval(gatherInfo, 1000);
-
