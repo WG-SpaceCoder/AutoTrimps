@@ -35,6 +35,7 @@ var baseHealth = 0;
 var preBuyAmt = game.global.buyAmt;
 var preBuyFiring = game.global.firing;
 var preBuyTooltip = game.global.lockTooltip;
+var preBuymaxSplit = game.global.maxSplit;
 
 ////////////////////////////////////////
 //List Variables////////////////////////
@@ -205,6 +206,7 @@ function preBuy() {
     preBuyAmt = game.global.buyAmt;
     preBuyFiring = game.global.firing;
     preBuyTooltip = game.global.lockTooltip;
+    preBuymaxSplit = game.global.maxSplit;
 }
 
 //Called after buying things that can be purchased in bulk
@@ -212,6 +214,7 @@ function postBuy() {
     game.global.buyAmt = preBuyAmt;
     game.global.firing = preBuyFiring;
     game.global.lockTooltip = preBuyTooltip;
+    game.global.maxSplit = preBuymaxSplit;
 }
 
 function safeBuyBuilding(building) {
@@ -232,7 +235,7 @@ function safeBuyBuilding(building) {
      //buy as many warpstations as we can afford
     if(building == 'Warpstation'){
         game.global.buyAmt = 'Max';
-        setMax(1);
+        game.global.maxSplit = 1;
             buyBuilding(building, true, true);
             debug('Building ' + game.global.buyAmt + ' ' + building + 's');
             return;
@@ -733,65 +736,6 @@ function setScienceNeeded() {
         }
     }
 }
-/*
-function breedTime(genes) {
-    var trimps = game.resources.trimps;
-
-    if (trimps.owned - trimps.employed < 2 || game.global.challengeActive == "Trapper") {
-        return 0;
-    }
-
-    var potencyMod = trimps.potency;
-    potencyMod = potencyMod * (1 + game.portal.Pheromones.level * game.portal.Pheromones.modifier);
-
-    if (game.unlocks.quickTrimps) {
-        potencyMod *= 2;
-    }
-    if (game.global.brokenPlanet) {
-        potencyMod /= 10;
-    }
-    if (game.jobs.Geneticist.owned > 0) {
-        potencyMod *= Math.pow(0.98, game.jobs.Geneticist.owned);
-    }
-
-    var multiplier = 1;
-    if (genes >= 0) {
-        multiplier *= Math.pow(0.98, genes);
-    } else {
-        multiplier *= Math.pow((1 / 0.98), -genes);
-    }
-
-    var soldiers = game.portal.Coordinated.level ? game.portal.Coordinated.currentSend : trimps.maxSoldiers;
-    var numerus = (trimps.realMax() - trimps.employed) / (trimps.realMax() - (soldiers + trimps.employed));
-    var base = potencyMod * multiplier + 1;
-
-    return Math.log(numerus) / Math.log(base);
-}
-
-function getEnemyMaxAttack(zone) {
-    var amt = 0;
-    var level = 30;
-    var world = zone;
-    amt += 50 * Math.sqrt(world * Math.pow(3.27, world));
-    amt -= 10;
-    if (world == 1) {
-        amt *= 0.35;
-        amt = (amt * 0.20) + ((amt * 0.75) * (level / 100));
-    } else if (world == 2) {
-        amt *= 0.5;
-        amt = (amt * 0.32) + ((amt * 0.68) * (level / 100));
-    } else if (world < 60) {
-        amt = (amt * 0.375) + ((amt * 0.7) * (level / 100));
-    } else {
-        amt = (amt * 0.4) + ((amt * 0.9) * (level / 100));
-        amt *= Math.pow(1.15, world - 59);
-    }
-
-    amt *= 1.1;
-    amt *= game.badGuys["Snimp"].attack;
-    return Math.floor(amt);
-}
-*/
 
 function getEnemyMaxAttack(world, level, name, diff) {
     var amt = 0;
@@ -1423,12 +1367,6 @@ function autoMap() {
     //allow script to handle abandoning
         if(game.options.menu.alwaysAbandon.enabled == 1) toggleSetting('alwaysAbandon');
 
-     /*   if(getPageSetting('CoordinationAbandon') && newCoord && !needPrestige && game.global.mapsUnlocked && game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) {
-                mapsClicked();
-                mapsClicked();
-               newCoord = false;
-        }
-        */
         //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 15
         //add crit in somehow?
         if(!getPageSetting('DisableFarm')) {
