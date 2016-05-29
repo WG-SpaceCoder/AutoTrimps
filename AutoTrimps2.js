@@ -1593,15 +1593,17 @@ function autoMap() {
 
         }
         //shouldFarm is true here if: regular shouldFarm check set it, or voidMap difficulty check set it
-    if (shouldFarm && siphonMap == -1 && !needPrestige) shouldDoMap = "create";
+        if (shouldDoMaps && siphonMap == -1 && !needPrestige) 
+            shouldDoMap = "create";
 
         //map if we don't have health/dmg or we need to clear void maps or if we are prestige mapping, and our set item has a new prestige available
         if (shouldDoMaps || doVoids || needPrestige) {
             //shouldDoMap = world here if we haven't set it to create yet, meaning we found appropriate high level map, or siphon map
             //if shouldDoMap != world, it already has a map ID and will be run below
             if (shouldDoMap == "world") {
-                //if shouldFarm is true, use a siphonology adjusted map, as long as we aren't trying to prestige
-                if (shouldDoMaps && shouldFarm && !needPrestige) shouldDoMap = game.global.mapsOwnedArray[siphonMap].id;
+                //use a siphonology adjusted map, as long as we aren't trying to prestige
+                if (shouldDoMaps && !needPrestige) 
+                    shouldDoMap = game.global.mapsOwnedArray[siphonMap].id;
                 else if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
                     shouldDoMap = game.global.mapsOwnedArray[highestMap].id;
                 } else {
