@@ -1355,8 +1355,6 @@ function autoStance() {
 
 //core function written by Belaith
 //prison/wonderland flags for use in autoPortal function
-var doPrison = false;
-var doWonderland = false;
 var stackingTox = false;
 var doVoids = false;
 var needToVoid = false;
@@ -1503,7 +1501,6 @@ function autoMap() {
                 //run the prison only if we are 'cleared' to run level 80 + 1 level per 200% difficulty. Could do more accurate calc if needed
                 if(theMap.name == 'The Prison' && (game.global.challengeActive == "Electricity" || game.global.challengeActive == "Mapocalypse")) {
                     var prisonDifficulty = Math.ceil(theMap.difficulty / 2);
-                    doPrison = true;
                     if(game.global.world >= 80 + prisonDifficulty) {
                         shouldDoMap = theMap.id;
                         break;
@@ -1520,7 +1517,6 @@ function autoMap() {
                 if(theMap.name == 'Bionic Wonderland' && game.global.challengeActive == "Crushed" ) {
                     var wonderlandDifficulty = Math.ceil(theMap.difficulty / 2);
                     if(game.global.world >= 125 + wonderlandDifficulty) {
-                    doWonderland = true;
                         shouldDoMap = theMap.id;
                         break;
                     }
@@ -1760,63 +1756,34 @@ function autoPortal() {
                     var myHelium = Math.floor(game.resources.helium.owned / timeThisPortal);
                     if(myHelium < lastHelium && !game.global.challengeActive) {
                         pushData();
-                        if(autoTrimpSettings.HeliumHourChallenge.selected != 'None') doPortal(autoTrimpSettings.HeliumHourChallenge.selected);
-                        else doPortal();
+                        if(autoTrimpSettings.HeliumHourChallenge.selected != 'None')
+                            doPortal(autoTrimpSettings.HeliumHourChallenge.selected);
+                        else
+                            doPortal();
+                    } else {
+                        lastHelium = myHelium;
                     }
-                    else lastHelium = myHelium;
-            }
-            break;
-        case "Balance":
-            if(game.global.world > 40 && !game.global.challengeActive) {
-                pushData();
-                doPortal('Balance');
-            }
-            break;
-        case "Electricity":
-            //if doPrison is true, autoMaps sent us in there because of electricity
-            if(doPrison && !game.global.challengeActive) {
-                pushData();
-                doPortal('Electricity');
-                doPrison = false;
-            }
-            break;
-        case "Crushed":
-            //if doWonderland is true, autoMaps sent us in there because of crushed
-            if(doWonderland && !game.global.challengeActive) {
-                pushData();
-                doPortal('Crushed');
-                doWonderland = false;
-            }
-            break;
-        case "Nom":
-            if(game.global.world > 145 && !game.global.challengeActive) {
-                pushData();
-                doPortal('Nom');
-            }
-            break;
-        case "Toxicity":
-            if(game.global.world > 165 && !game.global.challengeActive) {
-                pushData();
-                doPortal('Toxicity');
-            }
-            break;
-        case "Watch":
-            if(game.global.world > 180 && !game.global.challengeActive) {
-                pushData();
-                doPortal('Watch');
-            }
-            break;
-        case "Lead":
-            if(game.global.world > 180 && !game.global.challengeActive) {
-                pushData();
-                doPortal('Lead');
             }
             break;
         case "Custom":
             if(game.global.world > getPageSetting('CustomAutoPortal') && !game.global.challengeActive) {
                 pushData();
-                    if(autoTrimpSettings.HeliumHourChallenge.selected != 'None') doPortal(autoTrimpSettings.HeliumHourChallenge.selected);
-                    else doPortal();
+                if(autoTrimpSettings.HeliumHourChallenge.selected != 'None')
+                    doPortal(autoTrimpSettings.HeliumHourChallenge.selected);
+                else
+                    doPortal();
+            }
+            break;
+        case "Balance":
+        case "Electricity":
+        case "Crushed":
+        case "Nom":
+        case "Toxicity":
+        case "Watch":
+        case "Lead":
+            if(!game.global.challengeActive) {
+                pushData();
+                doPortal(autoTrimpSettings.AutoPortal.selected);
             }
             break;
         default:
