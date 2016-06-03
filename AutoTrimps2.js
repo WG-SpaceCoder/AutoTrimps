@@ -959,11 +959,6 @@ function buyJobs() {
     var scientistRatio = totalRatio / 25;
     var oldBuy = game.global.buyAmt;
 
-
-    // debug('Total farmers to add = ' + Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
-
-
-
     //Simple buy if you can
     if (getPageSetting('MaxTrainers') > game.jobs.Trainer.owned || getPageSetting('MaxTrainers') == -1) {
         game.global.buyAmt = 1;
@@ -981,34 +976,33 @@ function buyJobs() {
             safeBuyJob('Explorer');
         }
     }
-game.global.buyAmt = oldBuy;
-freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
+    game.global.buyAmt = oldBuy;
+    freeWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
     if (getPageSetting('HireScientists') && !game.jobs.Scientist.locked) {
-    //if earlier in the game, buy a small amount of scientists
-    if (game.jobs.Farmer.owned < 250000 && !breedFire) {
-        var buyScientists = Math.floor((scientistRatio / totalRatio * totalDistributableWorkers) - game.jobs.Scientist.owned);
-        //bandaid to prevent situation where 1 scientist is bought, causing floor calculation to drop by 1, making next calculation -1 and entering hiring/firing loop
-        //proper fix is including scientists in totalDistributableWorkers and the scientist ratio in the total ratio, but then it waits for 4 jobs
-        if(buyScientists > 0 && freeWorkers > 0) safeBuyJob('Scientist', buyScientists);
+        //if earlier in the game, buy a small amount of scientists
+        if (game.jobs.Farmer.owned < 250000 && !breedFire) {
+            var buyScientists = Math.floor((scientistRatio / totalRatio * totalDistributableWorkers) - game.jobs.Scientist.owned);
+            //bandaid to prevent situation where 1 scientist is bought, causing floor calculation to drop by 1, making next calculation -1 and entering hiring/firing loop
+            //proper fix is including scientists in totalDistributableWorkers and the scientist ratio in the total ratio, but then it waits for 4 jobs
+            if(buyScientists > 0 && freeWorkers > 0) safeBuyJob('Scientist', buyScientists);
+        }
+        //once over 100k farmers, fire our scientists and rely on manual gathering of science
+        else if (game.jobs.Scientist.owned > 0) 
+            safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
     }
-    //once over 100k farmers, fire our scientists and rely on manual gathering of science
-    else if (game.jobs.Scientist.owned > 0) safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
-}
     //Distribute Farmer/Lumberjack/Miner breedfire
     if(!game.jobs.Farmer.locked && !breedFire)
-    safeBuyJob('Farmer', Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
-   // else if(breedFire)
-   // safeBuyJob('Farmer', game.jobs.Farmer.owned * -1);
+        safeBuyJob('Farmer', Math.floor((farmerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Farmer.owned));
+    // else if(breedFire)
+    // safeBuyJob('Farmer', game.jobs.Farmer.owned * -1);
     if(!game.jobs.Lumberjack.locked && !breedFire)
-    safeBuyJob('Lumberjack', Math.floor((lumberjackRatio / totalRatio * totalDistributableWorkers) - game.jobs.Lumberjack.owned));
+        safeBuyJob('Lumberjack', Math.floor((lumberjackRatio / totalRatio * totalDistributableWorkers) - game.jobs.Lumberjack.owned));
     else if(breedFire)
-    safeBuyJob('Lumberjack', game.jobs.Lumberjack.owned * -1);
+        safeBuyJob('Lumberjack', game.jobs.Lumberjack.owned * -1);
     if(!game.jobs.Miner.locked && !breedFire)
-    safeBuyJob('Miner', Math.floor((minerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Miner.owned));
+        safeBuyJob('Miner', Math.floor((minerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Miner.owned));
     else if(breedFire)
-    safeBuyJob('Miner', game.jobs.Miner.owned * -1);
-
-
+        safeBuyJob('Miner', game.jobs.Miner.owned * -1);
 }
 
 function autoLevelEquipment() {
