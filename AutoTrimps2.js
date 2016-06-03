@@ -975,7 +975,7 @@ function buyJobs() {
             //proper fix is including scientists in totalDistributableWorkers and the scientist ratio in the total ratio, but then it waits for 4 jobs
             if(buyScientists > 0 && freeWorkers > 0) safeBuyJob('Scientist', buyScientists);
         }
-        //once over 100k farmers, fire our scientists and rely on manual gathering of science
+        //once over 250k farmers, fire our scientists and rely on manual gathering of science
         else if (game.jobs.Scientist.owned > 0) 
             safeBuyJob('Scientist', game.jobs.Scientist.owned * -1);
     }
@@ -1242,7 +1242,7 @@ function autoStance() {
         //think this is fluctuation in calculateDamage();
         var enemyDamage = enemy.attack * 1.19;
         if (game.global.challengeActive == 'Lead') {
-        enemyDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+            enemyDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
         }
         if (game.global.challengeActive == 'Watch') {
             enemyDamage *= 1.25;
@@ -1265,7 +1265,7 @@ function autoStance() {
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.19;
         if (game.global.challengeActive == 'Lead') {
-        enemyDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
+            enemyDamage *= (1 + (game.challenges.Lead.stacks * 0.04));
         }
         if (game.global.challengeActive == 'Watch') {
             enemyDamage *= 1.25;
@@ -1288,9 +1288,7 @@ function autoStance() {
             dDamage += dHealth/20;
             xDamage += xHealth/20;
             bDamage += bHealth/20;
-        }
-
-        else if (game.global.challengeActive == "Crushed") {
+        } else if (game.global.challengeActive == "Crushed") {
             if(dHealth > baseBlock /2)
             dDamage = enemyDamage*5 - baseBlock / 2 > 0 ? enemyDamage*5 - baseBlock / 2 : 0;
             if(xHealth > baseBlock)
@@ -1303,7 +1301,7 @@ function autoStance() {
     }
     //double attack is OK if the buff isn't double attack, or we will survive a double attack, or we are going to one-shot them (so they won't be able to double attack)
     var doubleAttackOK = game.global.voidBuff != 'doubleAttack' || ((newSquadRdy && dHealth > dDamage * 2) || dHealth - missingHealth > dDamage * 2) || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2);
-    var leadDamage = game.challenges.Lead.stacks * 0.0003;
+    var leadDamage = game.challenges.Lead.stacks * 0.0005;
     //lead attack ok if challenge isn't lead, or we are going to one shot them, or we can survive the lead damage
     var leadAttackOK = game.global.challengeActive != 'Lead' || enemyHealth < baseDamage * (game.global.titimpLeft > 0 ? 4 : 2) || ((newSquadRdy && dHealth > dDamage + (dHealth * leadDamage)) || (dHealth - missingHealth > dDamage + (dHealth * leadDamage)));
         //add voidcrit?
@@ -1541,6 +1539,10 @@ function autoMap() {
                     if (!shouldDoMaps && (game.global.mapGridArray[game.global.mapGridArray.length - 1].special == targetPrestige && game.mapUnlocks[targetPrestige].last >= game.global.world - 9 )) {
                         repeatClicked();
                     }
+                    //avoid another map cycle due to having the amount of tox stacks we need.
+                    if (stackingTox && (game.challenges.Toxicity.stacks + game.global.mapGridArray.length - (game.global.lastClearedMapCell + 1) >= 1500)){
+                        repeatClicked();
+                    }
                 } else {
                     //otherwise, make sure repeat map is off
                     if (game.global.repeatMap) {
@@ -1560,7 +1562,7 @@ function autoMap() {
             }
         } else if (game.global.preMapsActive) {
             if (shouldDoMap == "world") {
-                mapsClicked();
+                mapsClicked();  //go back
             }
             else if (shouldDoMap == "create") {
                 //create a siphonology level map if not prestiging (void map diff check consideration here?)
@@ -1606,20 +1608,13 @@ function autoMap() {
                 if(shouldFarm) {
                     biomeAdvMapsSelect.value = "Mountain";
                     while (sizeAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
-                            sizeAdvMapsRange.value = sizeAdvMapsRange.value - 1;
+                        sizeAdvMapsRange.value -= 1;
                     }
-                    while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
-                        lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
-                    }
-                }
-                else {
-                    while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
-                        lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
-                    }
+                } else {
                     //prioritize size over difficulty? Not sure. high Helium that just wants prestige = yes.
                     //Really just trying to prevent prestige mapping from getting stuck
                     while (difficultyAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
-                        difficultyAdvMapsRange.value = difficultyAdvMapsRange.value - 1;
+                        difficultyAdvMapsRange.value -= 1;
                     }
                 }
                 //if we can't afford the map we designed, pick our highest map
@@ -1762,11 +1757,11 @@ function checkSettings() {
     if(portalLevel == -1)
         return;
     if(autoTrimpSettings.VoidMaps.value >= portalLevel) {
-        tooltip('confirm', null, 'update', 'It looks like your void maps may be set to complete after your autoPortal. Your void maps may not be done at all in this case. Please verify your settings. Remember you can choose \'Custom\' autoPortal along with challenges for complete control over when you portal. <br><br> Estimated autoPortal level: ' + portalLevel , 'cancelTooltip()', 'Void Maps Conflict');
+        tooltip('confirm', null, 'update', 'WARNING: Your void maps are set to complete after your autoPortal, and therefore will not be done at all! Please verify your settings. Remember you can choose \'Custom\' autoPortal along with challenges for complete control over when you portal. <br><br> Estimated autoPortal level: ' + portalLevel , 'cancelTooltip()', 'Void Maps Conflict');
         return;
     }
     if((leadCheck || game.global.challengeActive == 'Lead') && (autoTrimpSettings.VoidMaps.value % 2 == 0 && portalLevel < 182))
-        tooltip('confirm', null, 'update', 'It looks like you may be on the Lead challenge or planning to run it and your void maps are set to complete on an even zone. You will receive double helium for completeing them in an odd numbered zone. Consider changing this.', 'cancelTooltip()', 'Lead Challenge Void Maps');
+        tooltip('confirm', null, 'update', 'WARNING: Voidmaps run during Lead on an Even zone do not receive the 2x Helium Bonus for Odd zones, and are also tougher. You should probably fix this.', 'cancelTooltip()', 'Lead Challenge Void Maps');
 }
 
 function doPortal(challenge) {
