@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.1
 // @description  try to take over the world!
-// @author       zininzinin, spindrjr, belaith, ishakaru
+// @author       zininzinin, spindrjr, belaith, ishakaru, genbtc
 // @include      *trimps.github.io*
 // @grant        none
 // ==/UserScript==
@@ -12,7 +12,7 @@
 ////////////////////////////////////////
 //Variables/////////////////////////////
 ////////////////////////////////////////
-var runInterval = 100; //How often to loop through logicc
+var runInterval = 100; //How often to loop through logic
 var enableDebug = true; //Spam console?
 var autoTrimpSettings = new Object();
 var bestBuilding;
@@ -21,12 +21,6 @@ var breedFire = false;
 var shouldFarm = false;
 var enoughDamage = true;
 var enoughHealth = true;
-var newCoord = false;
-
-var noFight = 0;
-
-
-
 
 var baseDamage = 0;
 var baseBlock = 0;
@@ -218,12 +212,10 @@ function postBuy() {
 }
 
 function safeBuyBuilding(building) {
-    //exclude housing from 1 per queue limit?
+    //limit to 1 building per queue
     for (var b in game.global.buildingsQueue) {
-           if (game.global.buildingsQueue[b].includes(building)) return false;
+        if (game.global.buildingsQueue[b].includes(building)) return false;
     }
-
-
     preBuy();
     game.global.buyAmt = 1;
     if (!canAffordBuilding(building)) {
@@ -232,18 +224,16 @@ function safeBuyBuilding(building) {
     }
     game.global.firing = false;
     //avoid slow building from clamping
-     //buy as many warpstations as we can afford
+    //buy as many warpstations as we can afford
     if(building == 'Warpstation'){
         game.global.buyAmt = 'Max';
         game.global.maxSplit = 1;
-            buyBuilding(building, true, true);
-            debug('Building ' + game.global.buyAmt + ' ' + building + 's');
-            return;
-    }
-        debug('Building ' + building);
         buyBuilding(building, true, true);
-
-
+        debug('Building ' + game.global.buyAmt + ' ' + building + 's');
+        return;
+    }
+    debug('Building ' + building);
+    buyBuilding(building, true, true);
     postBuy();
     return true;
 }
@@ -870,13 +860,12 @@ function buyUpgrades() {
         if (upgrade == 'Gigastation' && (game.global.lastWarp ? game.buildings.Warpstation.owned < (Math.floor(game.upgrades.Gigastation.done * getPageSetting('DeltaGigastation')) + getPageSetting('FirstGigastation')) : game.buildings.Warpstation.owned < getPageSetting('FirstGigastation'))) continue;
         if ((!game.upgrades.Scientists.done && upgrade != 'Battle') ? (available && upgrade == 'Scientists' && game.upgrades.Scientists.allowed) : (available)) {
             buyUpgrade(upgrade, true, true);
-            if(upgrade == 'Coordination') newCoord = true;
-            //debug('bought upgrade ' + upgrade);
+            debug('Upgraded ' + upgrade);
         }
     }
 }
 
-//Buys more storage if resource is over 90% full
+//Buys more storage if resource is over 85% full (or 60% if zone<10)
 function buyStorage() {
     var packMod = 1 + game.portal.Packrat.level * game.portal.Packrat.modifier;
     var Bs = {
@@ -893,13 +882,13 @@ function buyStorage() {
             jest = simpleSeconds(Bs[B], 45);
             jest = scaleToCurrentMap(jest);
         }
-        if (owned > max * 0.9 || owned + jest > max * 0.9) {
+        if ((game.global.world < 10 && owned > max * 0.6) || owned + jest > max * 0.85 || owned > max * 0.85) {
             // debug('Buying ' + B + '(' + Bs[B] + ') at ' + Math.floor(game.resources[Bs[B]].owned / (game.resources[Bs[B]].max * packMod * 0.99) * 100) + '%');
             if (canAffordBuilding(B)) {
                 safeBuyBuilding(B);
+                setGather('buildings');
             }
         }
-
     }
 }
 
@@ -1357,13 +1346,13 @@ var voidCheckPercent = 0;
 
 function autoMap() {
     //allow script to handle abandoning
-        if(game.options.menu.alwaysAbandon.enabled == 1) toggleSetting('alwaysAbandon');
+    if(game.options.menu.alwaysAbandon.enabled == 1) toggleSetting('alwaysAbandon');
 
-        //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 15
-        //add crit in somehow?
-        if(!getPageSetting('DisableFarm')) {
-            shouldFarm = shouldFarm ? getEnemyMaxHealth(game.global.world) / baseDamage > 10 : getEnemyMaxHealth(game.global.world) / baseDamage > 15;
-        }
+    //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 15
+    //add crit in somehow?
+    if(!getPageSetting('DisableFarm')) {
+        shouldFarm = shouldFarm ? getEnemyMaxHealth(game.global.world) / baseDamage > 10 : getEnemyMaxHealth(game.global.world) / baseDamage > 15;
+    }
 
     needToVoid = getPageSetting('VoidMaps') > 0 && game.global.totalVoidMaps > 0 && ((game.global.world == getPageSetting('VoidMaps') && !getPageSetting('RunNewVoids')) || (game.global.world >= getPageSetting('VoidMaps') && getPageSetting('RunNewVoids'))) && (game.global.challengeActive != 'Lead' || game.global.lastClearedCell > 95);
     if (game.global.mapsUnlocked) {
@@ -1372,9 +1361,9 @@ function autoMap() {
 
         needPrestige = (autoTrimpSettings.Prestige.selected != "Off" && game.mapUnlocks[autoTrimpSettings.Prestige.selected].last <= game.global.world - 5 && game.global.mapsUnlocked && game.global.challengeActive != "Frugal");
         if(game.global.challengeActive == "Toxicity") {
-        //ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
-        //enemyDamage *= 2;
-        enemyHealth *= 2;
+            //ignore damage changes (which would effect how much health we try to buy) entirely since we die in 20 attacks anyway?
+            //enemyDamage *= 2;
+            enemyHealth *= 2;
         }
         if(game.global.challengeActive == 'Lead') {
             enemyDamage *= 2.5;
@@ -1388,8 +1377,6 @@ function autoMap() {
         var shouldDoMaps = !enoughHealth || !enoughDamage;
         var shouldDoMap = "world";
 
-
-
         //if we are at max map bonus, and we don't need to farm, don't do maps
         if(game.global.mapBonus == 10 && !shouldFarm) shouldDoMaps = false;
         //if we are prestige mapping, force equip first mode
@@ -1400,14 +1387,7 @@ function autoMap() {
             autoTrimpSettings.Prestige.selected = "Bestplate";
         }
 
-
-
-
-        //If on toxicity and reached the last cell, calculate if max tox stacks will give us better He/hr (assumes max agility)
-        //at looting 54, I have found this only to trigger in lower zones, (20-72 or so) and not been worth it for overall he/hr. Higher looting should trigger it in progressively higher zones, but probably never worth it
-        //leaving it in for now. Manually setting heliumGrowing to true in console should allow it to be used for a maximum total helium gained tox run (for bone trader)
-
-        //stack tox stacks if heliumGrowing has been set to true, or of we need to clear our void maps
+        //stack tox stacks if we are doing max tox, or if we need to clear our void maps
         if(game.global.challengeActive == 'Toxicity' && game.global.lastClearedCell > 93 && game.challenges.Toxicity.stacks < 1500 && ((getPageSetting('MaxTox') && game.global.world > 59) || needToVoid)) {
             shouldDoMaps = true;
             stackingTox = true;
@@ -1416,7 +1396,6 @@ function autoMap() {
                 mapsClicked();
                 mapsClicked();
             }
-
         }
         else stackingTox = false;
 
@@ -1437,7 +1416,7 @@ function autoMap() {
         else shouldDoMap = "create";
 
 
-
+        //Look through all the maps we have - find Uniques or Voids and figure out if we need to run them.
         for (var map in game.global.mapsOwnedArray) {
             var theMap = game.global.mapsOwnedArray[map];
                 //clear void maps if we need to
@@ -1542,23 +1521,15 @@ function autoMap() {
             }
         }
 
-                 //don't map on even worlds if on Lead, except if person is dumb and wants to void on even
-            if(game.global.challengeActive == 'Lead' && !doVoids && (game.global.world % 2 == 0 || game.global.lastClearedCell < 50)) {
-                    if(game.global.preMapsActive)
-                       mapsClicked();
-                   return;
-               }
+        //don't map on even worlds if on Lead, except if person is dumb and wants to void on even
+        if(game.global.challengeActive == 'Lead' && !doVoids && (game.global.world % 2 == 0 || game.global.lastClearedCell < 50)) {
+            if(game.global.preMapsActive)
+                mapsClicked();
+            return;
+       }
         //repeat button management
         if (!game.global.preMapsActive) {
             if (game.global.mapsActive) {
-                //if we bought a new coordination and we're in a map and have a new army ready, force abandon to get updated damage numbers
-          /*      if(newCoord && game.global.repeatMap && game.resources.trimps.realMax() <= game.resources.trimps.owned + 1) {
-                    mapsClicked();
-                    mapsClicked();
-                    newCoord = false;
-                }
-                */
-
                 //if we are doing the right map, and it's not a norecycle (unique) map, and we aren't going to hit max map bonus
                 if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle && (game.global.mapBonus < 9 || shouldFarm || stackingTox)) {
                     var targetPrestige = autoTrimpSettings.Prestige.selected;
@@ -1641,7 +1612,7 @@ function autoMap() {
                         lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
                     }
                 }
-        else {
+                else {
                     while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
                         lootAdvMapsRange.value = lootAdvMapsRange.value - 1;
                     }
@@ -1650,8 +1621,8 @@ function autoMap() {
                     while (difficultyAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
                         difficultyAdvMapsRange.value = difficultyAdvMapsRange.value - 1;
                     }
-        }
-        //if we can't afford the map we designed, pick our highest map
+                }
+                //if we can't afford the map we designed, pick our highest map
                 if (updateMapCost(true) > game.resources.fragments.owned) {
                     selectMap(game.global.mapsOwnedArray[highestMap].id);
                     runMap();
@@ -1696,6 +1667,7 @@ function calculateHelium (stacks) {
     amt = Math.floor(amt);
     return amt;
 }
+
 //calculate our helium per hour including our helium for the end of this zone, assuming we finish the zone right now (and get that helium right now)
 //if (stacked), calculate with maximum toxicity stacks
 function calculateNextHeliumHour (stacked) {
@@ -1705,36 +1677,6 @@ function calculateNextHeliumHour (stacked) {
     if(stacked) heliumNow = Math.floor((game.resources.helium.owned + calculateHelium(true)) / (timeThisPortal + (1500 - game.challenges.Toxicity.stacks) / 7200000));
     return heliumNow;
 }
-
-var heliumGrowing = false;
-var strikes = 0;
-var heliumWatch= 0;
-/*
-function watchHelium (init) {
-    var he = calculateNextHeliumHour();
-    if(init) {
-        heliumGrowing = true;
-        strikes = 0;
-        heliumWatch = he;
-    }
-    if (he > heliumWatch) {
-        heliumGrowing = true;
-        strikes = 0;
-        debug('helium growing! ' + he + ' vs: ' + heliumWatch);
-    }
-    else if (he < heliumWatch) {
-    strikes ++;
-    }
-    if(strikes > 2) {
-        heliumGrowing = false;
-        debug ('urrrrrrrrr OUT!');
-    }
-    heliumWatch = he;
-
-}
-    setInterval(watchHelium, 10000);
-    */
-
 
 
 var lastHelium = 0;
@@ -1782,9 +1724,7 @@ function autoPortal() {
             break;
         default:
             break;
-
     }
-
 }
 
 function checkSettings() {
@@ -1876,14 +1816,14 @@ function manageGenes() {
     }
     //otherwise, if we have some geneticists, start firing them
     else if ((targetBreed < getBreedTime() || targetBreed < getBreedTime(true)) && !game.jobs.Geneticist.locked && game.jobs.Geneticist.owned > 10) {
-            safeBuyJob('Geneticist', -10);
-            //debug('fired a geneticist');
+        safeBuyJob('Geneticist', -10);
+        //debug('fired a geneticist');
 
     }
-        //if our time remaining to full trimps is still too high, fire some jobs to get-er-done
-        //needs option to toggle? advanced options?
-        else if ((targetBreed < getBreedTime(true) || (game.resources.trimps.soldiers == 0 && getBreedTime(true) > 6)) && breedFire == false && getPageSetting('BreedFire') && game.global.world > 10) {
-                breedFire = true;
+    //if our time remaining to full trimps is still too high, fire some jobs to get-er-done
+    //needs option to toggle? advanced options?
+    else if ((targetBreed < getBreedTime(true) || (game.resources.trimps.soldiers == 0 && getBreedTime(true) > 6)) && breedFire == false && getPageSetting('BreedFire') && game.global.world > 10) {
+            breedFire = true;
     }
 /*
     //really should be integrated with the buyBuildings routine instead of here, but I think it's mostly harmless here
@@ -1973,12 +1913,9 @@ function mainLoop() {
         lowLevelFight = game.resources.trimps.maxSoldiers < (game.resources.trimps.owned - game.resources.trimps.employed) * 0.5 && (game.resources.trimps.owned - game.resources.trimps.employed) > game.resources.trimps.realMax() * 0.1 && game.global.world < 5 && game.global.sLevel > 0;
         if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || lowLevelFight )) {
             fightManual();
-            newCoord = false;
             // debug('triggered fight');
         }
     }
-    if(game.resources.trimps.soldiers == 0) noFight ++;
-
 }
 
 function delayStart() {
