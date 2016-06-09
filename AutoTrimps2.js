@@ -1936,17 +1936,18 @@ function doPortal(challenge) {
 
 //adjust geneticists to reach desired breed timer
 function manageGenes() {
+  if(game.global.world != 200) {
     var fWorkers = Math.ceil(game.resources.trimps.realMax() / 2) - game.resources.trimps.employed;
     if(getPageSetting('ManageBreedtimer')) {
-        if(game.options.menu.showFullBreed.enabled != 1) toggleSetting("showFullBreed");
-
+    	if(game.options.menu.showFullBreed.enabled != 1) toggleSetting("showFullBreed");
+    	
         if(game.portal.Anticipation.level == 0) autoTrimpSettings.GeneticistTimer.value = '0';
         else if(game.global.challengeActive == 'Electricity' || game.global.challengeActive == 'Mapocalypse') autoTrimpSettings.GeneticistTimer.value = '3.5';
         else if(game.global.challengeActive == 'Nom' || game.global.challengeActive == 'Toxicity') {
-            //intent of below if is to push through past megafarming with 30 anti stacks if we need to farm,
-            //but raising to 30 antistacks often turns shouldfarm off. Would need a separate shouldFarmNom variable that approximates at 10 stacks? Don't care enough to do now
-            //if(shouldFarm && !game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '30';
-            autoTrimpSettings.GeneticistTimer.value = '11';
+        	//intent of below if is to push through past megafarming with 30 anti stacks if we need to farm, 
+        	//but raising to 30 antistacks often turns shouldfarm off. Would need a separate shouldFarmNom variable that approximates at 10 stacks? Don't care enough to do now
+        	//if(shouldFarm && !game.global.mapsActive) autoTrimpSettings.GeneticistTimer.value = '30';
+        	autoTrimpSettings.GeneticistTimer.value = '11';
         }
         else autoTrimpSettings.GeneticistTimer.value = '30';
     }
@@ -1955,8 +1956,8 @@ function manageGenes() {
     //if we need to hire geneticists
     //Don't hire geneticists if total breed time remaining is greater than our target breed time
     //Don't hire geneticists if we have already reached 30 anti stacks (put off further delay to next trimp group)
-    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked && targetBreed > getBreedTime(true) && (game.global.lastBreedTime/1000 + getBreedTime(true) < 30) && game.resources.trimps.soldiers > 0 && inDamageStance && !breedFire) {
-        //insert 10% of total food limit here? or cost vs tribute?
+    if (targetBreed > getBreedTime() && !game.jobs.Geneticist.locked && targetBreed > getBreedTime(true) && (game.global.lastBreedTime/1000 + getBreedTime(true) < 30) && game.resources.trimps.soldiers > 0 && inDamageStance) {
+    	//insert 10% of total food limit here? or cost vs tribute?
         //if there's no free worker spots, fire a farmer
         if (fWorkers < 1 && canAffordJob('Geneticist', false)) {
             safeBuyJob('Farmer', -1);
@@ -1971,16 +1972,16 @@ function manageGenes() {
     }
     //otherwise, if we have some geneticists, start firing them
     else if ((targetBreed < getBreedTime() || targetBreed < getBreedTime(true)) && !game.jobs.Geneticist.locked && game.jobs.Geneticist.owned > 10) {
-            safeBuyJob('Geneticist', -10);
-            //debug('fired a geneticist');
-
+        	safeBuyJob('Geneticist', -10);
+        	//debug('fired a geneticist');
+    	
     }
         //if our time remaining to full trimps is still too high, fire some jobs to get-er-done
-        //needs option to toggle? advanced options?
+    	//needs option to toggle? advanced options?
         else if ((targetBreed < getBreedTime(true) || (game.resources.trimps.soldiers == 0 && getBreedTime(true) > 6)) && breedFire == false && getPageSetting('BreedFire') && game.global.world > 10) {
-                breedFire = true;
+    	    	breedFire = true;
     }
-/*
+/*    
     //really should be integrated with the buyBuildings routine instead of here, but I think it's mostly harmless here
     else if (targetBreed < getBreedTime() && getPageSetting('ManageBreedtimer') && !game.buildings.Nursery.locked) {
         safeBuyBuilding('Nursery');
@@ -1989,8 +1990,11 @@ function manageGenes() {
 
     //reset breedFire once we have less than 2 seconds remaining
     if(getBreedTime(true) < 2) breedFire = false;
-
+  } else if(game.jobs.Geneticist.owned > 850) {
+    safeBuyJob('Geneticist', -10);
+  }
 }
+
 
 
 
