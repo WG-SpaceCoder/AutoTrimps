@@ -946,6 +946,9 @@ function buyJobs() {
     var minerRatio = parseInt(getPageSetting('MinerRatio'));
     var totalRatio = farmerRatio + lumberjackRatio + minerRatio;
     var scientistRatio = totalRatio / 25;
+    if (game.jobs.Farmer.owned < 100) {
+        scientistRatio = totalRatio / 10;
+    }
     var oldBuy = game.global.buyAmt;
 
     //Simple buy if you can
@@ -990,7 +993,7 @@ function buyJobs() {
         safeBuyJob('Lumberjack', game.jobs.Lumberjack.owned * -1);
     if(!game.jobs.Miner.locked && !breedFire)
         safeBuyJob('Miner', Math.floor((minerRatio / totalRatio * totalDistributableWorkers) - game.jobs.Miner.owned));
-    else if(breedFire)
+    else if(breedFire && game.global.turkimpTimer === 0)
         safeBuyJob('Miner', game.jobs.Miner.owned * -1);
 }
 
@@ -1139,7 +1142,13 @@ function manualLabor() {
     //if we have some upgrades sitting around which we don't have enough science for, gather science
     else if (game.resources.science.owned < scienceNeeded && document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden') {
         // debug('Science needed ' + scienceNeeded);
-        setGather('science');
+        if (getPlayerModifier() < game.jobs.Scientist.owned*game.jobs.Scientist.modifier && game.global.turkimpTimer > 0){
+            //if manual is less than half of science production switch on turkimp
+            setGather('metal');
+        }
+        else {
+            setGather('science');
+        }
     }
     else if (getPageSetting('TrapTrimps') && parseInt(getPageSetting('GeneticistTimer')) < getBreedTime(true) && game.buildings.Trap.owned < 1 && canAffordBuilding('Trap')) {
                 safeBuyBuilding('Trap');
