@@ -1142,7 +1142,7 @@ function manualLabor() {
     //if we have some upgrades sitting around which we don't have enough science for, gather science
     else if (game.resources.science.owned < scienceNeeded && document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden') {
         // debug('Science needed ' + scienceNeeded);
-        if (getPlayerModifier() < game.jobs.Scientist.owned*game.jobs.Scientist.modifier && game.global.turkimpTimer > 0){
+        if (getPlayerModifier() < game.jobs.Scientist.owned*game.jobs.Scientist.modifier *(1+game.portal.Motivation.modifier*game.portal.Motivation.level)*Math.pow(1.003,game.unlocks.impCount.Whipimp) && game.global.turkimpTimer > 0){
             //if manual is less than half of science production switch on turkimp
             setGather('metal');
         }
