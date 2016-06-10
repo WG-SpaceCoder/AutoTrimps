@@ -195,6 +195,29 @@ function timeStamp() {
     return time.join(":");
 }
 
+function getPerSecBeforeManual(job) {
+    var perSec = 0;
+    if (game.jobs[job].owned > 0){
+		perSec = (game.jobs[job].owned * game.jobs[job].modifier);
+		if (game.portal.Motivation.level > 0) perSec += (perSec * game.portal.Motivation.level * game.portal.Motivation.modifier);
+		if (game.portal.Motivation_II.level > 0) perSec *= (1 + (game.portal.Motivation_II.level * game.portal.Motivation_II.modifier));
+		if (game.portal.Meditation.level > 0) perSec *= (1 + (game.portal.Meditation.getBonusPercent() * 0.01)).toFixed(2);
+		if (game.global.challengeActive == "Meditate") perSec *= 1.25;
+		else if (game.global.challengeActive == "Size") perSec *= 1.5;
+		if (game.global.challengeActive == "Toxicity"){
+			var toxMult = (game.challenges.Toxicity.lootMult * game.challenges.Toxicity.stacks) / 100;
+			perSec *= (1 + toxMult);
+		}
+		if (game.global.challengeActive == "Balance"){
+			perSec *= game.challenges.Balance.getGatherMult();
+		}
+		if (game.global.challengeActive == "Watch") perSec /= 2;
+		if (game.global.challengeActive == "Lead" && ((game.global.world % 2) == 1)) perSec*= 2;
+		perSec = calcHeirloomBonus("Staff", job + "Speed", perSec);
+	}
+	return perSec
+}
+
 //Called before buying things that can be purchased in bulk
 function preBuy() {
     preBuyAmt = game.global.buyAmt;
@@ -1142,7 +1165,7 @@ function manualLabor() {
     //if we have some upgrades sitting around which we don't have enough science for, gather science
     else if (game.resources.science.owned < scienceNeeded && document.getElementById('scienceCollectBtn').style.display != 'none' && document.getElementById('science').style.visibility != 'hidden') {
         // debug('Science needed ' + scienceNeeded);
-        if (getPlayerModifier() < game.jobs.Scientist.owned*game.jobs.Scientist.modifier *(1+game.portal.Motivation.modifier*game.portal.Motivation.level)*Math.pow(1.003,game.unlocks.impCount.Whipimp) && game.global.turkimpTimer > 0){
+        if (getPlayerModifier() < getPerSecBeforeManual(metal) && game.global.turkimpTimer > 0){
             //if manual is less than half of science production switch on turkimp
             setGather('metal');
         }
