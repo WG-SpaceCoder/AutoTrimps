@@ -177,8 +177,10 @@ I'm going to open up my discord channel for chat. Here is the link if you would 
 ## Colors for upgrades highlights
 
 - Red text on Equip - it's best in its category in terms of stat per resource. This also compares Gyms with Shields.
+- Orange text - Upgrade is avaliable and improving this will make the upgrade actually reduce stat in question and it's best in its category in terms of stat per resource.
+- Yellow text - Upgrade is avaliable and improving this will make the upgrade actually reduce stat in question
 - White border - upgrade is not yet available
 - Yellow border - upgrade is available, but not affordable
 - Orange border - upgrade is available, affordable, but will actually reduce stat in question
 - Red border - you have enough resources to level equip after upgrade to surpass it's current stats.
-- Upgrade texts are also colored accordingly.
+- Green border on hoses - Best for gems 
