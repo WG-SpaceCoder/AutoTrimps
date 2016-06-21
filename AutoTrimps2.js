@@ -1651,6 +1651,10 @@ function autoMap() {
                     while (difficultyAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
                         difficultyAdvMapsRange.value -= 1;
                     }
+                    //if we still cant afford the map lower the size
+                    while (sizeAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+                        sizeAdvMapsRange.value -= 1;
+                    }
                 }
                 //if we can't afford the map we designed, pick our highest map
                 if (updateMapCost(true) > game.resources.fragments.owned) {
