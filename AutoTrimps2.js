@@ -847,11 +847,15 @@ function getBreedTime(remaining) {
 function initializeAutoTrimps() {
     debug('initializeAutoTrimps');
     loadPageVariables();
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/NewUI.js')._;
-    javascript: with(document)(head.appendChild(createElement('script')).src = 'https://zininzinin.github.io/AutoTrimps/Graphs.js')._;
-    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/NewUI.js')._;
-    //javascript: with(document)(head.appendChild(createElement('script')).src = 'https://rawgit.com/zininzinin/AutoTrimps/spin/Graphs.js')._;
-    //why you no update, github aids
+
+    var script = document.getElementById('AutoTrimps-script')
+      , base = 'https://zininzinin.github.io/AutoTrimps'
+      ;
+    if (script !== null) {
+        base = script.getAttribute('src').replace(/\/AutoTrimps2\.js$/, '');:
+    }
+    document.head.appendChild(document.createElement('script')).src = base + '/NewUI.js';
+    document.head.appendChild(document.createElement('script')).src = base + '/Graphs.js';
     toggleSettingsMenu();
     toggleSettingsMenu();
 }
@@ -1064,7 +1068,7 @@ function autoLevelEquipment() {
         enemyHealth *= 7;
     }
     //change name to make sure these are local to the function
-    var enoughHealthE = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
+    var enoughHealthE = !(doVoids && voidCheckPercent > 0) && (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
     var enoughDamageE = (baseDamage * 4 > enemyHealth);
 
     for (var equipName in equipmentList) {
