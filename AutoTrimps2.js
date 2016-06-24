@@ -230,12 +230,16 @@ function safeBuyBuilding(building) {
     game.global.firing = false;
     //avoid slow building from clamping
      //buy as many warpstations as we can afford
-    if(building == 'Warpstation'){
+    if (building == 'Warpstation') {
+      if (game.global.world < 212 || game.global.world % 10 < 2) {
         game.global.buyAmt = 'Max';
         setMax(1);
             buyBuilding(building, true, true);
             debug('Building ' + game.global.buyAmt + ' ' + building + 's');
             return;
+      } else {
+        return;
+      }
     }
         debug('Building ' + building);
         buyBuilding(building, true, true);
@@ -899,11 +903,20 @@ function initializeAutoTrimps() {
 }
 
 function easyMode() {
+  /*
+  if(game.global.world > 221 && !getPageSetting('BuyWeapons')){
+    settingChanged('BuyWeapons');
+  } else if(game.global.world > 200 && getPageSetting('BuyWeapons')){
+    settingChanged('BuyWeapons');
+  } else if(game.global.world < 200 && !getPageSetting('BuyWeapons')){
+    settingChanged('BuyWeapons');
+  }
+  */
     if (game.resources.trimps.realMax() > 10000000) {
         autoTrimpSettings.FarmerRatio.value = '1';
         autoTrimpSettings.LumberjackRatio.value = '1';
         autoTrimpSettings.MinerRatio.value = '10';
-    } if (game.resources.trimps.realMax() > 3000000) {
+    } else if (game.resources.trimps.realMax() > 3000000) {
         autoTrimpSettings.FarmerRatio.value = '3';
         autoTrimpSettings.LumberjackRatio.value = '1';
         autoTrimpSettings.MinerRatio.value = '5';
@@ -1990,7 +2003,7 @@ function manageGenes() {
 
     //reset breedFire once we have less than 2 seconds remaining
     if(getBreedTime(true) < 2) breedFire = false;
-  } else if(game.jobs.Geneticist.owned > 850) {
+  } else if(game.jobs.Geneticist.owned > 950) {
     safeBuyJob('Geneticist', -10);
   }
 }
