@@ -1747,6 +1747,7 @@ function autoPortal() {
         case "Toxicity":
         case "Watch":
         case "Lead":
+        case "Corrupted":
             if(!game.global.challengeActive) {
                 pushData();
                 doPortal(autoTrimpSettings.AutoPortal.selected);
