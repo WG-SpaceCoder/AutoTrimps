@@ -62,11 +62,12 @@ createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after c
 var advHeader = document.createElement("DIV");
 var advBtn = document.createElement("DIV");
 advBtn.setAttribute('class', 'btn btn-default');
-advBtn.setAttribute('onclick', 'autoToggle(document.getElementById(\'advancedSettings\'))');
+advBtn.setAttribute('onclick', 'autoToggle(\'advancedSettings\')');
 advBtn.innerHTML = 'Advanced Settings';
 advBtn.setAttribute("onmouseover", 'tooltip(\"Advanced Settings\", \"customText\", event, \"Leave off unless you know what you\'re doing with them.\")');
 advBtn.setAttribute("onmouseout", 'tooltip("hide")');
 advBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw;');
+advBtn.id='advancedSettingsBTN';
 advHeader.appendChild(advBtn);
 
 document.getElementById("autoSettings").appendChild(advHeader);
@@ -82,9 +83,122 @@ createSetting('MaxTox', 'Max Toxicity Stacks', 'Get maximum toxicity stacks befo
 createSetting('RunNewVoids', 'Run New Voids', 'Run new void maps acquired after the set void map zone.', 'boolean', null, null, 'advancedSettings');
 createSetting('VoidCheck', 'Void Difficulty Check', 'How many hits to be able to take from a void map boss in dominance stance before we attempt the map. Higher values will get you stronger before attempting. 2 should be fine.', 'value', '2', null, 'advancedSettings');
 createSetting('DisableFarm', 'Disable Farming', 'Disables the farming section of the automaps algorithm. This will cause it to always return to the zone upon reaching 10 map stacks.', 'boolean', null, null, 'advancedSettings');
-createSetting('PauseScript', 'Pause AutoTrimps', 'Pause AutoTrimps (not including the graphs module)', 'boolean', null, null, 'advancedSettings');
 
+//genBTC advanced settings - Create button.
+var genbtcBtn = document.createElement("DIV");
+genbtcBtn.setAttribute('class', 'btn btn-default');
+genbtcBtn.setAttribute('onclick', 'autoToggle(\'genbtcadvancedSettings\')');
+genbtcBtn.innerHTML = 'genBTC Settings';
+genbtcBtn.setAttribute("onmouseover", 'tooltip(\"genBTC Settings\", \"customText\", event, \"Leave off unless you know what you\'re doing with them.\")');
+genbtcBtn.setAttribute("onmouseout", 'tooltip("hide")');
+genbtcBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw;');
+genbtcBtn.id='genbtcadvancedSettingsBTN';
+advHeader.appendChild(genbtcBtn);
+//
+var genbtcadv = document.createElement("DIV");
+genbtcadv.id = 'genbtcadvancedSettings';
+genbtcadv.style.display = 'none';
+document.getElementById("autoSettings").appendChild(genbtcadv);
 
+//Page 2 - New settings - option buttons.
+createSetting('AutoRoboTrimp', 'AutoRoboTrimp', 'Use RoboTrimps ability starting at this level, and every 5 levels thereafter. (set to 0 to disable)', 'value', '0', null, 'genbtcadvancedSettings');
+createSetting('AutoGoldenUpgrades', 'AutoGoldenUpgrades', 'Automatically Buy the specified Golden Upgrades as they become available.', 'dropdown', 'Off', ["Off","Helium", "Battle", "Void"], 'genbtcadvancedSettings');
+
+//Manage importexport Settings - Create button.
+var importexportBtn = document.createElement("DIV");
+importexportBtn.setAttribute('class', 'btn btn-default');
+importexportBtn.setAttribute('onclick', 'autoToggle(\'importexportSettings\')');
+importexportBtn.innerHTML = 'Import/Export Settings';
+importexportBtn.setAttribute("onmouseover", 'tooltip(\"Import/Export Settings\", \"customText\", event, \"Expand the Import/Export/Reset Autotrimps section.\")');
+importexportBtn.setAttribute("onmouseout", 'tooltip("hide")');
+importexportBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw;');
+importexportBtn.id='importexportSettingsBTN';
+advHeader.appendChild(importexportBtn);
+//
+var importexportadv = document.createElement("DIV");
+importexportadv.id = 'importexportSettings';
+importexportadv.style.display = 'none';
+document.getElementById("autoSettings").appendChild(importexportadv);
+//Manage settings - option buttons - Export/Import/Default
+createSetting('ExportAutoTrimps', 'Export AutoTrimps', 'Export your Settings.', 'infoclick', 'ExportAutoTrimps', null, 'importexportSettings');
+createSetting('ImportAutoTrimps', 'Import AutoTrimps', 'Import your Settings.', 'infoclick', 'ImportAutoTrimps', null, 'importexportSettings');
+createSetting('DefaultAutoTrimps', 'Reset to Default', 'Reset everything to the way it was when you first installed the script.', 'infoclick', 'DefaultAutoTrimps', null, 'importexportSettings');
+
+//moved pause-button to be more visible. has its own logic down in createSetting.
+createSetting('PauseScript', 'Pause AutoTrimps', 'Pause AutoTrimps (not including the graphs module)', 'boolean', null, null, 'pause');
+
+function loadAutoTrimps() {
+    var thestring = document.getElementById("importBox").value.replace(/(\r\n|\n|\r|\s)/gm,"");
+    var tmpset = JSON.parse(thestring);
+    if (tmpset == null)
+        return;
+    //should have done more error checking with at least an error message.
+    autoTrimpSettings = tmpset;
+    checkSettings();
+    saveSettings();
+    updateValueFields();
+    updateCustomButtons();
+    for (var setting in autoTrimpSettings) {
+        if (autoTrimpSettings[setting].type == 'boolean')
+            //refresh boolean buttons.
+            document.getElementById(setting).setAttribute('class', 'settingsBtn settingBtn' + autoTrimpSettings[setting].enabled);
+    }
+}
+
+function AutoTrimpsTooltip(what, isItIn, event) {
+	if (game.global.lockTooltip) 
+        return;
+	var elem = document.getElementById("tooltipDiv");
+	swapClass("tooltipExtra", "tooltipExtraNone", elem);
+	var ondisplay = null; // if non-null, called after the tooltip is displayed
+	var tooltipText;
+	var costText = "";
+	if (what == "ExportAutoTrimps"){
+		tooltipText = "This is your AUTOTRIMPS save string. There are many like it but this one is yours. Save this save somewhere safe so you can save time next time. <br/><br/><textarea id='exportArea' style='width: 100%' rows='5'>" + JSON.stringify(autoTrimpSettings) + "</textarea>";
+        costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip()'>Got it</div>";
+		if (document.queryCommandSupported('copy')){
+			costText += "<div id='clipBoardBtn' class='btn btn-success'>Copy to Clipboard</div>";
+			ondisplay = function(){
+				document.getElementById('exportArea').select();
+				document.getElementById('clipBoardBtn').addEventListener('click', function(event) {
+				    document.getElementById('exportArea').select();
+					  try {
+						document.execCommand('copy');
+					  } catch (err) {
+						document.getElementById('clipBoardBtn').innerHTML = "Error, not copied";
+					  }
+				});
+            };
+		}
+        else {
+            ondisplay = function(){
+                document.getElementById('exportArea').select();
+            };
+		}
+		costText += "</div>";
+	}
+	if (what == "ImportAutoTrimps"){
+        //runs the loadAutoTrimps() function.
+		tooltipText = "Import your AUTOTRIMPS save string! It'll be fine, I promise.<br/><br/><textarea id='importBox' style='width: 100%' rows='5'></textarea>";
+		costText="<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip(); loadAutoTrimps();'>Import</div><div class='btn btn-info' onclick='cancelTooltip()'>Cancel</div></div>";
+		ondisplay = function () {
+			document.getElementById('importBox').focus();
+        };
+    }
+    if (what == "DefaultAutoTrimps"){
+        localStorage.removeItem('autoTrimpSettings');
+        tooltipText = "Please Save your game and reload your browser now, for Autotrimps to reset to defaults.";
+    }
+    game.global.lockTooltip = true;
+    elem.style.left = "33.75%";
+    elem.style.top = "25%";
+	document.getElementById("tipTitle").innerHTML = what;
+	document.getElementById("tipText").innerHTML = tooltipText;
+	document.getElementById("tipCost").innerHTML = costText;
+	elem.style.display = "block";
+	if (ondisplay !== null)
+		ondisplay();
+}
 
 function automationMenuInit() {
 
@@ -143,8 +257,15 @@ function automationMenuInit() {
 //toggles the display of the settings menu.
 function autoToggle(what){ 
     if(what) {
-        if(what.style.display === 'block') what.style.display = 'none';
-        else what.style.display = 'block';
+        whatobj = document.getElementById(what);
+        if(whatobj.style.display === 'block'){
+            whatobj.style.display = 'none';
+            document.getElementById(what+'BTN').style.border = '';
+        }
+        else {
+            whatobj.style.display = 'block';
+            document.getElementById(what+'BTN').style.border = '4px solid green';
+        }
     }
     else {
         if (game.options.displayed)
@@ -189,7 +310,17 @@ function createSetting(id, name, description, type, defaultValue, list, containe
         btn.setAttribute("onmouseover", 'tooltip(\"' + name + '\", \"customText\", event, \"' + description + '\")');
         btn.setAttribute("onmouseout", 'tooltip("hide")');
         btn.textContent = name;
-        btnParent.appendChild(btn)
+        //special case for Pause button.
+        if (container == 'pause'){
+            btn.setAttribute('style', 'inline-block');
+            btnParent.style.float = 'right';
+            btnParent.style.marginBottom = '';
+            btnParent.style.marginRight = '2vw';
+            btnParent.appendChild(btn);
+            advHeader.appendChild(btnParent);
+            return;
+        }
+        btnParent.appendChild(btn);
         if(container) document.getElementById(container).appendChild(btnParent);
         else document.getElementById("autoSettings").appendChild(btnParent);
     } else if (type == 'value') {
@@ -239,6 +370,14 @@ function createSetting(id, name, description, type, defaultValue, list, containe
         btn.value = autoTrimpSettings[id].selected;
         btnParent.appendChild(btn);
         
+        if(container) document.getElementById(container).appendChild(btnParent);
+        else document.getElementById("autoSettings").appendChild(btnParent);
+    } else if (type == 'infoclick') {
+        btn.setAttribute('class', 'btn btn-info');
+        btn.setAttribute("onclick", 'AutoTrimpsTooltip(\'' + defaultValue + '\', null, \'update\')');
+        btn.textContent = name;
+        btnParent.style.width = '';
+        btnParent.appendChild(btn);
         if(container) document.getElementById(container).appendChild(btnParent);
         else document.getElementById("autoSettings").appendChild(btnParent);
     }

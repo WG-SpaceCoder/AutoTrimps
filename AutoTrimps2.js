@@ -1925,6 +1925,30 @@ function manageGenes() {
 }
 
 
+function autoRoboTrimp() {
+    //exit if the cooldown is active, or we havent unlocked robotrimp.
+    if (game.global.roboTrimpCooldown > 0 || !game.global.roboTrimpLevel) return;
+    var robotrimpzone = parseInt(getPageSetting('AutoRoboTrimp'));
+    //exit if we have the setting set to 0
+    if (robotrimpzone == 0) return;
+    //activate the button when we are above the cutoff zone, and we are out of cooldown (and the button is inactive)
+    if (game.global.world >= robotrimpzone && !game.global.useShriek){
+        magnetoShriek();
+        debug("Activated Robotrimp Ability", '*podcast');
+    }
+}
+
+//Version 3.6 Golden Upgrades
+function autoGoldenUpgrades() {
+    //get the numerical value of the selected index of the dropdown box
+    var setting = document.getElementById('AutoGoldenUpgrades').selectedIndex;
+    if (setting == 0) return;   //if disabled, exit.
+    var num = getAvailableGoldenUpgrades();
+    if (num == 0) return;       //if we have nothing to buy, exit.
+    //buy one upgrade per loop.
+    var what = ["Off","Helium", "Battle", "Void"]        
+    buyGoldenUpgrade(what[setting]);        
+}
 
 ////////////////////////////////////////
 //Logic Loop////////////////////////////
@@ -1943,14 +1967,19 @@ setTimeout(delayStart, 2000);
 
 function mainLoop() {
     game.global.addonUser = true;
+    game.global.autotrimps = {
+        firstgiga: getPageSetting('FirstGigastation'),
+        deltagiga: getPageSetting('DeltaGigastation')
+    }    
     if(getPageSetting('PauseScript')) return;
     if(game.global.viewingUpgrades) return;
     setTitle();
     setScienceNeeded();
     updateValueFields();
 
-    if (getPageSetting('EasyMode')) easyMode(); //This needs a UI input
+    if (getPageSetting('EasyMode')) easyMode();
     if (getPageSetting('BuyUpgrades')) buyUpgrades();
+    autoGoldenUpgrades();
     if (getPageSetting('BuyStorage')) buyStorage();
     if (getPageSetting('BuyBuildings')) buyBuildings();
     if (getPageSetting('BuyJobs')) buyJobs();
@@ -1960,7 +1989,7 @@ function mainLoop() {
     if (autoTrimpSettings.AutoPortal.selected != "Off") autoPortal();
     if (getPageSetting('AutoHeirlooms')) autoHeirlooms();
     if (getPageSetting('TrapTrimps') && game.global.trapBuildAllowed && game.global.trapBuildToggled == false) toggleAutoTrap();
-
+    if (getPageSetting('AutoRoboTrimp')) autoRoboTrimp();
 
     if (getPageSetting('AutoStance')) autoStance();
     //if autostance is not on, we should do base calculations here so stuff like automaps still works
@@ -2003,7 +2032,16 @@ function mainLoop() {
             // debug('triggered fight');
         }
     }
+    //Runs any user provided scripts - by copying and pasting a function named userscripts() into the Chrome Dev console. (F12)
+    userscripts();
 }
+
+//left blank intentionally. the user will provide this.
+function userscripts()
+{
+    //insert code here:
+}
+
 
 function delayStart() {
     initializeAutoTrimps();
