@@ -1941,13 +1941,12 @@ function autoRoboTrimp() {
 //Version 3.6 Golden Upgrades
 function autoGoldenUpgrades() {
     //get the numerical value of the selected index of the dropdown box
-    var setting = document.getElementById('AutoGoldenUpgrades').selectedIndex;
-    if (setting == 0) return;   //if disabled, exit.
+    var setting = document.getElementById('AutoGoldenUpgrades').value;
+    if (setting == "Off") return;   //if disabled, exit.
     var num = getAvailableGoldenUpgrades();
     if (num == 0) return;       //if we have nothing to buy, exit.
     //buy one upgrade per loop.
-    var what = ["Off","Helium", "Battle", "Void"]        
-    buyGoldenUpgrade(what[setting]);        
+    buyGoldenUpgrade(setting);
 }
 
 ////////////////////////////////////////

@@ -502,6 +502,7 @@ function updateCustomButtons() {
     document.getElementById('AutoPortal').value = autoTrimpSettings.AutoPortal.selected;
     document.getElementById('HeliumHourChallenge').value = autoTrimpSettings.HeliumHourChallenge.selected;
     document.getElementById('CustomAutoPortal').value = autoTrimpSettings.CustomAutoPortal.selected;
+    document.getElementById('AutoGoldenUpgrades').value = autoTrimpSettings.AutoGoldenUpgrades.selected;
     
 
 }
