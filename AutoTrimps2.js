@@ -329,17 +329,20 @@ function safeBuyJob(jobTitle, amount) {
     if (amount === 0) return false;
     preBuy();
     if (amount < 0) {
-        game.global.firing = true;
         amount = Math.abs(amount);
-    } else {
-            game.global.firing = false;
-        if (!canAffordJob(jobTitle, false)) {
-            postBuy();
-            return false;
+        game.global.firing = true;
+        game.global.buyAmt = amount;
+    } else{
+        game.global.firing = false;
+        game.global.buyAmt = amount;
+        //if can afford, buy what we wanted,
+        if (!canAffordJob(jobTitle, false)){
+            game.global.buyAmt = 'Max'; //if we can't afford it, just use 'Max'. -it will always succeed-
+            game.global.maxSplit = 1;
         }
     }
     //debug((game.global.firing ? 'Firing ' : 'Hiring ') + game.global.buyAmt + ' ' + jobTitle);
-    game.global.buyAmt = amount;
+    
     buyJob(jobTitle, null, true);
     postBuy();
     return true;
