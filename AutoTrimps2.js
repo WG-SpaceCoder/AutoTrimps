@@ -288,7 +288,7 @@ function highlightHousing() {
             }
         }
         var keysSorted = Object.keys(obj).sort(function(a, b) {
-            return obj[a] - obj[b]
+            return obj[a] - obj[b];
         });
         bestBuilding = null;
         //loop through the array and find the first one that isn't limited by max settings
@@ -297,6 +297,12 @@ function highlightHousing() {
             if (max === false) max = -1;
             if (game.buildings[keysSorted[best]].owned < max || max == -1) {
                 bestBuilding = keysSorted[best];
+                
+                if (getPageSetting('WarpstationCap') && bestBuilding == "Warpstation") {
+                    //Warpstation Cap - if we are past the basewarp+deltagiga level, "cap" and just wait for next giga.
+                    if (game.buildings.Warpstation.owned >= (Math.floor(game.upgrades.Gigastation.done * getPageSetting('DeltaGigastation')) + getPageSetting('FirstGigastation')))
+                        bestBuilding = null;
+                }
                 break;
             }
         }
@@ -307,7 +313,7 @@ function highlightHousing() {
     } else {
         bestBuilding = null;
     }
-game.global.buyAmt = oldBuy;
+    game.global.buyAmt = oldBuy;
 }
 
 function buyFoodEfficientHousing() {
