@@ -66,7 +66,7 @@ advBtn.setAttribute('onclick', 'autoToggle(\'advancedSettings\')');
 advBtn.innerHTML = 'Advanced Settings';
 advBtn.setAttribute("onmouseover", 'tooltip(\"Advanced Settings\", \"customText\", event, \"Leave off unless you know what you\'re doing with them.\")');
 advBtn.setAttribute("onmouseout", 'tooltip("hide")');
-advBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw;');
+advBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw; font-size: 0.8vw;');
 advBtn.id='advancedSettingsBTN';
 advHeader.appendChild(advBtn);
 
@@ -91,7 +91,7 @@ genbtcBtn.setAttribute('onclick', 'autoToggle(\'genbtcadvancedSettings\')');
 genbtcBtn.innerHTML = 'genBTC Settings';
 genbtcBtn.setAttribute("onmouseover", 'tooltip(\"genBTC Settings\", \"customText\", event, \"Leave off unless you know what you\'re doing with them.\")');
 genbtcBtn.setAttribute("onmouseout", 'tooltip("hide")');
-genbtcBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw;');
+genbtcBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw; font-size: 0.8vw;');
 genbtcBtn.id='genbtcadvancedSettingsBTN';
 advHeader.appendChild(genbtcBtn);
 //
@@ -103,8 +103,13 @@ document.getElementById("autoSettings").appendChild(genbtcadv);
 //Page 2 - New settings - option buttons.
 createSetting('AutoRoboTrimp', 'AutoRoboTrimp', 'Use RoboTrimps ability starting at this level, and every 5 levels thereafter. (set to 0 to disable)', 'value', '0', null, 'genbtcadvancedSettings');
 createSetting('AutoGoldenUpgrades', 'AutoGoldenUpgrades', 'Automatically Buy the specified Golden Upgrades as they become available.', 'dropdown', 'Off', ["Off","Helium", "Battle", "Void"], 'genbtcadvancedSettings');
+var AGULabel = document.createElement("Label");
+AGULabel.id = 'AutoGoldenUpgradesLabel';
+AGULabel.innerHTML = "Golden Upgrades:";
+AGULabel.setAttribute('style', 'margin-right: 0.4vw; font-size: 0.8vw;');
+document.getElementById("AutoGoldenUpgrades").parentNode.insertBefore(AGULabel,document.getElementById("AutoGoldenUpgrades"))
 createSetting('WarpstationCap', 'Warpstation Cap', 'Do not level Warpstations past Basewarp+DeltaGiga. Without this, if a Giga wasnt available, it would level infinitely. ', 'boolean', null, null, 'genbtcadvancedSettings');
-createSetting('HeliumHrBuffer', 'Helium/Hr Buffer %', 'When using the He/Hr Autoportal, it will portal if your He/Hr drops by this amount of % lower than your best for current run, default is 0% (ie: set to 5 to portal at 95% of your best)', 'value', '0', null, 'genbtcadvancedSettings');
+createSetting('HeliumHrBuffer', 'He/Hr Portal Buffer %', 'When using the He/Hr Autoportal, it will portal if your He/Hr drops by this amount of % lower than your best for current run, default is 0% (ie: set to 5 to portal at 95% of your best)', 'value', '0', null, 'genbtcadvancedSettings');
 
 //Manage importexport Settings - Create button.
 var importexportBtn = document.createElement("DIV");
@@ -113,7 +118,7 @@ importexportBtn.setAttribute('onclick', 'autoToggle(\'importexportSettings\')');
 importexportBtn.innerHTML = 'Import/Export Settings';
 importexportBtn.setAttribute("onmouseover", 'tooltip(\"Import/Export Settings\", \"customText\", event, \"Expand the Import/Export/Reset Autotrimps section.\")');
 importexportBtn.setAttribute("onmouseout", 'tooltip("hide")');
-importexportBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw;');
+importexportBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw; font-size: 0.8vw;');
 importexportBtn.id='importexportSettingsBTN';
 advHeader.appendChild(importexportBtn);
 //
@@ -377,12 +382,19 @@ function createSetting(id, name, description, type, defaultValue, list, containe
     } else if (type == 'infoclick') {
         btn.setAttribute('class', 'btn btn-info');
         btn.setAttribute("onclick", 'AutoTrimpsTooltip(\'' + defaultValue + '\', null, \'update\')');
+        btn.setAttribute("style", "display: block; font-size: 0.8vw;");
         btn.textContent = name;
         btnParent.style.width = '';
         btnParent.appendChild(btn);
         if(container) document.getElementById(container).appendChild(btnParent);
         else document.getElementById("autoSettings").appendChild(btnParent);
+        return;
     }
+    //make sure names/descriptions match what we have stored.
+    if (autoTrimpSettings[id].name != name)
+        autoTrimpSettings[id].name = name;
+    if (autoTrimpSettings[id].description != description)
+        autoTrimpSettings[id].description = description;    
 }
 
 function settingChanged(id) {
@@ -489,8 +501,8 @@ function updateCustomButtons() {
     
     if (autoTrimpSettings.RunMapsWhenStuck.enabled) document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-success");
     else document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-danger");
-    //auto portal setting, hide until player has cleared zone 81
-    if (game.global.highestLevelCleared >= 80 ) document.getElementById("AutoPortal").style.display = '';
+    //auto portal setting, hide until player has cleared zone 60
+    if (game.global.highestLevelCleared >= 60 ) document.getElementById("AutoPortal").style.display = '';
     else document.getElementById("AutoPortal").style.display = 'none';
     //custom auto portal value
     if (autoTrimpSettings.AutoPortal.selected == "Custom") document.getElementById("CustomAutoPortal").style.display = '';
