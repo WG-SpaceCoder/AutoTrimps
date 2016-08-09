@@ -21,6 +21,7 @@ var breedFire = false;
 var shouldFarm = false;
 var enoughDamage = true;
 var enoughHealth = true;
+var stopScientistsatFarmers;
 
 var baseDamage = 0;
 var baseBlock = 0;
@@ -1973,33 +1974,36 @@ function autoGoldenUpgrades() {
     buyGoldenUpgrade(setting);
 }
 
+//Exits the Spire after completing the specified cell.
+function exitSpireCell() {    
+    if(game.global.world == 200 && game.global.spireActive && game.global.lastClearedCell >= getPageSetting('ExitSpireCell')-1) 
+        endSpire();    
+}
 ////////////////////////////////////////
 //Logic Loop////////////////////////////
 ////////////////////////////////////////
 
-
-
-//This is totally cheating Only use for debugging
-// game.settings.speed = 1;
-// game.settings.speedTemp = 1;
-// setTimeout(function() {
-//     game.settings.speed = 2;
-// }, 1000);
-
 setTimeout(delayStart, 2000);
 
 function mainLoop() {
+    stopScientistsatFarmers = 250000;   //put this here so it reverts every cycle (in case we portal out of watch challenge)
     game.global.addonUser = true;
     game.global.autotrimps = {
         firstgiga: getPageSetting('FirstGigastation'),
         deltagiga: getPageSetting('DeltaGigastation')
     }    
-    if(getPageSetting('PauseScript')) return;
+    if(getPageSetting('PauseScript') || game.options.menu.pauseGame.enabled) return;
     if(game.global.viewingUpgrades) return;
-    setTitle();
-    setScienceNeeded();
-    updateValueFields();
-
+    //auto-close breaking the world textbox
+    if(document.getElementById('tipTitle').innerHTML == 'The Improbability') cancelTooltip();
+    //auto-close the corruption at zone 181 textbox
+    if(document.getElementById('tipTitle').innerHTML == 'Corruption') cancelTooltip();
+    //auto-close the Spire notification checkbox
+    if(document.getElementById('tipTitle').innerHTML == 'Spire') cancelTooltip();
+    setTitle();          //set the browser title
+    setScienceNeeded();  //determine how much science is needed
+    updateValueFields(); //refresh the UI
+    if (getPageSetting('ExitSpireCell')) exitSpireCell(); //"Exit Spire After Cell" (genBTC settings area)
     if (getPageSetting('EasyMode')) easyMode();
     if (getPageSetting('BuyUpgrades')) buyUpgrades();
     autoGoldenUpgrades();
@@ -2038,8 +2042,6 @@ function mainLoop() {
             baseHealth *= 2;
         }
     }
-    //auto-close breaking the world textbox
-    if(document.getElementById('tipTitle').innerHTML == 'The Improbability') cancelTooltip();
     autoLevelEquipment();
 
     if (getPageSetting('AutoFight')) {
