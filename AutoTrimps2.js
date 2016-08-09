@@ -1531,6 +1531,8 @@ function autoMap() {
                     doVoids = true;
                     //check to make sure we won't get 1-shot in nostance by boss
                     var eAttack = getEnemyMaxAttack(game.global.world, theMap.size, 'Voidsnimp', theMap.difficulty);
+                    if (game.global.world >= 181 || (game.global.challengeActive == "Corrupted" && game.global.world >= 60))
+                        eAttack *= (getCorruptScale("attack") / 2).toFixed(1);                    
                     var ourHealth = baseHealth;
                     if(game.global.challengeActive == 'Balance') {
                         var stacks = game.challenges.Balance.balanceStacks ? (game.challenges.Balance.balanceStacks > theMap.size) ? theMap.size : game.challenges.Balance.balanceStacks : false;
