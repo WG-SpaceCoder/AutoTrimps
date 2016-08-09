@@ -1770,27 +1770,27 @@ function calculateNextHeliumHour (stacked) {
     return heliumNow;
 }
 
-
-var lastHelium = 0;
-var lastZone = 0;
+var lastHeliumZone = 0;
 function autoPortal() {
     switch (autoTrimpSettings.AutoPortal.selected) {
-        //portal if we have lower He/hr than the previous zone
+        //portal if we have lower He/hr than the previous zone (or buffer)
         case "Helium Per Hour":
-            if(game.global.world > lastZone) {
-                lastZone = game.global.world;
-                var timeThisPortal = new Date().getTime() - game.global.portalTime;
-                    timeThisPortal /= 3600000;
-                    var myHelium = Math.floor(game.resources.helium.owned / timeThisPortal);
-                    if(myHelium < lastHelium && !game.global.challengeActive) {
+            game.stats.bestHeliumHourThisRun.evaluate();    //normally, evaluate() is only called once per second, but the script runs at 10x a second.
+            if(game.global.world > lastHeliumZone) {
+                lastHeliumZone = game.global.world;
+                if(game.global.world > game.stats.bestHeliumHourThisRun.atZone) {
+                    var bestHeHr = game.stats.bestHeliumHourThisRun.storedValue;
+                    var myHeliumHr = game.stats.heliumHour.value();
+                    var heliumHrBuffer = Math.abs(getPageSetting('HeliumHrBuffer'));
+                    if(myHeliumHr < bestHeHr * (1-(heliumHrBuffer/100)) && !game.global.challengeActive) {
+                        debug("My Helium was: " + myHeliumHr + " & the Best Helium was: " + bestHeHr + " at zone: " +  game.stats.bestHeliumHourThisRun.atZone);
                         pushData();
-                        if(autoTrimpSettings.HeliumHourChallenge.selected != 'None')
+                        if(autoTrimpSettings.HeliumHourChallenge.selected != 'None') 
                             doPortal(autoTrimpSettings.HeliumHourChallenge.selected);
-                        else
+                        else 
                             doPortal();
-                    } else {
-                        lastHelium = myHelium;
                     }
+                }
             }
             break;
         case "Custom":
@@ -1869,10 +1869,9 @@ function doPortal(challenge) {
     if(!game.global.portalActive) return;
     portalClicked();
     if(challenge) selectChallenge(challenge);
-        activateClicked();
-        activatePortal();
-        lastHelium = 0;
-        lastZone = 0;
+    activateClicked();
+    activatePortal();
+    lastHeliumZone = 0;
 }
 
 //adjust geneticists to reach desired breed timer

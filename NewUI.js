@@ -104,6 +104,7 @@ document.getElementById("autoSettings").appendChild(genbtcadv);
 createSetting('AutoRoboTrimp', 'AutoRoboTrimp', 'Use RoboTrimps ability starting at this level, and every 5 levels thereafter. (set to 0 to disable)', 'value', '0', null, 'genbtcadvancedSettings');
 createSetting('AutoGoldenUpgrades', 'AutoGoldenUpgrades', 'Automatically Buy the specified Golden Upgrades as they become available.', 'dropdown', 'Off', ["Off","Helium", "Battle", "Void"], 'genbtcadvancedSettings');
 createSetting('WarpstationCap', 'Warpstation Cap', 'Do not level Warpstations past Basewarp+DeltaGiga. Without this, if a Giga wasnt available, it would level infinitely. ', 'boolean', null, null, 'genbtcadvancedSettings');
+createSetting('HeliumHrBuffer', 'Helium/Hr Buffer %', 'When using the He/Hr Autoportal, it will portal if your He/Hr drops by this amount of % lower than your best for current run, default is 0% (ie: set to 5 to portal at 95% of your best)', 'value', '0', null, 'genbtcadvancedSettings');
 
 //Manage importexport Settings - Create button.
 var importexportBtn = document.createElement("DIV");
