@@ -1450,7 +1450,8 @@ var voidCheckPercent = 0;
 function autoMap() {
     //allow script to handle abandoning
     if(game.options.menu.alwaysAbandon.enabled == 1) toggleSetting('alwaysAbandon');
-
+    //if we are in mapology and we have no credits, exit
+    if (game.global.challengeActive == "Mapology" && game.challenges.Mapology.credits < 1) return;
     //if we should be farming, we will continue farming until attack/damage is under 10, if we shouldn't be farming, we will start if attack/damage rises above 15
     //add crit in somehow?
     if(!getPageSetting('DisableFarm')) {
