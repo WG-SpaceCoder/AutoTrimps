@@ -175,6 +175,26 @@ function getPageSetting(setting) {
     }
 }
 
+//programmatically sets the underlying variable of the UI Setting and the appropriate Button CSS style&color
+function setPageSetting(setting,value) {
+    if (autoTrimpSettings.hasOwnProperty(setting) == false) {
+        return false;
+    }
+    if (autoTrimpSettings[setting].type == 'boolean') {
+        // debug('found a boolean');
+        autoTrimpSettings[setting].enabled = value;
+        document.getElementById(setting).setAttribute('class', 'settingsBtn settingBtn' + autoTrimpSettings[setting].enabled);
+    } else if (autoTrimpSettings[setting].type == 'value') {
+        // debug('found a value');
+        autoTrimpSettings[setting].value = value;
+    } else if (autoTrimpSettings[setting].type == 'dropdown') {
+        autoTrimpSettings[setting].selected = value;
+    }
+    updateCustomButtons();
+    saveSettings();
+    checkSettings();
+}
+
 //Global debug message (need to implement debugging to in game window)
 function debug(message) {
     if (enableDebug)
@@ -2045,6 +2065,8 @@ function useScryerStance() {
     var useinvoids = getPageSetting('ScryerUseinVoidMaps');
     var useinspire = getPageSetting('ScryerUseinSpire');
     var useoverkill = getPageSetting('ScryerUseWhenOverkill');
+    if (useoverkill && game.portal.Overkill.level == 0)
+        setPageSetting('ScryerUseWhenOverkill',false);    
     var skipcorrupteds = getPageSetting('ScryerSkipCorrupteds');
     //var useinspiresafes = getPageSetting('ScryerUseinSpireSafes');
     var minzone = getPageSetting('ScryerMinZone');
@@ -2054,7 +2076,7 @@ function useScryerStance() {
     var Sstance = 0.5;
     var ovkldmg = avgDamage * Sstance * (game.portal.Overkill.level*0.005);
     //are we going to overkill ?
-    var ovklHDratio = getCurrentEnemy().maxHealth / ovkldmg;
+    var ovklHDratio = getCurrentEnemy(1) && getCurrentEnemy(1).maxHealth / ovkldmg;
 
     var iscorrupt = getCurrentEnemy(1) && getCurrentEnemy(1).corrupted;
     var isnextcorrupt = getCurrentEnemy(2) && getCurrentEnemy(2).corrupted; // && baseDamage*getPlayerCritDamageMult() > getCurrentEnemy().health/2))
@@ -2064,7 +2086,9 @@ function useScryerStance() {
     var run = !mapcheck;    //initially set run with the opposite of "are we in a map" (if false, run will be true which means "run if we are in world")
     //if we are in a map, and set to useinmaps, or in a void and set to useinvoids
     //else if we aren't in a map, are we in spire and set to useinspire? if not, just go with run in world.
-    run = mapcheck ? (useinmaps||(getCurrentMapObject().location == "Void"&&useinvoids)) : ((game.global.world == 200&&game.global.spireActive) ? useinspire : run);
+    var nowinvoid = mapcheck && getCurrentMapObject().location == "Void";
+    var nowinspire = (game.global.world == 200&&game.global.spireActive);
+    run = mapcheck ? ((useinmaps&&!nowinvoid)||(nowinvoid&&useinvoids)) : (nowinspire ? useinspire : run);
     //skip corrupteds.
     run = iscorrupt ? (!skipcorrupteds || ovklHDratio < 8) : run;    
     if (run == true && game.global.world >= 60 && (((game.global.world >= minzone || minzone <= 0) && (game.global.world < maxzone || maxzone <= 0))||(useoverkill && ovklHDratio < 8))) {
