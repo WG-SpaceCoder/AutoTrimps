@@ -1,9 +1,9 @@
 //Import the Chart Libraries
 var head = document.getElementsByTagName('head')[0];
-var script = document.createElement('script');
-script.type = 'text/javascript';
-script.src = 'https://code.highcharts.com/highcharts.js';
-head.appendChild(script);
+var chartscript = document.createElement('script');
+chartscript.type = 'text/javascript';
+chartscript.src = 'https://code.highcharts.com/highcharts.js';
+head.appendChild(chartscript);
 
 
 //Create the graph button and div
@@ -16,7 +16,7 @@ settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
 document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style="display: none;"><div id="graph" style="margin-bottom: 2vw;margin-top: 2vw;"></div></div>';
 
 //Create the dropdown for what graph to show
-var graphList = ['HeliumPerHour', 'Helium', 'Clear Time', 'Void Maps', 'Loot Sources', 'Run Time'];
+var graphList = ['HeliumPerHour', 'Helium', 'Clear Time', 'Cumulative Clear Time', 'Void Maps', 'Void Map History', 'Run Time'];
 var btn = document.createElement("select");
 btn.id = 'graphSelection';
 if(game.options.menu.darkTheme.enabled == 2) btn.setAttribute("style", "color: #C8C8C8");
@@ -163,12 +163,16 @@ function pushData() {
         heliumOwned: game.resources.helium.owned,
         currentTime: new Date().getTime(),
         portalTime: game.global.portalTime,
-        resources: game.resources,
         world: game.global.world,
         challenge: game.global.challengeActive,
         voids: game.global.totalVoidMaps,
-        heirlooms: game.stats.totalHeirlooms,
-        nullifium: game.global.nullifium
+        heirlooms: {"value": game.stats.totalHeirlooms.value, "valueTotal":game.stats.totalHeirlooms.valueTotal},
+        nullifium: recycleAllExtraHeirlooms(true),
+        gigas: game.upgrades.Gigastation.done,
+        gigasleft: game.upgrades.Gigastation.allowed - game.upgrades.Gigastation.done,
+        trimps: game.resources.trimps.realMax(),
+        coord: game.upgrades.Coordination.done,
+        lastwarp: game.global.lastWarp
     });
     //only keep 10 portals worth of runs to prevent filling storage
     clearData(10);
@@ -202,7 +206,7 @@ function gatherInfo() {
 }
 
 function drawGraph() {
-        setGraphData(document.getElementById('graphSelection').value);
+    setGraphData(document.getElementById('graphSelection').value);
 }
 
 function setGraphData(graph) {
@@ -215,7 +219,7 @@ function setGraphData(graph) {
         return '<span style="color:' + ser.color + '" >●</span> ' +
                 ser.name + ': <b>' + 
                 Highcharts.numberFormat(this.y, 0,'.', ',') + valueSuffix + '</b><br>';
-            };
+    };
             
     switch (graph) {
         case 'Clear Time':
@@ -227,7 +231,7 @@ function setGraphData(graph) {
                     graphData.push({
                         name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
                         data: []
-                    })
+                    });
                     currentPortal = allSaveData[i].totalPortals;
                     //push a 0 to index 0 so that clear times line up with x-axis numbers
                     graphData[graphData.length -1].data.push(0);
@@ -254,6 +258,51 @@ function setGraphData(graph) {
             yType = 'Linear';
             valueSuffix = ' Seconds';
             break;
+        case 'Cumulative Clear Time':
+            var graphData = [];
+            var currentPortal = -1;
+            var currentZone = -1;
+            var totaltime = 0;
+            for (var i in allSaveData) {
+                if (allSaveData[i].totalPortals != currentPortal) {
+                    graphData.push({
+                        name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
+                        data: []
+                    });
+                    currentPortal = allSaveData[i].totalPortals;
+                    //push a 0 to index 0 so that clear times line up with x-axis numbers
+                    graphData[graphData.length -1].data.push(0);
+                    totaltime =0;
+                }
+                if(currentZone < allSaveData[i].world && currentZone != -1) {
+                    totaltime += Math.round((allSaveData[i].currentTime - allSaveData[i-1].currentTime))
+                    graphData[graphData.length - 1].data.push(totaltime);
+                }
+                
+                //first time through, push 0s to zones we don't have data for. Probably only occurs if script is loaded in the middle of a run where it was previously not loaded (haven't tested this)
+                //this functionality could fix some of the weirdness in graphs from using bone portal?
+                if(currentZone == -1) {
+                    var loop = allSaveData[i].world - 1;
+                    while (loop > 0) {
+                        graphData[graphData.length -1].data.push(0);
+                        loop--;
+                    }
+                }
+                currentZone = allSaveData[i].world;
+
+            }
+            title = 'Cumulative Time at start of zone#';
+            xTitle = 'Zone';
+            yTitle = 'Cumulative Clear Time';
+            yType = 'datetime';
+            formatter =  function () {
+                var ser = this.series;
+                return '<span style="color:' + ser.color + '" >●</span> ' +
+                        ser.name + ': <b>' +
+                        Highcharts.dateFormat('%H:%M:%S', this.y) + '</b><br>';
+            
+            };
+            break;     
         case 'Helium':
             var currentPortal = -1;
             graphData = [];
@@ -262,16 +311,17 @@ function setGraphData(graph) {
                     graphData.push({
                         name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
                         data: []
-                    })
+                    });
                     currentPortal = allSaveData[i].totalPortals;
                 }
                 graphData[graphData.length - 1].data.push(allSaveData[i].heliumOwned);
             }
             title = 'Helium';
             xTitle = 'Zone';
-            yTitle = 'Helium'
+            yTitle = 'Helium';
             yType = 'Linear';
             break;
+            
         case 'HeliumPerHour':
             var currentPortal = -1;
             var currentZone = -1;
@@ -281,9 +331,9 @@ function setGraphData(graph) {
                     graphData.push({
                         name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
                         data: []
-                    })
+                    });
                     currentPortal = allSaveData[i].totalPortals;
-                    if(allSaveData[i].world == 1)
+                    if(allSaveData[i].world == 1 && currentZone != -1 )
                         graphData[graphData.length -1].data.push(0);
                     
                     if(currentZone == -1 || allSaveData[i].world != 1) {
@@ -301,13 +351,13 @@ function setGraphData(graph) {
                 currentZone = allSaveData[i].world;
                 
             }
-            title = 'Helium/Hour';
+            title = 'Helium/Hour (Cumulative)';
             xTitle = 'Zone';
-            yTitle = 'Helium';
+            yTitle = 'Helium/Hour';
             yType = 'Linear';
             break;
-            
-            case 'Void Maps':
+
+        case 'Void Maps':
             var currentPortal = -1;
             var totalVoids = 0;
             var theChallenge = '';
@@ -338,8 +388,9 @@ function setGraphData(graph) {
             yTitle = 'Void Maps';
             yType = 'Linear';
             break;
-           /* 
-            case 'Loot Sources':
+
+		/*
+        case 'Loot Sources':
             graphData = [];
             graphData[0] = {name: 'Metal', data: lootData.metal};
             graphData[1] = {name: 'Wood', data: lootData.wood};
@@ -351,7 +402,7 @@ function setGraphData(graph) {
             break;
             */
             
-            case 'Run Time':
+        case 'Run Time':
             var currentPortal = -1;
             var theChallenge = '';
             graphData = [];
@@ -385,6 +436,24 @@ function setGraphData(graph) {
                         Highcharts.dateFormat('%H:%M:%S', this.y) + '</b><br>';
             
             };
+            break;
+        case 'Void Map History':
+            var currentPortal = -1;
+            graphData = [];
+            for (var i in allSaveData) {
+                if (allSaveData[i].totalPortals != currentPortal) {
+                    graphData.push({
+                        name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
+                        data: []
+                    });
+                    currentPortal = allSaveData[i].totalPortals;
+                }
+                graphData[graphData.length - 1].data.push(allSaveData[i].voids);
+            }
+            title = 'Void Map History';
+            xTitle = 'Zone';
+            yTitle = 'Number of Void Maps';
+            yType = 'Linear';
             break;
     }
     if (oldData != JSON.stringify(graphData)) {
@@ -434,7 +503,7 @@ function getLootData() {
 
 setInterval(getLootData, 30000);
 
-//overwriting default game functions!!!!!!!!!!!!!!!!!!!!!!
+//BEGIN overwriting default game functions!!!!!!!!!!!!!!!!!!!!!!
 game.badGuys.Jestimp.loot = 
 function() {
     var elligible = ["food", "wood", "metal", "science"];
@@ -486,10 +555,10 @@ function addResCheckMax(what, number, noStat, fromGather, nonFilteredLoot) {
 	if (nonFilteredLoot && game.options.menu.useAverages.enabled){
 		addAvg(what, number);
 	}
-}
-
-//END game function overwrite
+}//END overwriting default game functions!!!!!!!!!!!!!!!!!!!!!!
 */
+
+//Initialize the saved data objects, and load data/grab from browser if found.
 var allSaveData = [];
 var graphData = [];
 var tmpGraphData = JSON.parse(localStorage.getItem('allSaveData'));
@@ -498,6 +567,5 @@ if (tmpGraphData !== null) {
     allSaveData = tmpGraphData;
 }
 
-
+//run the main gatherInfo function 1 time every second
 setInterval(gatherInfo, 1000);
-

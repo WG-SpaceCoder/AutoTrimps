@@ -133,6 +133,33 @@ createSetting('ExportAutoTrimps', 'Export AutoTrimps', 'Export your Settings.', 
 createSetting('ImportAutoTrimps', 'Import AutoTrimps', 'Import your Settings.', 'infoclick', 'ImportAutoTrimps', null, 'importexportSettings');
 createSetting('DefaultAutoTrimps', 'Reset to Default', 'Reset everything to the way it was when you first installed the script.', 'infoclick', 'DefaultAutoTrimps', null, 'importexportSettings');
 
+//Manage Scryer Stance Settings - Create button.
+var scryerSettingsBtn = document.createElement("DIV");
+scryerSettingsBtn.setAttribute('class', 'btn btn-default');
+scryerSettingsBtn.setAttribute('onclick', 'autoToggle(\'scryerSettings\')');
+scryerSettingsBtn.innerHTML = 'Scryer Stance Settings';
+scryerSettingsBtn.setAttribute("onmouseover", 'tooltip(\"Scryer Stance Settings\", \"customText\", event, \"Expand the Scryer Stance settings section.\")');
+scryerSettingsBtn.setAttribute("onmouseout", 'tooltip("hide")');
+scryerSettingsBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw; font-size: 0.8vw;');
+scryerSettingsBtn.id='scryerSettingsBTN';
+advHeader.appendChild(scryerSettingsBtn);
+//
+var scryerSettingsadv = document.createElement("DIV");
+scryerSettingsadv.id = 'scryerSettings';
+scryerSettingsadv.style.display = 'none';
+document.getElementById("autoSettings").appendChild(scryerSettingsadv);
+//Manage settings - option buttons - Scryer settings
+createSetting('UseScryerStance', 'Use Scryer Stance', 'Stay in Scryer stance in z181 and above (Overrides Autostance). Falls back to regular Autostance when not in use (so leave that on). Current point is to get Dark Essence. EXPERIMENTAL. This is the Master button. All other buttons have no effect if this one is off.', 'boolean',true,null,'scryerSettings');
+createSetting('ScryerUseinMaps', 'Use in Maps', 'Use in Maps.', 'boolean', null,null, 'scryerSettings');
+createSetting('ScryerUseinVoidMaps', 'Use in Void Maps', 'Use in Void Maps.', 'boolean', false,null, 'scryerSettings');
+createSetting('ScryerUseinSpire', 'Use in Spire(All)', 'Use in Spire (all cells).', 'boolean', false,null, 'scryerSettings');
+createSetting('ScryerSkipBossPastVoids', 'Skip Cell 100 above VoidLevel', 'Skips all world Improbabilities/Bosses on cell 100 if you are past the level you have your voidmaps set to run at.', 'boolean', false,null, 'scryerSettings');
+createSetting('ScryerSkipCorrupteds', 'Skip Corrupted Cells', 'Skip all corrupted cells unless you can overkill them.', 'boolean', false,null, 'scryerSettings');
+//createSetting('ScryerUseinSpireSafes', 'Use in Spire(Safes)', 'Use on Spire cells marked with the safe icons - high loot *50 metal reward.', 'boolean', false,null, 'scryerSettings');
+createSetting('ScryerMinZone', 'Min Zone', 'Minimum zone to start using scryer in.(inclusive) rec:(60 or 181)', 'value', '181', null, 'scryerSettings');
+createSetting('ScryerMaxZone', 'Max Zone', 'Zone to STOP using scryer at.(not inclusive) Use at your own discretion. rec: (0 or -1 to disable.)', 'value', '-1',null, 'scryerSettings');
+createSetting('ScryerUseWhenOverkill', 'Use When Overkill', 'Use pre-181 when we can Overkill in S stance, for double loot with no speed penalty. NOTE: Overrides zone settings.', 'boolean', false,null, 'scryerSettings');
+
 //moved pause-button to be more visible. has its own logic down in createSetting.
 createSetting('PauseScript', 'Pause AutoTrimps', 'Pause AutoTrimps (not including the graphs module)', 'boolean', null, null, 'pause');
 
@@ -287,17 +314,19 @@ function autoToggle(what){
         else item.style.display = 'block'; 
     }
 }
-    //overloads the settings menu button to include hiding the auto menu settings.
-  function autoPlusSettingsMenu() {
-      var item = document.getElementById('autoSettings');
-      if(item.style.display === 'block')
+
+//overloads the settings menu button to include hiding the auto menu settings.
+function autoPlusSettingsMenu() {
+    var item = document.getElementById('autoSettings');
+    if(item.style.display === 'block')
         item.style.display='none';
-      item = document.getElementById('graphParent');
-      if(item.style.display === 'block')
+    item = document.getElementById('graphParent');
+    if(item.style.display === 'block')
         item.style.display='none';
     toggleSettingsMenu();
-  }
-
+}
+    
+  
 function createSetting(id, name, description, type, defaultValue, list, container) {
     var btnParent = document.createElement("DIV");
    // btnParent.setAttribute('class', 'optionContainer');
@@ -311,7 +340,7 @@ function createSetting(id, name, description, type, defaultValue, list, containe
                 name: name,
                 description: description,
                 type: type,
-                enabled: false
+                enabled: defaultValue ? defaultValue : false
             };
         }
         btn.setAttribute('class', 'settingsBtn settingBtn' + autoTrimpSettings[id].enabled);
@@ -503,8 +532,8 @@ function updateCustomButtons() {
     
     if (autoTrimpSettings.RunMapsWhenStuck.enabled) document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-success");
     else document.getElementById("autoMapBtn").setAttribute("class", "btn fightBtn btn-danger");
-    //auto portal setting, hide until player has cleared zone 60
-    if (game.global.highestLevelCleared >= 60 ) document.getElementById("AutoPortal").style.display = '';
+    //auto portal setting, hide until player has cleared zone 59
+    if (game.global.highestLevelCleared >= 59 ) document.getElementById("AutoPortal").style.display = '';
     else document.getElementById("AutoPortal").style.display = 'none';
     //custom auto portal value
     if (autoTrimpSettings.AutoPortal.selected == "Custom") document.getElementById("CustomAutoPortal").style.display = '';

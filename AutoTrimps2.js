@@ -12,7 +12,8 @@
 ////////////////////////////////////////
 //Variables/////////////////////////////
 ////////////////////////////////////////
-var runInterval = 100; //How often to loop through logic
+var runInterval = 100;      //How often to loop through logic
+var startupDelay = 2000;    //How long to wait for everything to load
 var enableDebug = true; //Spam console?
 var autoTrimpSettings = new Object();
 var bestBuilding;
@@ -760,10 +761,10 @@ function setScienceNeeded() {
     }
 }
 
-function getEnemyMaxAttack(world, level, name, diff) {
+function getEnemyMaxAttack(world, level, name, diff, corrupt) {
     var amt = 0;
     var adjWorld = ((world - 1) * 100) + level;
-    amt += 50 * Math.sqrt(world * Math.pow(3.27, world));
+    amt += 50 * Math.sqrt(world) * Math.pow(3.27, world / 2);
     amt -= 10;
     if (world == 1){
         amt *= 0.35;
@@ -775,39 +776,68 @@ function getEnemyMaxAttack(world, level, name, diff) {
     }
     else if (world < 60)
         amt = (amt * 0.375) + ((amt * 0.7) * (level / 100));
-    else{
+    else{ 
         amt = (amt * 0.4) + ((amt * 0.9) * (level / 100));
         amt *= Math.pow(1.15, world - 59);
     }
-
-    if (diff) {
-        amt *= 1.1;
+    if (world < 60) amt *= 0.85;
+    if (world > 6 && game.global.mapsActive) amt *= 1.1;
+    if (diff) { 
         amt *= diff;
+    }    
+    if (!corrupt)
+        amt *= game.badGuys[name].attack;
+    else {
+        amt *= getCorruptScale("attack");
     }
-    amt *= game.badGuys[name].attack;
     return Math.floor(amt);
 }
 
-function getEnemyMaxHealth(zone) {
+function getEnemyMaxHealth(world, level, corrupt) {
+    if (!level)
+        level = 30;
     var amt = 0;
-    var level = 30;
-    var world = zone;
-    amt += 130 * Math.sqrt(world * Math.pow(3.265, world));
+    amt += 130 * Math.sqrt(world) * Math.pow(3.265, world / 2);
     amt -= 110;
     if (world == 1 || world == 2 && level < 10) {
         amt *= 0.6;
         amt = (amt * 0.25) + ((amt * 0.72) * (level / 100));
-    } else if (world < 60) {
+    }
+    else if (world < 60)
         amt = (amt * 0.4) + ((amt * 0.4) * (level / 110));
-    } else {
+    else {
         amt = (amt * 0.5) + ((amt * 0.8) * (level / 100));
         amt *= Math.pow(1.1, world - 59);
     }
-    amt *= 1.1;
-    amt *= game.badGuys["Grimp"].health;
-    amt *= 0.84;
+    if (world < 60) amt *= 0.75;        
+    if (world > 5 && game.global.mapsActive) amt *= 1.1;
+    if (!corrupt)
+        amt *= game.badGuys["Grimp"].health;
+    else
+        amt *= getCorruptScale("health");
     return Math.floor(amt);
 }
+
+function getCurrentEnemy(current) {
+    if (!current)
+        current = 1;
+    var enemy;
+    if (!game.global.mapsActive && !game.global.preMapsActive) {
+        if (typeof game.global.gridArray[game.global.lastClearedCell + current] === 'undefined') {
+            enemy = game.global.gridArray[game.global.gridArray.length - 1];
+        } else {
+            enemy = game.global.gridArray[game.global.lastClearedCell + current];
+        }
+    } else if (game.global.mapsActive && !game.global.preMapsActive) {
+        if (typeof game.global.mapGridArray[game.global.lastClearedMapCell + current] === 'undefined') {
+            enemy = game.global.mapGridArray[game.global.gridArray.length - 1];
+        } else {
+            enemy = game.global.mapGridArray[game.global.lastClearedMapCell + current];
+        }
+    }
+    return enemy;
+}
+
 
 function getBreedTime(remaining) {
     var trimps = game.resources.trimps;
@@ -1260,14 +1290,10 @@ function manualLabor() {
     }
 }
 
-//function written by Belaith
-function autoStance() {
-    if (game.global.gridArray.length === 0) return;
-    var missingHealth = game.global.soldierHealthMax - game.global.soldierHealth;
-    var newSquadRdy = game.resources.trimps.realMax() <= game.resources.trimps.owned + 1;
-
-
+function calcBaseDamageinX() {
+    //baseDamage
     baseDamage = game.global.soldierCurrentAttack * 2 * (1 + (game.global.achievementBonus / 100)) * ((game.global.antiStacks * game.portal.Anticipation.level * game.portal.Anticipation.modifier) + 1) * (1 + (game.global.roboTrimpLevel * 0.2));
+    //D stance
     if (game.global.formation == 2) {
         baseDamage /= 4;
     } else if (game.global.formation != "0") {
@@ -1276,6 +1302,7 @@ function autoStance() {
 
     //baseBlock
     baseBlock = game.global.soldierCurrentBlock;
+    //B stance
     if (game.global.formation == 3) {
         baseBlock /= 4;
     } else if (game.global.formation != "0") {
@@ -1284,19 +1311,30 @@ function autoStance() {
 
     //baseHealth
     baseHealth = game.global.soldierHealthMax;
+    //H stance
     if (game.global.formation == 1) {
         baseHealth /= 4;
     } else if (game.global.formation != "0") {
         baseHealth *= 2;
     }
+    //S stance is accounted for (combination of all the above's else clauses)
+}
+    
+//Autostance - function originally created by Belaith (in 1971)
+//Automatically swap formations (stances) to avoid dying
+function autoStance() {
+    //get back to a baseline of no stance (X)
+    calcBaseDamageinX();
+    //no need to continue
+    if (game.global.gridArray.length === 0) return;    
+    if (!getPageSetting('AutoStance')) return;
 
+    //start analyzing autostance
+    var missingHealth = game.global.soldierHealthMax - game.global.soldierHealth;
+    var newSquadRdy = game.resources.trimps.realMax() <= game.resources.trimps.owned + 1;
     var enemy;
     if (!game.global.mapsActive && !game.global.preMapsActive) {
-        if (typeof game.global.gridArray[game.global.lastClearedCell + 1] === 'undefined') {
-            enemy = game.global.gridArray[0];
-        } else {
-            enemy = game.global.gridArray[game.global.lastClearedCell + 1];
-        }
+        enemy = getCurrentEnemy();
         var enemyFast = game.global.challengeActive == "Slow" || ((((game.badGuys[enemy.name].fast || enemy.corrupted) && game.global.challengeActive != "Nom") && game.global.challengeActive != "Coordinate"));
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.2;   //changed by genBTC from 1.19 (there is no fluctuation)
@@ -1326,11 +1364,7 @@ function autoStance() {
         var bDamage = enemyDamage - baseBlock * 4 > enemyDamage * (0.1 + pierceMod) ? enemyDamage - baseBlock * 4 : enemyDamage * (0.1 + pierceMod);
         var bHealth = baseHealth/2;
     } else if (game.global.mapsActive && !game.global.preMapsActive) {
-        if (typeof game.global.mapGridArray[game.global.lastClearedMapCell + 1] === 'undefined') {
-            enemy = game.global.mapGridArray[0];
-        } else {
-            enemy = game.global.mapGridArray[game.global.lastClearedMapCell + 1];
-        }
+        enemy = getCurrentEnemy();
         var enemyFast = game.global.challengeActive == "Slow" || ((((game.badGuys[enemy.name].fast || enemy.corrupted) && game.global.challengeActive != "Nom") || game.global.voidBuff == "doubleAttack") && game.global.challengeActive != "Coordinate");
         var enemyHealth = enemy.health;
         var enemyDamage = enemy.attack * 1.2;   //changed by genBTC from 1.19 (there is no fluctuation)
@@ -1975,16 +2009,89 @@ function autoGoldenUpgrades() {
     buyGoldenUpgrade(setting);
 }
 
+//Handles manual fighting automatically, in a different way.
+function betterAutoFight() {
+    //Manually fight instead of using builtin auto-fight
+    if (game.global.autoBattle) {
+        if (!game.global.pauseFight) {
+            pauseFight(); //Disable autofight
+        }
+    }
+    lowLevelFight = game.resources.trimps.maxSoldiers < (game.resources.trimps.owned - game.resources.trimps.employed) * 0.5 && (game.resources.trimps.owned - game.resources.trimps.employed) > game.resources.trimps.realMax() * 0.1 && game.global.world < 5 && game.global.sLevel > 0;
+    if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || lowLevelFight || game.global.challengeActive == 'Watch')) {
+        fightManual();
+    }
+    //Click Fight if we are dead and already have enough for our breed timer, and fighting would not add a significant amount of time
+    if (!game.global.fighting && getBreedTime() < 2 && (game.global.lastBreedTime/1000) > autoTrimpSettings.GeneticistTimer.value && game.global.soldierHealth == 0)
+        fightManual();
+}
+
 //Exits the Spire after completing the specified cell.
 function exitSpireCell() {    
     if(game.global.world == 200 && game.global.spireActive && game.global.lastClearedCell >= getPageSetting('ExitSpireCell')-1) 
         endSpire();    
 }
+
+//use S stance
+function useScryerStance() {
+    var skipbosses = getPageSetting('ScryerSkipBossPastVoids') && (game.global.world > getPageSetting('VoidMaps') && game.global.lastClearedCell == 98)
+    if (game.global.preMapsActive || game.global.gridArray.length === 0 || game.global.highestLevelCleared < 180 || skipbosses ) {
+        autoStance();    //falls back to autostance when not using S. 
+        return;
+    }
+    calcBaseDamageinX(); //calculate internal script variables normally processed by autostance.
+    //grab settings variables
+    var useinmaps = getPageSetting('ScryerUseinMaps');
+    var useinvoids = getPageSetting('ScryerUseinVoidMaps');
+    var useinspire = getPageSetting('ScryerUseinSpire');
+    var useoverkill = getPageSetting('ScryerUseWhenOverkill');
+    var skipcorrupteds = getPageSetting('ScryerSkipCorrupteds');
+    //var useinspiresafes = getPageSetting('ScryerUseinSpireSafes');
+    var minzone = getPageSetting('ScryerMinZone');
+    var maxzone = getPageSetting('ScryerMaxZone');
+
+    var avgDamage = (baseDamage * (1-getPlayerCritChance()) + (baseDamage * getPlayerCritChance() * getPlayerCritDamageMult()))/2;
+    var Sstance = 0.5;
+    var ovkldmg = avgDamage * Sstance * (game.portal.Overkill.level*0.005);
+    //are we going to overkill ?
+    var ovklHDratio = getCurrentEnemy().maxHealth / ovkldmg;
+
+    var iscorrupt = getCurrentEnemy(1) && getCurrentEnemy(1).corrupted;
+    var isnextcorrupt = getCurrentEnemy(2) && getCurrentEnemy(2).corrupted; // && baseDamage*getPlayerCritDamageMult() > getCurrentEnemy().health/2))
+    
+    //decide if we are going to use S.
+    var mapcheck = game.global.mapsActive;
+    var run = !mapcheck;    //initially set run with the opposite of "are we in a map" (if false, run will be true which means "run if we are in world")
+    //if we are in a map, and set to useinmaps, or in a void and set to useinvoids
+    //else if we aren't in a map, are we in spire and set to useinspire? if not, just go with run in world.
+    run = mapcheck ? (useinmaps||(getCurrentMapObject().location == "Void"&&useinvoids)) : ((game.global.world == 200&&game.global.spireActive) ? useinspire : run);
+    //skip corrupteds.
+    run = iscorrupt ? (!skipcorrupteds || ovklHDratio < 8) : run;    
+    if (run == true && game.global.world >= 60 && (((game.global.world >= minzone || minzone <= 0) && (game.global.world < maxzone || maxzone <= 0))||(useoverkill && ovklHDratio < 8))) {
+        setFormation(4);    //set the S stance
+    } else {
+        autoStance();    //falls back to autostance when not using S. 
+    }
+}
+
 ////////////////////////////////////////
-//Logic Loop////////////////////////////
+//Main DELAY Loop///////////////////////
 ////////////////////////////////////////
 
-setTimeout(delayStart, 2000);
+setTimeout(delayStart, startupDelay);
+function delayStart() {
+    initializeAutoTrimps();
+    setTimeout(delayStartAgain, startupDelay);
+}
+function delayStartAgain(){
+    setInterval(mainLoop, runInterval);
+    updateCustomButtons();
+    document.getElementById('Prestige').value = autoTrimpSettings.PrestigeBackup.selected;
+}
+
+////////////////////////////////////////
+//Main LOGIC Loop///////////////////////
+////////////////////////////////////////
 
 function mainLoop() {
     stopScientistsatFarmers = 250000;   //put this here so it reverts every cycle (in case we portal out of watch challenge)
@@ -2018,46 +2125,14 @@ function mainLoop() {
     if (getPageSetting('AutoHeirlooms')) autoHeirlooms();
     if (getPageSetting('TrapTrimps') && game.global.trapBuildAllowed && game.global.trapBuildToggled == false) toggleAutoTrap();
     if (getPageSetting('AutoRoboTrimp')) autoRoboTrimp();
-
-    if (getPageSetting('AutoStance')) autoStance();
-    //if autostance is not on, we should do base calculations here so stuff like automaps still works
-    else {
-        baseDamage = game.global.soldierCurrentAttack * 2 * (1 + (game.global.achievementBonus / 100)) * ((game.global.antiStacks * game.portal.Anticipation.level * game.portal.Anticipation.modifier) + 1) * (1 + (game.global.roboTrimpLevel * 0.2));
-        if (game.global.formation == 2) {
-            baseDamage /= 4;
-        } else if (game.global.formation != "0") {
-            baseDamage *= 2;
-        }
-        //baseBlock
-        baseBlock = game.global.soldierCurrentBlock;
-        if (game.global.formation == 3) {
-            baseBlock /= 4;
-        } else if (game.global.formation != "0") {
-            baseBlock *= 2;
-        }
-        //baseHealth
-        baseHealth = game.global.soldierHealthMax;
-        if (game.global.formation == 1) {
-            baseHealth /= 4;
-        } else if (game.global.formation != "0") {
-            baseHealth *= 2;
-        }
-    }
-    autoLevelEquipment();
-
-    if (getPageSetting('AutoFight')) {
-        //Manually fight instead of using builtin auto-fight
-        if (game.global.autoBattle) {
-            if (!game.global.pauseFight) {
-                pauseFight(); //Disable autofight
-            }
-        }
-        lowLevelFight = game.resources.trimps.maxSoldiers < (game.resources.trimps.owned - game.resources.trimps.employed) * 0.5 && (game.resources.trimps.owned - game.resources.trimps.employed) > game.resources.trimps.realMax() * 0.1 && game.global.world < 5 && game.global.sLevel > 0;
-        if (game.upgrades.Battle.done && !game.global.fighting && game.global.gridArray.length !== 0 && !game.global.preMapsActive && (game.resources.trimps.realMax() <= game.resources.trimps.owned + 1 || game.global.soldierHealth > 0 || lowLevelFight )) {
-            fightManual();
-            // debug('triggered fight');
-        }
-    }
+    if (getPageSetting('UseScryerStance')) 
+        useScryerStance();                                  //"Use Scryer Stance"
+    else
+        autoStance();
+    
+    autoLevelEquipment();                                   //"Buy Armor", "Buy Armor Upgrades", "Buy Weapons","Buy Weapons Upgrades"
+    if (getPageSetting('AutoFight')) betterAutoFight();     //"Better Auto Fight"
+    
     //Runs any user provided scripts - by copying and pasting a function named userscripts() into the Chrome Dev console. (F12)
     userscripts();
 }
@@ -2066,15 +2141,4 @@ function mainLoop() {
 function userscripts()
 {
     //insert code here:
-}
-
-
-function delayStart() {
-    initializeAutoTrimps();
-    setTimeout(delayStartAgain, 2000);
-}
-function delayStartAgain(){
-     setInterval(mainLoop, runInterval);
-     updateCustomButtons();
-     //setInterval(updateCustomButtons, 10000);
 }
