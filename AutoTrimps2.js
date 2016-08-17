@@ -2090,7 +2090,11 @@ function useScryerStance() {
     var nowinspire = (game.global.world == 200&&game.global.spireActive);
     run = mapcheck ? ((useinmaps&&!nowinvoid)||(nowinvoid&&useinvoids)) : (nowinspire ? useinspire : run);
     //skip corrupteds.
-    run = iscorrupt ? (!skipcorrupteds || ovklHDratio < 8) : run;    
+    if (iscorrupt && skipcorrupteds) {
+        run = false;
+        if (useoverkill && ovklHDratio < 8)
+            run = true;
+    }
     if (run == true && game.global.world >= 60 && (((game.global.world >= minzone || minzone <= 0) && (game.global.world < maxzone || maxzone <= 0))||(useoverkill && ovklHDratio < 8))) {
         setFormation(4);    //set the S stance
     } else {
