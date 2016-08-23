@@ -16,13 +16,13 @@ settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
 document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style="display: none;"><div id="graph" style="margin-bottom: 2vw;margin-top: 2vw;"></div></div>';
 
 //Create the dropdown for what graph to show
-var graphList = ['HeliumPerHour', 'Helium', 'Clear Time', 'Cumulative Clear Time', 'Void Maps', 'Void Map History', 'Run Time'];
+var graphList = ['HeliumPerHour', 'Helium', 'Clear Time', 'Cumulative Clear Time', 'Run Time', 'Void Maps', 'Void Map History', 'Coords', 'Gigas', 'UnusedGigas', 'Lastwarp', 'Trimps','Nullifium Gained'];
 var btn = document.createElement("select");
 btn.id = 'graphSelection';
 if(game.options.menu.darkTheme.enabled == 2) btn.setAttribute("style", "color: #C8C8C8");
 else btn.setAttribute("style", "color:black");
 btn.setAttribute("class", "settingBtn");
-btn.setAttribute("onmouseover", 'tooltip(\"Graph\", \"customText\", event, \"What graph would you like to display you nerd you?\")');
+btn.setAttribute("onmouseover", 'tooltip(\"Graph\", \"customText\", event, \"What graph would you like to display?\")');
 btn.setAttribute("onmouseout", 'tooltip("hide")');
 btn.setAttribute("onchange", "setGraphData(document.getElementById('graphSelection').value)");
 for (var item in graphList) {
@@ -44,7 +44,7 @@ document.getElementById('graphParent').appendChild(btn1);
 
 //clear data button
 var btn2 = document.createElement("button");
-var t = document.createTextNode("Clear All Data");
+var t = document.createTextNode("Clear All Previous Data");
 btn2.appendChild(t);
 btn2.setAttribute("onclick", "clearData(); drawGraph();");
 btn2.setAttribute("class", "settingBtn");
@@ -90,7 +90,17 @@ function setGraph(title, xTitle, yTitle, valueSuffix, formatter, series, yType) 
     chart1 = new Highcharts.Chart({
         chart: {
             renderTo: 'graph',
-            zoomType: 'xy'
+            zoomType: 'xy',
+            //move reset button out of the way.
+            resetZoomButton: {
+                position: {
+                    align: 'right',
+                    verticalAlign: 'top', 
+                    x: -20,
+                    y: 15
+                },
+                relativeTo: 'chart'
+            }            
         },
         title: {
             text: title,
@@ -388,6 +398,49 @@ function setGraphData(graph) {
             yTitle = 'Void Maps';
             yType = 'Linear';
             break;
+      
+        case 'Nullifium Gained':
+            var currentPortal = -1;
+            var totalNull = 0;
+            var theChallenge = '';
+            graphData = [];
+            var averagenulli = 0;
+            var sumnulli = 0;
+            var count = 0;
+            for (var i in allSaveData) {
+                if (allSaveData[i].totalPortals != currentPortal) {
+                    if(currentPortal == -1) {
+                        theChallenge = allSaveData[i].challenge;
+                        currentPortal = allSaveData[i].totalPortals;
+                        graphData.push({
+                        name: 'Nullifium Gained',
+                        data: [],
+                        type: 'column'
+                    });
+                        continue;
+                    }
+                    graphData[0].data.push([allSaveData[i-1].totalPortals, totalNull]);
+                    count++;
+                    sumnulli += totalNull;
+                    //console.log("nulli was: " + totalNull + " " + count + " @ " + allSaveData[i].totalPortals);   //debug
+                    theChallenge = allSaveData[i].challenge;
+                    totalNull = 0;
+                    currentPortal = allSaveData[i].totalPortals;
+                    
+                }
+                if(allSaveData[i].nullifium > totalNull) {
+                    totalNull = allSaveData[i].nullifium;                
+                }
+            }
+            averagenulli = sumnulli / count;
+            //console.log("Average nulli was: " + averagenulli);
+            title = 'Nullifium Gained Per Portal';
+            if (averagenulli)
+                title = "Average " + title + " = " + averagenulli;
+            xTitle = 'Portal';
+            yTitle = 'Nullifium Gained';
+            yType = 'Linear';
+            break;
 
 		/*
         case 'Loot Sources':
@@ -437,6 +490,7 @@ function setGraphData(graph) {
             
             };
             break;
+            
         case 'Void Map History':
             var currentPortal = -1;
             graphData = [];
@@ -455,6 +509,107 @@ function setGraphData(graph) {
             yTitle = 'Number of Void Maps';
             yType = 'Linear';
             break;
+            
+        case 'Coords':
+            var currentPortal = -1;
+            graphData = [];
+            for (var i in allSaveData) {
+                if (allSaveData[i].totalPortals != currentPortal) {
+                    graphData.push({
+                        name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
+                        data: []
+                    });
+                    currentPortal = allSaveData[i].totalPortals;
+                }
+                if (allSaveData[i].coord >= 0)
+                    graphData[graphData.length - 1].data.push(allSaveData[i].coord);
+            }
+            title = 'Coordination History';
+            xTitle = 'Zone';
+            yTitle = 'Coordination';
+            yType = 'Linear';
+            break;
+            
+        case 'Gigas':
+            var currentPortal = -1;
+            graphData = [];
+            for (var i in allSaveData) {
+                if (allSaveData[i].totalPortals != currentPortal) {
+                    graphData.push({
+                        name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
+                        data: []
+                    });
+                    currentPortal = allSaveData[i].totalPortals;
+                }
+                if (allSaveData[i].gigas >= 0)
+                    graphData[graphData.length - 1].data.push(allSaveData[i].gigas);
+            }
+            title = 'Gigastation History';
+            xTitle = 'Zone';
+            yTitle = 'Number of Gigas';
+            yType = 'Linear';
+            break;
+
+        case 'UnusedGigas':
+            var currentPortal = -1;
+            graphData = [];
+            for (var i in allSaveData) {
+                if (allSaveData[i].totalPortals != currentPortal) {
+                    graphData.push({
+                        name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
+                        data: []
+                    });
+                    currentPortal = allSaveData[i].totalPortals;
+                }
+                if (allSaveData[i].gigasleft >= 0)
+                    graphData[graphData.length - 1].data.push(allSaveData[i].gigasleft);
+            }
+            title = 'Unused Gigastations';
+            xTitle = 'Zone';
+            yTitle = 'Number of Gigas';
+            yType = 'Linear';
+            break;            
+
+        case 'Lastwarp':
+            var currentPortal = -1;
+            graphData = [];
+            for (var i in allSaveData) {
+                if (allSaveData[i].totalPortals != currentPortal) {
+                    graphData.push({
+                        name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
+                        data: []
+                    });
+                    currentPortal = allSaveData[i].totalPortals;
+                }
+                if (allSaveData[i].lastwarp >= 0)
+                    graphData[graphData.length - 1].data.push(allSaveData[i].lastwarp);
+            }
+            title = 'Warpstation History';
+            xTitle = 'Zone';
+            yTitle = 'Previous Giga\'s Number of Warpstations';
+            yType = 'Linear';
+            break; 
+
+        case 'Trimps':
+            var currentPortal = -1;
+            graphData = [];
+            for (var i in allSaveData) {
+                if (allSaveData[i].totalPortals != currentPortal) {
+                    graphData.push({
+                        name: 'Portal ' + allSaveData[i].totalPortals + ': ' + allSaveData[i].challenge,
+                        data: []
+                    });
+                    currentPortal = allSaveData[i].totalPortals;
+                }
+                if (allSaveData[i].trimps >= 0)
+                    graphData[graphData.length - 1].data.push(allSaveData[i].trimps);
+            }
+            title = 'Total Trimps';
+            xTitle = 'Zone';
+            yTitle = 'Cumulative Number of Trimps';
+            yType = 'Linear';
+            break;                        
+            
     }
     if (oldData != JSON.stringify(graphData)) {
         setGraph(title, xTitle, yTitle, valueSuffix, formatter, graphData, yType);
