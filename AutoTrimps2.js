@@ -1,13 +1,12 @@
 // ==UserScript==
 // @name         AutoTrimpsV2
 // @namespace    http://tampermonkey.net/
-// @version      2.1
+// @version      2.12
 // @description  try to take over the world!
 // @author       zininzinin, spindrjr, belaith, ishakaru, genbtc
 // @include      *trimps.github.io*
 // @grant        none
 // ==/UserScript==
-
 
 ////////////////////////////////////////
 //Variables/////////////////////////////
@@ -256,102 +255,6 @@ function postBuy() {
     game.global.maxSplit = preBuymaxSplit;
 }
 
-function safeBuyBuilding(building) {
-    //limit to 1 building per queue
-    for (var b in game.global.buildingsQueue) {
-        if (game.global.buildingsQueue[b].includes(building)) return false;
-    }
-    preBuy();
-    game.global.buyAmt = 1;
-    if (!canAffordBuilding(building)) {
-        postBuy();
-        return false;
-    }
-    game.global.firing = false;
-    //avoid slow building from clamping
-    //buy as many warpstations as we can afford
-    if(building == 'Warpstation'){
-        game.global.buyAmt = 'Max';
-        game.global.maxSplit = 1;
-        buyBuilding(building, true, true);
-        debug('Building ' + game.global.buyAmt + ' ' + building + 's');
-        return;
-    }
-    debug('Building ' + building);
-    buyBuilding(building, true, true);
-    postBuy();
-    return true;
-}
-
-//Outlines the most efficient housing based on gems (credits to Belaith)
-function highlightHousing() {
-    var oldBuy = game.global.buyAmt;
-    game.global.buyAmt = 1;
-    var allHousing = ["Mansion", "Hotel", "Resort", "Gateway", "Collector", "Warpstation"];
-    var unlockedHousing = [];
-    for (var house in allHousing) {
-        if (game.buildings[allHousing[house]].locked === 0) {
-            unlockedHousing.push(allHousing[house]);
-        }
-    }
-    if (unlockedHousing.length) {
-        var obj = {};
-        for (var house in unlockedHousing) {
-            var building = game.buildings[unlockedHousing[house]];
-            var cost = 0;
-            cost += getBuildingItemPrice(building, "gems", false, 1);
-            var ratio = cost / building.increase.by;
-            //don't consider Gateway if we can't afford it right now - hopefully to prevent game waiting for fragments to buy gateway when collector could be bought right now
-            if(unlockedHousing[house] == "Gateway" && !canAffordBuilding('Gateway')) continue;
-            obj[unlockedHousing[house]] = ratio;
-            if (document.getElementById(unlockedHousing[house]).style.border = "1px solid #00CC00") {
-                document.getElementById(unlockedHousing[house]).style.border = "1px solid #FFFFFF";
-                // document.getElementById(unlockedHousing[house]).removeEventListener("click", update);
-            }
-        }
-        var keysSorted = Object.keys(obj).sort(function(a, b) {
-            return obj[a] - obj[b];
-        });
-        bestBuilding = null;
-        //loop through the array and find the first one that isn't limited by max settings
-        for (var best in keysSorted) {
-            var max = getPageSetting('Max' + keysSorted[best]);
-            if (max === false) max = -1;
-            if (game.buildings[keysSorted[best]].owned < max || max == -1) {
-                bestBuilding = keysSorted[best];
-                
-                if (getPageSetting('WarpstationCap') && bestBuilding == "Warpstation") {
-                    //Warpstation Cap - if we are past the basewarp+deltagiga level, "cap" and just wait for next giga.
-                    if (game.buildings.Warpstation.owned >= (Math.floor(game.upgrades.Gigastation.done * getPageSetting('DeltaGigastation')) + getPageSetting('FirstGigastation')))
-                        bestBuilding = null;
-                }
-                break;
-            }
-        }
-        if (bestBuilding) {
-            document.getElementById(bestBuilding).style.border = "1px solid #00CC00";
-        }
-        // document.getElementById(bestBuilding).addEventListener('click', update, false);
-    } else {
-        bestBuilding = null;
-    }
-    game.global.buyAmt = oldBuy;
-}
-
-function buyFoodEfficientHousing() {
-    var houseWorth = game.buildings.House.locked ? 0 : game.buildings.House.increase.by / getBuildingItemPrice(game.buildings.House, "food", false, 1);
-    var hutWorth = game.buildings.Hut.increase.by / getBuildingItemPrice(game.buildings.Hut, "food", false, 1);
-    var hutAtMax = (game.buildings.Hut.owned >= autoTrimpSettings.MaxHut.value && autoTrimpSettings.MaxHut.value != -1);
-    //if hutworth is more, but huts are maxed , still buy up to house max
-    if ((houseWorth > hutWorth || hutAtMax) && canAffordBuilding('House') && (game.buildings.House.owned < autoTrimpSettings.MaxHouse.value || autoTrimpSettings.MaxHouse.value == -1)) {
-        safeBuyBuilding('House');
-    } else {
-        if (!hutAtMax) {
-            safeBuyBuilding('Hut');
-        }
-    }
-}
-
 function safeBuyJob(jobTitle, amount) {
     if (amount === undefined) amount = 1;
     if (amount === 0) return false;
@@ -376,6 +279,37 @@ function safeBuyJob(jobTitle, amount) {
     return true;
 }
 
+function Effect(gameResource, equip) {
+    if (equip.Equip) {
+        return gameResource[equip.Stat + 'Calculated'];
+    } else {
+        //That be Gym
+        var oldBlock = gameResource.increase.by * gameResource.owned;
+        var Mod = game.upgrades.Gymystic.done ? (game.upgrades.Gymystic.modifier + (0.01 * (game.upgrades.Gymystic.done - 1))) : 1;
+        var newBlock = gameResource.increase.by * (gameResource.owned + 1) * Mod;
+        return newBlock - oldBlock;
+    }
+}
+
+function Cost(gameResource, equip) {
+    preBuy();
+    game.global.buyAmt = 1;
+    var price = parseFloat(getBuildingItemPrice(gameResource, equip.Resource, equip.Equip, 1));
+    if (equip.Equip) price = Math.ceil(price * (Math.pow(1 - game.portal.Artisanistry.modifier, game.portal.Artisanistry.level)));
+    postBuy();
+    return price;
+}
+
+function PrestigeValue(what) {
+    var name = game.upgrades[what].prestiges;
+    var equipment = game.equipment[name];
+    var stat;
+    if (equipment.blockNow) stat = "block";
+    else stat = (typeof equipment.health !== 'undefined') ? "health" : "attack";
+    var toReturn = Math.round(equipment[stat] * Math.pow(1.19, ((equipment.prestige) * game.global.prestige[stat]) + 1));
+    return toReturn;
+}
+
 function getScienceCostToUpgrade(upgrade) {
     var upgradeObj = game.upgrades[upgrade];
     if (upgradeObj.cost.resources.science !== undefined ? upgradeObj.cost.resources.science[0] !== undefined : false) {
@@ -383,6 +317,152 @@ function getScienceCostToUpgrade(upgrade) {
     } else {
         return 0;
     }
+}
+
+function setScienceNeeded() {
+    scienceNeeded = 0;
+    for (var upgrade in upgradeList) {
+        upgrade = upgradeList[upgrade];
+        if (game.upgrades[upgrade].allowed > game.upgrades[upgrade].done) { //If the upgrade is available
+            scienceNeeded += getScienceCostToUpgrade(upgrade);
+        }
+    }
+}
+
+function setTitle() {
+    document.title = '(' + game.global.world + ')' + ' Trimps ' + document.getElementById('versionNumber').innerHTML;
+    //for the dummies like me who always forget to turn automaps back on after portaling
+    if(getPageSetting('RunUniqueMaps') && !game.upgrades.Battle.done && autoTrimpSettings.RunMapsWhenStuck.enabled == false) {
+        settingChanged("RunMapsWhenStuck");
+    }
+}
+
+function getEnemyMaxAttack(world, level, name, diff, corrupt) {
+    var amt = 0;
+    var adjWorld = ((world - 1) * 100) + level;
+    amt += 50 * Math.sqrt(world) * Math.pow(3.27, world / 2);
+    amt -= 10;
+    if (world == 1){
+        amt *= 0.35;
+        amt = (amt * 0.20) + ((amt * 0.75) * (level / 100));
+    }
+    else if (world == 2){
+        amt *= 0.5;
+        amt = (amt * 0.32) + ((amt * 0.68) * (level / 100));
+    }
+    else if (world < 60)
+        amt = (amt * 0.375) + ((amt * 0.7) * (level / 100));
+    else{ 
+        amt = (amt * 0.4) + ((amt * 0.9) * (level / 100));
+        amt *= Math.pow(1.15, world - 59);
+    }
+    if (world < 60) amt *= 0.85;
+    if (world > 6 && game.global.mapsActive) amt *= 1.1;
+    if (diff) { 
+        amt *= diff;
+    }    
+    if (!corrupt)
+        amt *= game.badGuys[name].attack;
+    else {
+        amt *= getCorruptScale("attack");
+    }
+    return Math.floor(amt);
+}
+
+function getEnemyMaxHealth(world, level, corrupt) {
+    if (!level)
+        level = 30;
+    var amt = 0;
+    amt += 130 * Math.sqrt(world) * Math.pow(3.265, world / 2);
+    amt -= 110;
+    if (world == 1 || world == 2 && level < 10) {
+        amt *= 0.6;
+        amt = (amt * 0.25) + ((amt * 0.72) * (level / 100));
+    }
+    else if (world < 60)
+        amt = (amt * 0.4) + ((amt * 0.4) * (level / 110));
+    else {
+        amt = (amt * 0.5) + ((amt * 0.8) * (level / 100));
+        amt *= Math.pow(1.1, world - 59);
+    }
+    if (world < 60) amt *= 0.75;        
+    if (world > 5 && game.global.mapsActive) amt *= 1.1;
+    if (!corrupt)
+        amt *= game.badGuys["Grimp"].health;
+    else
+        amt *= getCorruptScale("health");
+    return Math.floor(amt);
+}
+
+function getCurrentEnemy(current) {
+    if (!current)
+        current = 1;
+    var enemy;
+    if (!game.global.mapsActive && !game.global.preMapsActive) {
+        if (typeof game.global.gridArray[game.global.lastClearedCell + current] === 'undefined') {
+            enemy = game.global.gridArray[game.global.gridArray.length - 1];
+        } else {
+            enemy = game.global.gridArray[game.global.lastClearedCell + current];
+        }
+    } else if (game.global.mapsActive && !game.global.preMapsActive) {
+        if (typeof game.global.mapGridArray[game.global.lastClearedMapCell + current] === 'undefined') {
+            enemy = game.global.mapGridArray[game.global.gridArray.length - 1];
+        } else {
+            enemy = game.global.mapGridArray[game.global.lastClearedMapCell + current];
+        }
+    }
+    return enemy;
+}
+
+function getCorruptedCellsNum() {
+    var enemy;
+    var corrupteds = 0;
+    for (var i = 0; i < game.global.gridArray.length - 1; i++) {
+        enemy = game.global.gridArray[i];
+        if (enemy.corrupted)
+            corrupteds++;
+    }
+    return corrupteds;    
+}
+
+function getBreedTime(remaining) {
+    var trimps = game.resources.trimps;
+    var breeding = trimps.owned - trimps.employed;
+    var trimpsMax = trimps.realMax();
+
+    var potencyMod = trimps.potency;
+    if (game.global.brokenPlanet) breeding /= 10;
+
+    //Pheromones
+    potencyMod += (potencyMod * game.portal.Pheromones.level * game.portal.Pheromones.modifier);
+    if (game.jobs.Geneticist.owned > 0) potencyMod *= Math.pow(0.98, game.jobs.Geneticist.owned);
+    if (game.unlocks.quickTrimps) potencyMod *= 2;
+    if (game.global.challengeActive == "Toxicity" && game.challenges.Toxicity.stacks > 0){
+    potencyMod *= Math.pow(game.challenges.Toxicity.stackMult, game.challenges.Toxicity.stacks);
+    }
+    if (game.global.voidBuff == "slowBreed"){
+        potencyMod *= 0.2;
+
+    }
+
+    potencyMod = calcHeirloomBonus("Shield", "breedSpeed", potencyMod);
+    breeding = breeding * potencyMod;
+    updatePs(breeding, true);
+
+
+    var timeRemaining = log10((trimpsMax - trimps.employed) / (trimps.owned - trimps.employed)) / log10(1 + (potencyMod / 10));
+    if (!game.global.brokenPlanet) timeRemaining /= 10;
+    timeRemaining = Math.floor(timeRemaining);
+    if(remaining) return timeRemaining;
+    var fullBreed = 0;
+    var adjustedMax = (game.portal.Coordinated.level) ? game.portal.Coordinated.currentSend : trimps.maxSoldiers;
+    var totalTime = log10((trimpsMax - trimps.employed) / ((trimpsMax - adjustedMax) - trimps.employed)) / log10(1 + (potencyMod / 10));
+    if (!game.global.brokenPlanet) totalTime /= 10;
+    fullBreed = Math.floor(totalTime) + " Secs";
+    timeRemaining += " / " + fullBreed;
+
+    // debug('Time to breed is ' +Math.floor(totalTime));
+    return Math.floor(totalTime);
 }
 
 var worth = {'Shield': {}, 'Staff': {}};
@@ -458,6 +538,14 @@ function autoHeirlooms() {
        //document.getElementById('extraHeirloomsHere').childNodes[INDEX].childNodes[1].style.border = "1px solid #00CC00"
        //document.getElementById('selectedHeirloom').childNodes[0].childNodes[4/7/10/13].style.backgroundColor
        //advBtn.setAttribute("onmouseover", 'tooltip(\"Advanced Settings\", \"customText\", event, \"Leave off unless you know what you\'re doing with them.\")');
+}
+
+function checkForMod(what, loom, location){
+    var heirloom = game.global[location][loom];
+    for (var mod in heirloom.mods){
+        if (heirloom.mods[mod][0] == what) return true;
+    }
+    return false;
 }
 
 function evaluateMods(loom, location, upgrade) {
@@ -667,15 +755,173 @@ function evaluateMods(loom, location, upgrade) {
     return eff;
 }
 
-function checkForMod(what, loom, location){
-    var heirloom = game.global[location][loom];
-    for (var mod in heirloom.mods){
-        if (heirloom.mods[mod][0] == what) return true;
+
+////////////////////////////////////////
+//Main Functions////////////////////////
+////////////////////////////////////////
+
+function initializeAutoTrimps() {
+    debug('initializeAutoTrimps');
+    loadPageVariables();
+
+    var script = document.getElementById('AutoTrimps-script')
+      , base = 'https://zininzinin.github.io/AutoTrimps'
+      ;
+    if (script !== null) {
+        base = script.getAttribute('src').replace(/\/AutoTrimps2\.js$/, '');
     }
-    return false;
+    document.head.appendChild(document.createElement('script')).src = base + '/NewUI.js';
+    document.head.appendChild(document.createElement('script')).src = base + '/Graphs.js';
+    toggleSettingsMenu();
+    toggleSettingsMenu();
 }
 
+function easyMode() {
+    if (game.resources.trimps.realMax() > 3000000) {
+        autoTrimpSettings.FarmerRatio.value = '3';
+        autoTrimpSettings.LumberjackRatio.value = '1';
+        autoTrimpSettings.MinerRatio.value = '4';
+    } else if (game.resources.trimps.realMax() > 300000) {
+        autoTrimpSettings.FarmerRatio.value = '3';
+        autoTrimpSettings.LumberjackRatio.value = '3';
+        autoTrimpSettings.MinerRatio.value = '5';
+    } else {
+        autoTrimpSettings.FarmerRatio.value = '1';
+        autoTrimpSettings.LumberjackRatio.value = '1';
+        autoTrimpSettings.MinerRatio.value = '1';
+    }
+}
 
+function safeBuyBuilding(building) {
+    //limit to 1 building per queue
+    for (var b in game.global.buildingsQueue) {
+        if (game.global.buildingsQueue[b].includes(building)) return false;
+    }
+    preBuy();
+    game.global.buyAmt = 1;
+    if (!canAffordBuilding(building)) {
+        postBuy();
+        return false;
+    }
+    game.global.firing = false;
+    //avoid slow building from clamping
+    //buy as many warpstations as we can afford
+    if(building == 'Warpstation'){
+        game.global.buyAmt = 'Max';
+        game.global.maxSplit = 1;
+        buyBuilding(building, true, true);
+        debug('Building ' + game.global.buyAmt + ' ' + building + 's');
+        return;
+    }
+    debug('Building ' + building);
+    buyBuilding(building, true, true);
+    postBuy();
+    return true;
+}
+
+//Outlines the most efficient housing based on gems (credits to Belaith)
+function highlightHousing() {
+    var oldBuy = game.global.buyAmt;
+    game.global.buyAmt = 1;
+    var allHousing = ["Mansion", "Hotel", "Resort", "Gateway", "Collector", "Warpstation"];
+    var unlockedHousing = [];
+    for (var house in allHousing) {
+        if (game.buildings[allHousing[house]].locked === 0) {
+            unlockedHousing.push(allHousing[house]);
+        }
+    }
+    if (unlockedHousing.length) {
+        var obj = {};
+        for (var house in unlockedHousing) {
+            var building = game.buildings[unlockedHousing[house]];
+            var cost = 0;
+            cost += getBuildingItemPrice(building, "gems", false, 1);
+            var ratio = cost / building.increase.by;
+            //don't consider Gateway if we can't afford it right now - hopefully to prevent game waiting for fragments to buy gateway when collector could be bought right now
+            if(unlockedHousing[house] == "Gateway" && !canAffordBuilding('Gateway')) continue;
+            obj[unlockedHousing[house]] = ratio;
+            if (document.getElementById(unlockedHousing[house]).style.border = "1px solid #00CC00") {
+                document.getElementById(unlockedHousing[house]).style.border = "1px solid #FFFFFF";
+                // document.getElementById(unlockedHousing[house]).removeEventListener("click", update);
+            }
+        }
+        var keysSorted = Object.keys(obj).sort(function(a, b) {
+            return obj[a] - obj[b];
+        });
+        bestBuilding = null;
+        //loop through the array and find the first one that isn't limited by max settings
+        for (var best in keysSorted) {
+            var max = getPageSetting('Max' + keysSorted[best]);
+            if (max === false) max = -1;
+            if (game.buildings[keysSorted[best]].owned < max || max == -1) {
+                bestBuilding = keysSorted[best];
+                
+                if (getPageSetting('WarpstationCap') && bestBuilding == "Warpstation") {
+                    //Warpstation Cap - if we are past the basewarp+deltagiga level, "cap" and just wait for next giga.
+                    if (game.buildings.Warpstation.owned >= (Math.floor(game.upgrades.Gigastation.done * getPageSetting('DeltaGigastation')) + getPageSetting('FirstGigastation')))
+                        bestBuilding = null;
+                }
+                break;
+            }
+        }
+        if (bestBuilding) {
+            document.getElementById(bestBuilding).style.border = "1px solid #00CC00";
+        }
+        // document.getElementById(bestBuilding).addEventListener('click', update, false);
+    } else {
+        bestBuilding = null;
+    }
+    game.global.buyAmt = oldBuy;
+}
+
+function buyFoodEfficientHousing() {
+    var houseWorth = game.buildings.House.locked ? 0 : game.buildings.House.increase.by / getBuildingItemPrice(game.buildings.House, "food", false, 1);
+    var hutWorth = game.buildings.Hut.increase.by / getBuildingItemPrice(game.buildings.Hut, "food", false, 1);
+    var hutAtMax = (game.buildings.Hut.owned >= autoTrimpSettings.MaxHut.value && autoTrimpSettings.MaxHut.value != -1);
+    //if hutworth is more, but huts are maxed , still buy up to house max
+    if ((houseWorth > hutWorth || hutAtMax) && canAffordBuilding('House') && (game.buildings.House.owned < autoTrimpSettings.MaxHouse.value || autoTrimpSettings.MaxHouse.value == -1)) {
+        safeBuyBuilding('House');
+    } else {
+        if (!hutAtMax) {
+            safeBuyBuilding('Hut');
+        }
+    }
+}
+
+//Buy all non-storage buildings
+function buyBuildings() {
+    if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || (game.jobs.Scientist.locked && game.global.challengeActive != "Scientist"))
+        return;
+    highlightHousing();
+
+    //if housing is highlighted
+    if (bestBuilding !== null) {
+        //insert gigastation logic here ###############
+        if (!safeBuyBuilding(bestBuilding)) {
+            buyFoodEfficientHousing();
+        }
+    } else {
+        buyFoodEfficientHousing();
+    }
+
+    if(getPageSetting('MaxWormhole') > 0 && game.buildings.Wormhole.owned < getPageSetting('MaxWormhole') && !game.buildings.Wormhole.locked) safeBuyBuilding('Wormhole');
+
+    //Buy non-housing buildings
+    if (!game.buildings.Gym.locked && (getPageSetting('MaxGym') > game.buildings.Gym.owned || getPageSetting('MaxGym') == -1)) {
+        safeBuyBuilding('Gym');
+    }
+    if (!game.buildings.Tribute.locked && (getPageSetting('MaxTribute') > game.buildings.Tribute.owned || getPageSetting('MaxTribute') == -1)) {
+        safeBuyBuilding('Tribute');
+    }
+    var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
+    //only buy nurseries if enabled,   and we need to lower our breed time, or our target breed time is 0, or we aren't trying to manage our breed time before geneticists, and they aren't locked
+    //even if we are trying to manage breed timer pre-geneticists, start buying nurseries once geneticists are unlocked AS LONG AS we can afford a geneticist (to prevent nurseries from outpacing geneticists soon after they are unlocked)
+    if ((targetBreed < getBreedTime() || targetBreed == 0 || !getPageSetting('ManageBreedtimer') || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
+        if ((getPageSetting('MaxNursery') > game.buildings.Nursery.owned || getPageSetting('MaxNursery') == -1) && (getBuildingItemPrice(game.buildings.Nursery, "gems", false, 1) < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems", false, 1) || game.buildings.Warpstation.locked) && (getBuildingItemPrice(game.buildings.Nursery, "gems", false, 1) < 0.05 * getBuildingItemPrice(game.buildings.Collector, "gems", false, 1) || game.buildings.Collector.locked || !game.buildings.Warpstation.locked)) {
+            safeBuyBuilding('Nursery');
+        }
+    }
+}
 
 function evaluateEfficiency(equipName) {
     var equip = equipmentList[equipName];
@@ -740,202 +986,6 @@ function evaluateEfficiency(equipName) {
     };
 }
 
-function Effect(gameResource, equip) {
-    if (equip.Equip) {
-        return gameResource[equip.Stat + 'Calculated'];
-    } else {
-        //That be Gym
-        var oldBlock = gameResource.increase.by * gameResource.owned;
-        var Mod = game.upgrades.Gymystic.done ? (game.upgrades.Gymystic.modifier + (0.01 * (game.upgrades.Gymystic.done - 1))) : 1;
-        var newBlock = gameResource.increase.by * (gameResource.owned + 1) * Mod;
-        return newBlock - oldBlock;
-    }
-}
-
-function Cost(gameResource, equip) {
-    preBuy();
-    game.global.buyAmt = 1;
-    var price = parseFloat(getBuildingItemPrice(gameResource, equip.Resource, equip.Equip, 1));
-    if (equip.Equip) price = Math.ceil(price * (Math.pow(1 - game.portal.Artisanistry.modifier, game.portal.Artisanistry.level)));
-    postBuy();
-    return price;
-}
-
-function PrestigeValue(what) {
-    var name = game.upgrades[what].prestiges;
-    var equipment = game.equipment[name];
-    var stat;
-    if (equipment.blockNow) stat = "block";
-    else stat = (typeof equipment.health !== 'undefined') ? "health" : "attack";
-    var toReturn = Math.round(equipment[stat] * Math.pow(1.19, ((equipment.prestige) * game.global.prestige[stat]) + 1));
-    return toReturn;
-}
-
-function setScienceNeeded() {
-    scienceNeeded = 0;
-    for (var upgrade in upgradeList) {
-        upgrade = upgradeList[upgrade];
-        if (game.upgrades[upgrade].allowed > game.upgrades[upgrade].done) { //If the upgrade is available
-            scienceNeeded += getScienceCostToUpgrade(upgrade);
-        }
-    }
-}
-
-function getEnemyMaxAttack(world, level, name, diff, corrupt) {
-    var amt = 0;
-    var adjWorld = ((world - 1) * 100) + level;
-    amt += 50 * Math.sqrt(world) * Math.pow(3.27, world / 2);
-    amt -= 10;
-    if (world == 1){
-        amt *= 0.35;
-        amt = (amt * 0.20) + ((amt * 0.75) * (level / 100));
-    }
-    else if (world == 2){
-        amt *= 0.5;
-        amt = (amt * 0.32) + ((amt * 0.68) * (level / 100));
-    }
-    else if (world < 60)
-        amt = (amt * 0.375) + ((amt * 0.7) * (level / 100));
-    else{ 
-        amt = (amt * 0.4) + ((amt * 0.9) * (level / 100));
-        amt *= Math.pow(1.15, world - 59);
-    }
-    if (world < 60) amt *= 0.85;
-    if (world > 6 && game.global.mapsActive) amt *= 1.1;
-    if (diff) { 
-        amt *= diff;
-    }    
-    if (!corrupt)
-        amt *= game.badGuys[name].attack;
-    else {
-        amt *= getCorruptScale("attack");
-    }
-    return Math.floor(amt);
-}
-
-function getEnemyMaxHealth(world, level, corrupt) {
-    if (!level)
-        level = 30;
-    var amt = 0;
-    amt += 130 * Math.sqrt(world) * Math.pow(3.265, world / 2);
-    amt -= 110;
-    if (world == 1 || world == 2 && level < 10) {
-        amt *= 0.6;
-        amt = (amt * 0.25) + ((amt * 0.72) * (level / 100));
-    }
-    else if (world < 60)
-        amt = (amt * 0.4) + ((amt * 0.4) * (level / 110));
-    else {
-        amt = (amt * 0.5) + ((amt * 0.8) * (level / 100));
-        amt *= Math.pow(1.1, world - 59);
-    }
-    if (world < 60) amt *= 0.75;        
-    if (world > 5 && game.global.mapsActive) amt *= 1.1;
-    if (!corrupt)
-        amt *= game.badGuys["Grimp"].health;
-    else
-        amt *= getCorruptScale("health");
-    return Math.floor(amt);
-}
-
-function getCurrentEnemy(current) {
-    if (!current)
-        current = 1;
-    var enemy;
-    if (!game.global.mapsActive && !game.global.preMapsActive) {
-        if (typeof game.global.gridArray[game.global.lastClearedCell + current] === 'undefined') {
-            enemy = game.global.gridArray[game.global.gridArray.length - 1];
-        } else {
-            enemy = game.global.gridArray[game.global.lastClearedCell + current];
-        }
-    } else if (game.global.mapsActive && !game.global.preMapsActive) {
-        if (typeof game.global.mapGridArray[game.global.lastClearedMapCell + current] === 'undefined') {
-            enemy = game.global.mapGridArray[game.global.gridArray.length - 1];
-        } else {
-            enemy = game.global.mapGridArray[game.global.lastClearedMapCell + current];
-        }
-    }
-    return enemy;
-}
-
-
-function getBreedTime(remaining) {
-    var trimps = game.resources.trimps;
-    var breeding = trimps.owned - trimps.employed;
-    var trimpsMax = trimps.realMax();
-
-    var potencyMod = trimps.potency;
-    if (game.global.brokenPlanet) breeding /= 10;
-
-    //Pheromones
-    potencyMod += (potencyMod * game.portal.Pheromones.level * game.portal.Pheromones.modifier);
-    if (game.jobs.Geneticist.owned > 0) potencyMod *= Math.pow(0.98, game.jobs.Geneticist.owned);
-    if (game.unlocks.quickTrimps) potencyMod *= 2;
-    if (game.global.challengeActive == "Toxicity" && game.challenges.Toxicity.stacks > 0){
-    potencyMod *= Math.pow(game.challenges.Toxicity.stackMult, game.challenges.Toxicity.stacks);
-    }
-    if (game.global.voidBuff == "slowBreed"){
-        potencyMod *= 0.2;
-
-    }
-
-    potencyMod = calcHeirloomBonus("Shield", "breedSpeed", potencyMod);
-    breeding = breeding * potencyMod;
-    updatePs(breeding, true);
-
-
-    var timeRemaining = log10((trimpsMax - trimps.employed) / (trimps.owned - trimps.employed)) / log10(1 + (potencyMod / 10));
-    if (!game.global.brokenPlanet) timeRemaining /= 10;
-    timeRemaining = Math.floor(timeRemaining);
-    if(remaining) return timeRemaining;
-    var fullBreed = 0;
-    var adjustedMax = (game.portal.Coordinated.level) ? game.portal.Coordinated.currentSend : trimps.maxSoldiers;
-    var totalTime = log10((trimpsMax - trimps.employed) / ((trimpsMax - adjustedMax) - trimps.employed)) / log10(1 + (potencyMod / 10));
-    if (!game.global.brokenPlanet) totalTime /= 10;
-    fullBreed = Math.floor(totalTime) + " Secs";
-    timeRemaining += " / " + fullBreed;
-
-    // debug('Time to breed is ' +Math.floor(totalTime));
-    return Math.floor(totalTime);
-}
-
-
-////////////////////////////////////////
-//Main Functions////////////////////////
-////////////////////////////////////////
-
-function initializeAutoTrimps() {
-    debug('initializeAutoTrimps');
-    loadPageVariables();
-
-    var script = document.getElementById('AutoTrimps-script')
-      , base = 'https://zininzinin.github.io/AutoTrimps'
-      ;
-    if (script !== null) {
-        base = script.getAttribute('src').replace(/\/AutoTrimps2\.js$/, '');
-    }
-    document.head.appendChild(document.createElement('script')).src = base + '/NewUI.js';
-    document.head.appendChild(document.createElement('script')).src = base + '/Graphs.js';
-    toggleSettingsMenu();
-    toggleSettingsMenu();
-}
-
-function easyMode() {
-    if (game.resources.trimps.realMax() > 3000000) {
-        autoTrimpSettings.FarmerRatio.value = '3';
-        autoTrimpSettings.LumberjackRatio.value = '1';
-        autoTrimpSettings.MinerRatio.value = '4';
-    } else if (game.resources.trimps.realMax() > 300000) {
-        autoTrimpSettings.FarmerRatio.value = '3';
-        autoTrimpSettings.LumberjackRatio.value = '3';
-        autoTrimpSettings.MinerRatio.value = '5';
-    } else {
-        autoTrimpSettings.FarmerRatio.value = '1';
-        autoTrimpSettings.LumberjackRatio.value = '1';
-        autoTrimpSettings.MinerRatio.value = '1';
-    }
-}
-
 //Buys all available non-equip upgrades listed in var upgradeList
 function buyUpgrades() {
     for (var upgrade in upgradeList) {
@@ -978,49 +1028,6 @@ function buyStorage() {
                 if (getPageSetting('ManualGather')) setGather('buildings');
             }
         }
-    }
-}
-
-//Buy all non-storage buildings
-function buyBuildings() {
-    if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || (game.jobs.Scientist.locked && game.global.challengeActive != "Scientist"))
-        return;
-    highlightHousing();
-
-    //if housing is highlighted
-    if (bestBuilding !== null) {
-        //insert gigastation logic here ###############
-        if (!safeBuyBuilding(bestBuilding)) {
-            buyFoodEfficientHousing();
-        }
-    } else {
-        buyFoodEfficientHousing();
-    }
-
-    if(getPageSetting('MaxWormhole') > 0 && game.buildings.Wormhole.owned < getPageSetting('MaxWormhole') && !game.buildings.Wormhole.locked) safeBuyBuilding('Wormhole');
-
-    //Buy non-housing buildings
-    if (!game.buildings.Gym.locked && (getPageSetting('MaxGym') > game.buildings.Gym.owned || getPageSetting('MaxGym') == -1)) {
-        safeBuyBuilding('Gym');
-    }
-    if (!game.buildings.Tribute.locked && (getPageSetting('MaxTribute') > game.buildings.Tribute.owned || getPageSetting('MaxTribute') == -1)) {
-        safeBuyBuilding('Tribute');
-    }
-    var targetBreed = parseInt(getPageSetting('GeneticistTimer'));
-    //only buy nurseries if enabled,   and we need to lower our breed time, or our target breed time is 0, or we aren't trying to manage our breed time before geneticists, and they aren't locked
-    //even if we are trying to manage breed timer pre-geneticists, start buying nurseries once geneticists are unlocked AS LONG AS we can afford a geneticist (to prevent nurseries from outpacing geneticists soon after they are unlocked)
-    if ((targetBreed < getBreedTime() || targetBreed == 0 || !getPageSetting('ManageBreedtimer') || (!game.jobs.Geneticist.locked && canAffordJob('Geneticist', false))) && !game.buildings.Nursery.locked) {
-        if ((getPageSetting('MaxNursery') > game.buildings.Nursery.owned || getPageSetting('MaxNursery') == -1) && (getBuildingItemPrice(game.buildings.Nursery, "gems", false, 1) < 0.05 * getBuildingItemPrice(game.buildings.Warpstation, "gems", false, 1) || game.buildings.Warpstation.locked) && (getBuildingItemPrice(game.buildings.Nursery, "gems", false, 1) < 0.05 * getBuildingItemPrice(game.buildings.Collector, "gems", false, 1) || game.buildings.Collector.locked || !game.buildings.Warpstation.locked)) {
-            safeBuyBuilding('Nursery');
-        }
-    }
-}
-
-function setTitle() {
-    document.title = '(' + game.global.world + ')' + ' Trimps ' + document.getElementById('versionNumber').innerHTML;
-    //for the dummies like me who always forget to turn automaps back on after portaling
-    if(getPageSetting('RunUniqueMaps') && !game.upgrades.Battle.done && autoTrimpSettings.RunMapsWhenStuck.enabled == false) {
-        settingChanged("RunMapsWhenStuck");
     }
 }
 
