@@ -13,7 +13,7 @@ newItem.setAttribute("class", "btn btn-default");
 newItem.setAttribute("onclick", "autoToggleGraph(); drawGraph();");
 var settingbarRow = document.getElementById("settingsTable").firstElementChild.firstElementChild;
 settingbarRow.insertBefore(newItem, settingbarRow.childNodes[10]);
-document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style="display: none;"><div id="graph" style="margin-bottom: 2vw;margin-top: 2vw;"></div></div>';
+document.getElementById("settingsRow").innerHTML += '<div id="graphParent" style="display: none; height: 600px"><div id="graph" style="margin-bottom: 15px;margin-top: 10px; height: 540px;"></div><div id="graphFooter" style="height: 50px;"></div>';
 
 //Create the dropdown for what graph to show
 var graphList = ['HeliumPerHour', 'Helium', 'Clear Time', 'Cumulative Clear Time', 'Run Time', 'Void Maps', 'Void Map History', 'Coords', 'Gigas', 'UnusedGigas', 'Lastwarp', 'Trimps','Nullifium Gained'];
@@ -31,7 +31,7 @@ for (var item in graphList) {
     option.text = graphList[item];
     btn.appendChild(option);
 }
-document.getElementById('graphParent').appendChild(btn);
+document.getElementById('graphFooter').appendChild(btn);
 
 //refresh graph button - probably don't need different variables but I don't know what I'm doing!
 var btn1 = document.createElement("button");
@@ -40,7 +40,7 @@ btn1.appendChild(u);
 btn1.setAttribute("onclick", "drawGraph()");
 btn1.setAttribute("class", "settingBtn");
 if(game.options.menu.darkTheme.enabled != 2) btn1.setAttribute("style", "color:black");
-document.getElementById('graphParent').appendChild(btn1);
+document.getElementById('graphFooter').appendChild(btn1);
 
 //clear data button
 var btn2 = document.createElement("button");
@@ -48,23 +48,220 @@ var t = document.createTextNode("Clear All Previous Data");
 btn2.appendChild(t);
 btn2.setAttribute("onclick", "clearData(); drawGraph();");
 btn2.setAttribute("class", "settingBtn");
-if(game.options.menu.darkTheme.enabled != 2) btn2.setAttribute("style", "color:black");
-document.getElementById('graphParent').appendChild(btn2);
+btn2.setAttribute('style', 'margin-left: 10vw; ');
+if(game.options.menu.darkTheme.enabled != 2) btn2.setAttribute("style", "color:black; margin-left: 10vw; ");
+document.getElementById('graphFooter').appendChild(btn2);
 
+
+//textbox for clear data button
+var textboxbtn3 = document.createElement("input");
+textboxbtn3.setAttribute("id", "deleteSelectedTextBox");
+textboxbtn3.setAttribute("style", "width: 2.5vw;margin-left: 10vw; margin-right: 5px; color:black");
+document.getElementById('graphFooter').appendChild(textboxbtn3);
+
+//delete selected button
+var btn3 = document.createElement("button");
+var tt = document.createTextNode("Delete Selected Portal");
+btn3.appendChild(tt);
+btn3.setAttribute("onclick", "deleteSelected(); drawGraph();");
+btn3.setAttribute("class", "settingBtn");
+if(game.options.menu.darkTheme.enabled != 2) btn3.setAttribute("style", "color:black");
+document.getElementById('graphFooter').appendChild(btn3);
+
+//Create Graphs export button.
+var btnExp = document.createElement("button");
+var exp = document.createTextNode("Export your Graph Database");
+btnExp.appendChild(exp);
+btnExp.setAttribute("class", "settingBtn");
+if(game.options.menu.darkTheme.enabled != 2)
+    btnExp.setAttribute("style", "margin-left: 10vw; margin-right: 5px; color:black");
+else
+    btnExp.setAttribute("style", "margin-left: 10vw; margin-right: 5px;");
+document.getElementById('graphFooter').appendChild(btnExp);
+btnExp.setAttribute("onclick", 'GraphsImportExportTooltip(\'ExportGraphs\', null, \'update\')');
+
+/*
+// IMPORT BUTTON IS NOT FINISHED. DO NOT USE! = ONLY FOR DEVELOPERS WHO CAN FIX IT
+
+//Create Graphs import button.
+var btnImp = document.createElement("button");
+var imp = document.createTextNode("Replace your Graph Database");
+btnImp.appendChild(imp);
+btnImp.setAttribute("class", "settingBtn");
+if(game.options.menu.darkTheme.enabled != 2)
+    btnImp.setAttribute("style", "color:black");
+document.getElementById('graphFooter').appendChild(btnImp);
+btnImp.setAttribute("onclick", 'GraphsImportExportTooltip(\'ImportGraphs\', null, \'update\')');
+
+//Create Graphs append  button.
+var btnImpApp = document.createElement("button");
+var impapp = document.createTextNode("Append to your Graph Database");
+btnImpApp.appendChild(impapp);
+btnImpApp.setAttribute("class", "settingBtn");
+if(game.options.menu.darkTheme.enabled != 2)
+    btnImpApp.setAttribute("style", "color:black");
+document.getElementById('graphFooter').appendChild(btnImpApp);
+btnImpApp.setAttribute("onclick", 'GraphsImportExportTooltip(\'AppendGraphs\', null, \'update\')');
+*/
+
+//deselect all button
+var btn4 = document.createElement("button");
+var t = document.createTextNode("Invert Selection");
+btn4.appendChild(t);
+btn4.setAttribute("onclick", "toggleSelectedGraphs()");
+btn4.setAttribute("class", "settingBtn");
+btn4.setAttribute('style', 'position:relative; float:right;');
+if(game.options.menu.darkTheme.enabled != 2) btn4.setAttribute("style", "color:black; position:relative; float:right; margin-right: 0.5vw; ");
+document.getElementById('graphFooter').appendChild(btn4);
+
+//all off/on
+var btn5 = document.createElement("button");
+var t = document.createTextNode("All Off/On");
+btn5.appendChild(t);
+btn5.setAttribute("onclick", "toggleAllGraphs()");
+btn5.setAttribute("class", "settingBtn");
+btn5.setAttribute('style', 'position:relative; float:right;');
+if(game.options.menu.darkTheme.enabled != 2) btn5.setAttribute("style", "color:black; position:relative; float:right; margin-right: 1vw; ");
+document.getElementById('graphFooter').appendChild(btn5);
+
+//tips bottom line
 var tips = document.createElement('div');
-tips.innerHTML = 'Tips: You can zoom by dragging a box around an area. You can turn series off by clicking them on the legend.';
-document.getElementById('graphParent').appendChild(tips);
+tips.innerHTML = 'Tips: You can zoom by dragging a box around an area. You can turn series off by clicking them on the legend. To delete a portal, Type its portal number in the box and press Delete Selected';
+document.getElementById('graphFooter').appendChild(tips);
 
-
-function clearData(portal) {
-    if(portal) {
-        while(allSaveData[0].totalPortals < game.global.totalPortals - portal) allSaveData.shift();
+function GraphsImportExportTooltip(what, isItIn, event) {
+	if (game.global.lockTooltip) 
+        return;
+	var elem = document.getElementById("tooltipDiv");
+	swapClass("tooltipExtra", "tooltipExtraNone", elem);
+	var ondisplay = null; // if non-null, called after the tooltip is displayed
+	var tooltipText;
+	var costText = "";
+	if (what == "ExportGraphs"){
+		tooltipText = "This is your GRAPH DATABASE save string. There are many like it but this one is yours. Save this save somewhere safe so you can save time next time. <br/><br/><textarea id='exportArea' style='width: 100%' rows='5'>" + JSON.stringify(allSaveData) + "</textarea>";
+        costText = "<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip()'>Got it</div>";
+		if (document.queryCommandSupported('copy')){
+			costText += "<div id='clipBoardBtn' class='btn btn-success'>Copy to Clipboard</div>";
+			ondisplay = function(){
+				document.getElementById('exportArea').select();
+				document.getElementById('clipBoardBtn').addEventListener('click', function(event) {
+				    document.getElementById('exportArea').select();
+					  try {
+						document.execCommand('copy');
+					  } catch (err) {
+						document.getElementById('clipBoardBtn').innerHTML = "Error, not copied";
+					  }
+				});
+            };
+		}
+        else {
+            ondisplay = function(){
+                document.getElementById('exportArea').select();
+            };
+		}
+		costText += "</div>";
+	}
+	if (what == "ImportGraphs"){
+        //runs the loadGraphs() function.
+		tooltipText = "Replaces your GRAPH DATABASE with this save string! It'll be fine, I promise.<br/><br/><textarea id='importBox' style='width: 100%' rows='5'></textarea>";
+		costText="<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip(); loadGraphs();'>Import</div><div class='btn btn-info' onclick='cancelTooltip()'>Cancel</div></div>";
+		ondisplay = function () {
+			document.getElementById('importBox').focus();
+        };
     }
-    else {
-        while(allSaveData[0].totalPortals < game.global.totalPortals) allSaveData.shift();
+	if (what == "AppendGraphs"){
+        //runs the appendGraphs() function.
+		tooltipText = "Appends to your GRAPH DATABASE with this save string (combines them)! It'll be fine, I hope.<br/><br/><textarea id='importBox' style='width: 100%' rows='5'></textarea>";
+		costText="<div class='maxCenter'><div id='confirmTooltipBtn' class='btn btn-info' onclick='cancelTooltip(); appendGraphs();'>Import</div><div class='btn btn-info' onclick='cancelTooltip()'>Cancel</div></div>";
+		ondisplay = function () {
+			document.getElementById('importBox').focus();
+        };
+    }    
+    game.global.lockTooltip = true;
+    elem.style.left = "33.75%";
+    elem.style.top = "25%";
+	document.getElementById("tipTitle").innerHTML = what;
+	document.getElementById("tipText").innerHTML = tooltipText;
+	document.getElementById("tipCost").innerHTML = costText;
+	elem.style.display = "block";
+	if (ondisplay !== null)
+		ondisplay();
+}
+
+//function to take the text string, and use it to load and overwrite your saved data (for graphs)
+function loadGraphs() {
+    var thestring = document.getElementById("importBox").value.replace(/(\r\n|\n|\r|\s)/gm,"");
+    var tmpset = JSON.parse(thestring);
+    if (tmpset == null)
+        return;
+    //should have done more error checking with at least an error message.
+    allSaveData = tmpset;
+    //refresh
+    drawGraph();
+}
+
+//function to take the text string, and use it to load and append your saved data (for graphs) to the old database 
+function appendGraphs() {
+    //currently overwrites:
+    /*
+    var thestring = document.getElementById("importBox").value.replace(/(\r\n|\n|\r|\s)/gm,"");
+    var tmpset = JSON.parse(thestring);
+    if (tmpset == null)
+        return;
+    //should have done more error checking with at least an error message.
+    allSaveData = tmpset;
+    */
+    //refresh
+    drawGraph();
+}
+
+//Invert graph selections
+function toggleSelectedGraphs() {
+    for (var i=0; i < chart1.series.length; i++){
+        var run = chart1.series[i];
+        if (run.visible)
+            run.hide();
+        else
+            run.show();
     }
 }
 
+//Turn all graphs on/off (to the opposite of which one we are closer to)
+function toggleAllGraphs() {
+    var count = 0;
+    for (var i=0; i < chart1.series.length; i++){
+        var run = chart1.series[i];
+        if (run.visible)
+            count++;
+    }
+    for (var i=0; i < chart1.series.length; i++){
+        var run = chart1.series[i];
+        if (count > chart1.series.length/2)
+            run.hide();
+        else
+            run.show();
+    }    
+}
+
+function clearData(portal) {
+    //clear data of runs with portalnumbers prior than X (15) away from current portal number. (or 0 = clear all)
+    if(!portal) 
+        portal = 0;
+    while(allSaveData[0].totalPortals < game.global.totalPortals - portal) {
+        allSaveData.shift();
+    }
+}
+
+//delete a specific portal number's graphs.
+function deleteSelected() {
+    var txtboxvalue = document.getElementById('deleteSelectedTextBox').value;
+    if (txtboxvalue == "")
+        return;
+    for (var i = allSaveData.length-1; i >= 0; i--) {
+        if (allSaveData[i].totalPortals == txtboxvalue)
+            allSaveData.splice(i, 1);
+    }
+}
 
 function autoToggleGraph() {
     if (game.options.displayed) toggleSettingsMenu();
@@ -80,11 +277,13 @@ function autoToggleGraph() {
     }
 }
 
+//unused for some reason:
 function autoPlusGraphMenu() {
     var item = document.getElementById('graphParent');
     if (item.style.display === 'block') item.style.display = 'none';
     toggleSettingsMenu();
 }
+
 var chart1;
 function setGraph(title, xTitle, yTitle, valueSuffix, formatter, series, yType) {
     chart1 = new Highcharts.Chart({
@@ -158,9 +357,9 @@ function setGraph(title, xTitle, yTitle, valueSuffix, formatter, series, yType) 
 function setColor(tmp) {
     for (var i in tmp) {
         if (i == tmp.length - 1) {
-            tmp[i].color = '#FF0000' //Current run is in red
+            tmp[i].color = '#FF0000'; //Current run is in red
         } else {
-            tmp[i].color = '#90C3D4' //Old runs are in blue
+            tmp[i].color = '#90C3D4'; //Old runs are in blue
         }
     }
     return tmp;
@@ -184,35 +383,29 @@ function pushData() {
         coord: game.upgrades.Coordination.done,
         lastwarp: game.global.lastWarp
     });
-    //only keep 10 portals worth of runs to prevent filling storage
+    //only keep 15 portals worth of runs to prevent filling storage
     clearData(15);
     localStorage.setItem('allSaveData', JSON.stringify(allSaveData));
 }
 
-
-function gatherInfo() {
+function initializeData() {
+    //initialize fresh with a blank array if needed
     if (allSaveData === null) {
         allSaveData = [];
     }
-    //clear filtered loot data upon portaling. <5 check to hopefully throw out bone portal shenanigans
-  /*  if(allSaveData[allSaveData.length -1].totalPortals != game.global.totalPortals && game.global.world < 5) {
-    	for(var r in filteredLoot) {
-    		for(var b in filteredLoot[r]){
-    			filteredLoot[r][b] = 0;
-    		}
-    	}
-    }
-    */
+    //fill the array with the first data point
     if (allSaveData.length === 0) {
         pushData();
-    } else if (allSaveData[allSaveData.length - 1].world != game.global.world) {
+    }
+}
+
+//main function of the graphs script - runs every second.
+function gatherInfo() {
+    initializeData();
+    //if we have reached a new zone, push a new data point (main
+    if (allSaveData.length > 0 && allSaveData[allSaveData.length - 1].world != game.global.world) {
         pushData();
     }
-
-
-    // graphData = setColor(graphData);
-
-
 }
 
 function drawGraph() {
