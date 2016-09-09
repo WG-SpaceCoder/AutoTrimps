@@ -949,10 +949,12 @@ function buyUpgrades() {
             buyUpgrade(upgrade, true, true);
             debug('Upgraded ' + upgrade);
         }
+        //skip bloodlust during scientist challenges and while we have autofight enabled.
+        if (upgrade == 'Bloodlust' && game.global.challengeActive == 'Scientist' && getPageSetting('AutoFight'))    continue;
     }
 }
 
-//Buys more storage if resource is over 85% full (or 60% if zone<10)
+//Buys more storage if resource is over 85% full (or 50% if Zone 2-10) (or 70% if zone==1)
 function buyStorage() {
     var packMod = 1 + game.portal.Packrat.level * game.portal.Packrat.modifier;
     var Bs = {
@@ -969,9 +971,9 @@ function buyStorage() {
             jest = simpleSeconds(Bs[B], 45);
             jest = scaleToCurrentMap(jest);
         }
-        if ((game.global.world < 10 && owned > max * 0.6) || owned + jest > max * 0.85 || owned > max * 0.85) {
+        if ((game.global.world==1 && owned > max * 0.7) || (game.global.world >= 2 && game.global.world < 10 && owned > max * 0.5) || (owned + jest > max * 0.85)) {
             // debug('Buying ' + B + '(' + Bs[B] + ') at ' + Math.floor(game.resources[Bs[B]].owned / (game.resources[Bs[B]].max * packMod * 0.99) * 100) + '%');
-            if (canAffordBuilding(B)) {
+            if (canAffordBuilding(B) && game.triggers[B].done) {
                 safeBuyBuilding(B);
                 if (getPageSetting('ManualGather')) setGather('buildings');
             }
