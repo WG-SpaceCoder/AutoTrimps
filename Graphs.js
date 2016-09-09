@@ -185,7 +185,7 @@ function pushData() {
         lastwarp: game.global.lastWarp
     });
     //only keep 10 portals worth of runs to prevent filling storage
-    clearData(10);
+    clearData(15);
     localStorage.setItem('allSaveData', JSON.stringify(allSaveData));
 }
 
