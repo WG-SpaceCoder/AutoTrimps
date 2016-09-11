@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AutoTrimpsV2 stable
 // @namespace    http://tampermonkey.net/
-// @version      2.1.2
+// @version      2.1.2 stable (zininzinin)
 // @description  try to take over the world!
 // @author       zininzinin, spindrjr, belaith, ishakaru, genBTC
 // @include      *trimps.github.io*
@@ -11,7 +11,7 @@
 ////////////////////////////////////////
 //Variables/////////////////////////////
 ////////////////////////////////////////
-var ATversion = '2.1.2';
+var ATversion = '2.1.2 stable (zininzinin)';
 var AutoTrimpsDebugTabVisible = true;
 var enableDebug = true; //Spam console
 var autoTrimpSettings = {};
