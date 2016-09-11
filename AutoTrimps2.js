@@ -2054,8 +2054,6 @@ function manageGenes() {
     }
 }
 
-}
-
 //Activate Robo Trimp
 function autoRoboTrimp() {
     //exit if the cooldown is active, or we havent unlocked robotrimp.
