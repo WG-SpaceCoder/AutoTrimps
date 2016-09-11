@@ -2044,6 +2044,8 @@ function manageGenes() {
     //if a new fight group is available and anticipation stacks aren't 30, abandon and grab a new group
     var newSquadRdy = game.resources.trimps.realMax() <= game.resources.trimps.owned + 1;
     if (game.portal.Anticipation.level && game.global.antiStacks < targetBreed && getBreedTime() >= targetBreed && getBreedTime(true) == 0 && (game.global.lastBreedTime/1000) >= targetBreed && newSquadRdy && game.resources.trimps.soldiers > 0) {
+        if (game.global.mapsActive && getCurrentMapObject().location == "Void")
+            return;
         if (!game.global.preMapsActive) {
             mapsClicked(); 
             //force abandon army
