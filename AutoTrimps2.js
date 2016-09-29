@@ -805,17 +805,17 @@ function initializeAutoTrimps() {
 
 function easyMode() {
     if (game.resources.trimps.realMax() > 3000000) {
-        autoTrimpSettings.FarmerRatio.value = '3';
-        autoTrimpSettings.LumberjackRatio.value = '1';
-        autoTrimpSettings.MinerRatio.value = '4';
+        autoTrimpSettings.FarmerRatio.value = parseInt(getPageSetting('emrFarmergt3m'));
+        autoTrimpSettings.LumberjackRatio.value = parseInt(getPageSetting('emrLumberjackgt3m'));
+        autoTrimpSettings.MinerRatio.value = parseInt(getPageSetting('emrMinergt3m'));
     } else if (game.resources.trimps.realMax() > 300000) {
-        autoTrimpSettings.FarmerRatio.value = '3';
-        autoTrimpSettings.LumberjackRatio.value = '3';
-        autoTrimpSettings.MinerRatio.value = '5';
+        autoTrimpSettings.FarmerRatio.value = parseInt(getPageSetting('emrFarmerlt3m'));
+        autoTrimpSettings.LumberjackRatio.value = parseInt(getPageSetting('emrLumberjacklt3m'));
+        autoTrimpSettings.MinerRatio.value = parseInt(getPageSetting('emrMinerlt3m'));
     } else {
-        autoTrimpSettings.FarmerRatio.value = '1';
-        autoTrimpSettings.LumberjackRatio.value = '1';
-        autoTrimpSettings.MinerRatio.value = '1';
+        autoTrimpSettings.FarmerRatio.value = parseInt(getPageSetting('emrFarmerlt300k'));
+        autoTrimpSettings.LumberjackRatio.value = parseInt(getPageSetting('emrLumberjacklt300k'));
+        autoTrimpSettings.MinerRatio.value = parseInt(getPageSetting('emrMinerlt300k'));
     }
     if (game.global.challengeActive == 'Watch'){
         autoTrimpSettings.FarmerRatio.value = '1';

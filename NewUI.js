@@ -25,7 +25,7 @@ createSetting('RunMapsWhenStuck', 'Auto Maps', 'Automatically run maps to progre
 createSetting('RunUniqueMaps', 'Run Unique Maps', 'Relies on AutoMaps to choose to run Unique maps. Required for AutoPortal. Also needed for challenges: Electricity, Mapocalypse, Meditate, and Crushed (etc). Needed to auto-run The Wall and Dimension of Anger. ', 'boolean');
 createSetting('AutoHeirlooms', 'Auto Heirlooms', 'Automatically evaluate and carry the best heirlooms, and recommend upgrades for equipped items. AutoHeirlooms will only change carried items when the heirlooms window is not open. Carried items will be compared and swapped with the types that are already carried. If a carry spot is empty, it will be filled with the best shield (if available). Evaluation is based ONLY on the following mods (listed in order of priority, high to low): Void Map Drop Chance/Trimp Attack, Crit Chance/Crit Damage, Miner Efficiency/Metal Drop, Gem Drop/Dragimp Efficiency, Farmer/Lumberjack Efficiency. For the purposes of carrying, rarity trumps all of the stat evaluations. Empty mod slots are valued at the average value of the best missing mod.', 'boolean');
 createSetting('HireScientists', 'Hire Scientists', 'Enable or disable hiring of scientists. Math: ScientistRatio=(FarmerRatio+LumberjackRatio+MinerRatio)/25 and stops hiring scientists after 250k Farmers.', 'boolean');
-createSetting('EasyMode', 'Auto Worker Ratios', 'Automatically changes worker ratios based on current progress. WARNING: overrides worker ratio settings. Settings: 1/1/1 up to 300k trimps, 3/3/5 up to 3mil trimps, then 3/1/4 thereafter.', 'boolean');
+createSetting('EasyMode', 'Auto Worker Ratios', 'Automatically changes worker ratios based on current progress. WARNING: overrides worker ratio settings. Default Settings: 1/1/1 up to 300k trimps, 3/3/5 up to 3mil trimps, then 3/1/4 thereafter. Can be adjusted below.', 'boolean');
 createSetting('ManageBreedtimer', 'Manage Breed Timer', 'Automatically manage the breed timer by purchasing Genetecists. Sets ideal anticpation stacks. If not using AutoStance, this will probably be undesirable... Picks appropriate times for various challenges (3.5s,11s,30s). Delays purchasing potency and nurseries if trying to raise the timer. EFFECTIVELY LOCKS THE BREED TIMER', 'boolean');
 //
 // createSetting('', '', '', 'boolean');
@@ -57,8 +57,7 @@ createSetting('AutoPortal', 'Auto Portal', 'Automatically portal. Will NOT auto-
 createSetting('HeliumHourChallenge', 'Challenge for Helium per Hour and Custom', 'Automatically portal with this challenge when using helium per hour or custom autoportal.', 'dropdown', 'None', ['None', 'Balance', 'Electricity', 'Crushed', 'Nom', 'Toxicity', 'Watch', 'Lead', 'Corrupted']);
 createSetting('CustomAutoPortal', 'Custom Portal', 'Automatically portal after clearing this level', 'value', '200');
 
-//advanced settings
-
+//advanced settings - Create button.
 var advHeader = document.createElement("DIV");
 var advBtn = document.createElement("DIV");
 advBtn.setAttribute('class', 'btn btn-default');
@@ -83,6 +82,34 @@ createSetting('MaxTox', 'Max Toxicity Stacks', 'Get maximum toxicity stacks befo
 createSetting('RunNewVoids', 'Run New Voids', 'Run new void maps acquired after the set void map zone.', 'boolean', null, null, 'advancedSettings');
 createSetting('VoidCheck', 'Void Difficulty Check', 'How many hits to be able to take from a void map boss in dominance stance before we attempt the map. Higher values will get you stronger before attempting. 2 should be fine.', 'value', '2', null, 'advancedSettings');
 createSetting('DisableFarm', 'Disable Farming', 'Disables the farming section of the automaps algorithm. This will cause it to always return to the zone upon reaching 10 map stacks.', 'boolean', null, null, 'advancedSettings');
+
+//easymode ratio settings - Create button.
+var emrBtn = document.createElement("DIV");
+emrBtn.setAttribute('class', 'btn btn-default');
+emrBtn.setAttribute('onclick', 'autoToggle(\'emrSettings\')');
+emrBtn.innerHTML = 'Autoworker Ratio Settings';
+emrBtn.setAttribute("onmouseover", 'tooltip(\"Autoworker Ratio Settings\", \"customText\", event, \"Leave off unless you know what you\'re doing with them.\")');
+emrBtn.setAttribute("onmouseout", 'tooltip("hide")');
+emrBtn.setAttribute('style', 'margin-left: 1vw; margin-right: 1vw; margin-bottom: 1vw; font-size: 0.8vw;');
+emrBtn.id='emrSettingsBTN';
+advHeader.appendChild(emrBtn);
+//
+var emradv = document.createElement("DIV");
+emradv.id = 'emrSettings';
+emradv.style.display = 'none';
+document.getElementById("autoSettings").appendChild(emradv);
+
+//easymode ratio settings
+createSetting('emrFarmerlt300k', '<300k Farmer Ratio', 'Autoworker Farmer ratio for < 300,000 trimps. (1 is default)', 'value', '1', null, 'emrSettings');
+createSetting('emrLumberjacklt300k', '<300k Lumberjack Ratio', 'Autoworker Lumberjack ratio for < 300,000 trimps. (1 is default)', 'value', '1', null, 'emrSettings');
+createSetting('emrMinerlt30k', '<300k Miner Ratio', 'Autoworker Miner ratio for < 300,000 trimps. (1 is default)', 'value', '1', null, 'emrSettings');
+createSetting('emrFarmerlt3m', '300k-3m Farmer Ratio', 'Autoworker Farmer ratio for 300,000 to 3,000,000 trimps. (3 is default)', 'value', '3', null, 'emrSettings');
+createSetting('emrLumberjacklt3m', '300k-3m Lumberjack Ratio', 'Autoworker Lumberjack ratio for 300,000 to 3,000,000 trimps. (3 is default)', 'value', '3', null, 'emrSettings');
+createSetting('emrMinerlt3m', '300k-3m Miner Ratio', 'Autoworker Miner ratio for 300,000 to 3,000,000 trimps. (5 is default)', 'value', '5', null, 'emrSettings');
+createSetting('emrFarmergt3m', '>3m Farmer Ratio', 'Autoworker Farmer ratio for > 3,000,000 trimps. (3 is default)', 'value', '3', null, 'emrSettings');
+createSetting('emrLumberjackgt3m', '>3m Lumberjack Ratio', 'Autoworker Lumberjack ratio for > 3,000,000 trimps. (1 is default)', 'value', '1', null, 'emrSettings');
+createSetting('emrMinergt3m', '>3m Miner Ratio', 'Autoworker Miner ratio for > 3,000,000 trimps. (4 is default)', 'value', '4', null, 'emrSettings');
+
 
 //genBTC advanced settings - Create button.
 var genbtcBtn = document.createElement("DIV");
