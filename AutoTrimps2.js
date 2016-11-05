@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AutoTrimpsV2 stable
 // @namespace    http://tampermonkey.net/
-// @version      2.1.2 stable (zininzinin)
+// @version      2.1.3 stable (zininzinin)
 // @description  try to take over the world!
 // @author       zininzinin, spindrjr, belaith, ishakaru, genBTC
 // @include      *trimps.github.io*
@@ -11,7 +11,7 @@
 ////////////////////////////////////////
 //Variables/////////////////////////////
 ////////////////////////////////////////
-var ATversion = '2.1.2 stable (zininzinin)';
+var ATversion = '2.1.3 stable (zininzinin)';
 var AutoTrimpsDebugTabVisible = true;
 var enableDebug = true; //Spam console
 var autoTrimpSettings = {};
@@ -27,10 +27,10 @@ var baseDamage = 0;
 var baseBlock = 0;
 var baseHealth = 0;
 
-var preBuyAmt = game.global.buyAmt;
-var preBuyFiring = game.global.firing;
-var preBuyTooltip = game.global.lockTooltip;
-var preBuymaxSplit = game.global.maxSplit;
+var preBuyAmt;
+var preBuyFiring;
+var preBuyTooltip;
+var preBuymaxSplit;
 
 ////////////////////////////////////////
 //Magic Numbers/////////////////////////
