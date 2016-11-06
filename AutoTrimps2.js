@@ -1829,7 +1829,7 @@ function autoMap() {
         //if selectedMap != world, it already has a map ID and will be run below
         if (selectedMap == "world") {
             //use a siphonology adjusted map, as long as we aren't trying to prestige
-            if (selectedMaps && !needPrestige) 
+            if (shouldDoMaps && !needPrestige) 
                 selectedMap = game.global.mapsOwnedArray[siphonMap].id;
             else if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
                 selectedMap = game.global.mapsOwnedArray[highestMap].id;
