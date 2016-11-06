@@ -1108,7 +1108,7 @@ function safeFireJob(job,amount) {
     //do some jiggerypokery in case jobs overflow and firing -1 worker does 0 (java integer overflow)
     var oldjob = game.jobs[job].owned;
     if (oldjob == 0)
-        return 0;    
+        return 0;
     var test = oldjob;
     var x = 1;
     if (!Number.isSafeInteger(oldjob)){
@@ -1206,7 +1206,7 @@ function buyJobs() {
         safeBuyJob('Miner', game.jobs.Miner.owned * -1);
 }
 
-//"Buy Armor", "Buy Armor Upgrades", "Buy Weapons","Buy Weapons Upgrades"
+//"Buy Armor", "Buy Armor Upgrades", "Buy Weapons", "Buy Weapons Upgrades"
 function autoLevelEquipment() {
     if((game.jobs.Miner.locked && game.global.challengeActive != 'Metal') || (game.jobs.Scientist.locked && game.global.challengeActive != "Scientist"))
         return;
@@ -1291,6 +1291,7 @@ function autoLevelEquipment() {
                 document.getElementById(equipName).style.color = 'yellow';
             }
 
+            //Code is Spaced This Way So You Can Read It:
             if (
                 evaluation.Status == 'red' &&
                 (
@@ -1306,7 +1307,7 @@ function autoLevelEquipment() {
                         )
                     )
                 )
-            ) 
+            )
             {
                 var upgrade = equipmentList[equipName].Upgrade;
                 if (upgrade != "Gymystic")
@@ -1683,7 +1684,9 @@ function autoMap() {
         enemyDamage *= 2.5;
         enemyHealth *= 2.5;
     }
-    enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2) || baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
+    enoughHealth = (baseHealth * 4 > 30 * (enemyDamage - baseBlock / 2 > 0 ? enemyDamage - baseBlock / 2 : enemyDamage * 0.2)
+                    || 
+                    baseHealth > 30 * (enemyDamage - baseBlock > 0 ? enemyDamage - baseBlock : enemyDamage * 0.2));
     enoughDamage = (baseDamage * 4 > enemyHealth);
     HDratio = getEnemyMaxHealth(game.global.world) / baseDamage;
     //prevents map-screen from flickering on and off during startup when base damage is 0.
@@ -1691,7 +1694,7 @@ function autoMap() {
     if (baseDamage > 0){
         shouldDoMaps = !enoughHealth || !enoughDamage;
     }
-    var shouldDoMap = "world";
+    var selectedMap = "world";
 
 //BEGIN AUTOMAPS DECISIONS:
     //if we are at max map bonus, and we don't need to farm, don't do maps
@@ -1739,35 +1742,35 @@ function autoMap() {
         var theMap = game.global.mapsOwnedArray[map];
         if (theMap.noRecycle && getPageSetting('RunUniqueMaps')) {
             if (theMap.name == 'The Wall' && game.upgrades.Bounty.allowed == 0 && !game.talents.bounty.purchased) {
-                shouldDoMap = theMap.id;
+                selectedMap = theMap.id;
                 break;
             }
             if (theMap.name == 'Dimension of Anger' && document.getElementById("portalBtn").style.display == "none" && !game.talents.portal.purchased) {
                 var doaDifficulty = Math.ceil(theMap.difficulty / 2);
                 if(game.global.world < 20 + doaDifficulty) continue;
-                shouldDoMap = theMap.id;
+                selectedMap = theMap.id;
                 break;
             }
             //run the prison only if we are 'cleared' to run level 80 + 1 level per 200% difficulty. Could do more accurate calc if needed
             if(theMap.name == 'The Prison' && (game.global.challengeActive == "Electricity" || game.global.challengeActive == "Mapocalypse")) {
                 var prisonDifficulty = Math.ceil(theMap.difficulty / 2);
                 if(game.global.world >= 80 + prisonDifficulty) {
-                    shouldDoMap = theMap.id;
+                    selectedMap = theMap.id;
                     break;
                 }
             }
             if(theMap.name == 'The Block' && !game.upgrades.Shieldblock.allowed && (game.global.challengeActive == "Scientist" || game.global.challengeActive == "Trimp" || getPageSetting('BuyShieldblock'))) {
-                shouldDoMap = theMap.id;
+                selectedMap = theMap.id;
                 break;
             }
             if(theMap.name == 'Trimple Of Doom' && game.global.challengeActive == "Meditate") {
-                shouldDoMap = theMap.id;
+                selectedMap = theMap.id;
                 break;
             }
             if(theMap.name == 'Bionic Wonderland' && game.global.challengeActive == "Crushed" ) {
                 var wonderlandDifficulty = Math.ceil(theMap.difficulty / 2);
                 if(game.global.world >= 125 + wonderlandDifficulty) {
-                    shouldDoMap = theMap.id;
+                    selectedMap = theMap.id;
                     break;
                 }
             }
@@ -1806,7 +1809,7 @@ function autoMap() {
                 if(getPageSetting('DisableFarm'))
                     shouldFarm = false;
             }
-            shouldDoMap = theMap.id;
+            selectedMap = theMap.id;
             if(game.global.mapsActive && game.global.challengeActive == "Nom") {
                 if(game.global.mapGridArray[game.global.lastClearedMapCell + 1].nomStacks > 6) {
                     mapsClicked(true);
@@ -1818,22 +1821,22 @@ function autoMap() {
     
     //shouldFarm is true here if: regular shouldFarm check set it, or voidMap difficulty check set it
     if (shouldDoMaps && siphonMap == -1 && !needPrestige) 
-        shouldDoMap = "create";
+        selectedMap = "create";
 
     //map if we don't have health/dmg or we need to clear void maps or if we are prestige mapping, and our set item has a new prestige available
     if (shouldDoMaps || doVoids || needPrestige) {
-        //shouldDoMap = world here if we haven't set it to create yet, meaning we found appropriate high level map, or siphon map
-        //if shouldDoMap != world, it already has a map ID and will be run below
-        if (shouldDoMap == "world") {
+        //selectedMap = world here if we haven't set it to create yet, meaning we found appropriate high level map, or siphon map
+        //if selectedMap != world, it already has a map ID and will be run below
+        if (selectedMap == "world") {
             //use a siphonology adjusted map, as long as we aren't trying to prestige
-            if (shouldDoMaps && !needPrestige) 
-                shouldDoMap = game.global.mapsOwnedArray[siphonMap].id;
+            if (selectedMaps && !needPrestige) 
+                selectedMap = game.global.mapsOwnedArray[siphonMap].id;
             else if (game.global.world == game.global.mapsOwnedArray[highestMap].level) {
-                shouldDoMap = game.global.mapsOwnedArray[highestMap].id;
+                selectedMap = game.global.mapsOwnedArray[highestMap].id;
             } else {
                 //if we dont' have an appropriate max level map, or a siphon map, we need to make one
-                //if(!shouldDoMaps) shouldDoMap = "world";
-                shouldDoMap = "create";
+                //if(!shouldDoMaps) selectedMap = "world";
+                selectedMap = "create";
             }
         }
         //if selectedMap != world, it already has a map ID and will be run below
@@ -1850,7 +1853,7 @@ function autoMap() {
     if (!game.global.preMapsActive) {
         if (game.global.mapsActive) {
             //if we are doing the right map, and it's not a norecycle (unique) map, and we aren't going to hit max map bonus
-            if (shouldDoMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle && (game.global.mapBonus < 9 || shouldFarm || stackingTox)) {
+            if (selectedMap == game.global.currentMapId && !game.global.mapsOwnedArray[getMapIndex(game.global.currentMapId)].noRecycle && (game.global.mapBonus < 9 || shouldFarm || stackingTox)) {
                 var targetPrestige = autoTrimpSettings.Prestige.selected;
                 //make sure repeat map is on
                 if (!game.global.repeatMap) {
@@ -1871,7 +1874,7 @@ function autoMap() {
                 }
             }
         } else if (!game.global.mapsActive) {
-            if (shouldDoMap != "world") {
+            if (selectedMap != "world") {
                 //if shouldFarm, don't switch until after megafarming
                 if (!game.global.switchToMaps && ((shouldFarm && game.global.lastClearedCell > 79) || !shouldFarm)) {
                      mapsClicked();
@@ -1882,10 +1885,10 @@ function autoMap() {
             }
         }
     } else if (game.global.preMapsActive) {
-        if (shouldDoMap == "world") {
+        if (selectedMap == "world") {
             mapsClicked();  //go back
         }
-        else if (shouldDoMap == "create") {
+        else if (selectedMap == "create") {
             //create a siphonology level map if not prestiging (void map diff check consideration here?)
             var mapLevel = game.global.world;
             if(shouldDoMaps && !needPrestige) {
@@ -1943,19 +1946,37 @@ function autoMap() {
                     sizeAdvMapsRange.value -= 1;
                 }
             }
-            //if we can't afford the map we designed, pick our highest map
+            //Common:
+            //if we still cant afford the map, lower the size slider (make it larger) (doesn't matter much for farming.)
+            while (sizeAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+                sizeAdvMapsRange.value -= 1;
+            }
+            //if we STILL cant afford the map, lower the loot slider (less loot)
+            while (lootAdvMapsRange.value > 0 && updateMapCost(true) > game.resources.fragments.owned) {
+                lootAdvMapsRange.value -= 1;
+            }
+            //if we can't afford the map we designed, pick our highest existing map
             if (updateMapCost(true) > game.resources.fragments.owned) {
                 selectMap(game.global.mapsOwnedArray[highestMap].id);
+                debug("Can't afford the map we designed, #" + document.getElementById("mapLevelInput").value, '*crying2');
+                debug("..picking our highest map:# " + game.global.mapsOwnedArray[highestMap].id + " Level: " + game.global.mapsOwnedArray[highestMap].level, '*happy2');
                 runMap();
             } else {
-                if(buyMap() == -2){
+                debug("BUYING a Map, level: #" + document.getElementById("mapLevelInput").value, 'th-large');
+                var result = buyMap();
+                if(result == -2){
+                    debug("Too many maps, recycling now: ", 'th-large');
                     recycleBelow(true);
-                     buyMap();
+                    debug("Retrying BUYING a Map, level: #" + document.getElementById("mapLevelInput").value, 'th-large');
+                    buyMap();
                 }
             }
             //if we already have a map picked, run it
         } else {
-            selectMap(shouldDoMap);
+            selectMap(selectedMap);
+            debug("Already have a map picked: Running map: " + selectedMap +
+                " Level: " + game.global.mapsOwnedArray[getMapIndex(selectedMap)].level +
+                " Name: " + game.global.mapsOwnedArray[getMapIndex(selectedMap)].name, 'th-large');
             runMap();
         }
     }
@@ -2174,8 +2195,13 @@ function betterAutoFight() {
         fightManual();
     }
     //Click Fight if we are dead and already have enough for our breed timer, and fighting would not add a significant amount of time
-    if (!game.global.fighting && getBreedTime() < 2 && (game.global.lastBreedTime/1000) > autoTrimpSettings.GeneticistTimer.value && game.global.soldierHealth == 0)
-        fightManual();
+    if (!game.global.fighting) {
+        if (getBreedTime() < 2 && (game.global.lastBreedTime/1000) > autoTrimpSettings.GeneticistTimer.value && game.global.soldierHealth == 0)
+            fightManual();
+        //AutoFight will now send Trimps to fight if it takes less than 0.1 seconds to breed a new group of soldiers, even if the population limit hasn't been reached yet
+        else if (game.resources.trimps.owned >= game.resources.trimps.realMax() || getBreedTime() <= 0.1)
+            fightManual();
+    }
 }
 
 //Exits the Spire after completing the specified cell.
