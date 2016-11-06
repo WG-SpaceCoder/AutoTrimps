@@ -2274,6 +2274,7 @@ function delayStartAgain(){
     setInterval(mainLoop, runInterval);
     updateCustomButtons();
     document.getElementById('Prestige').value = autoTrimpSettings.PrestigeBackup.selected;
+    tooltip('confirm', null, 'update', '<b>Message from the AUTOTRIMPS Editor (genBTC):</b> Sorry for the recent breakage of the script. You are currently on the zininzinin branch. I have been designated the official maintainer of this branch for a while now (June), and have been running my own repository since April. The fact is that so much work goes into keeping both scripts seperated, and I let an error slip in. Any work I do on the script is tested first on the genBTC branch and ported over to zininzinin once its stable. In a month or two they will be merged completely. So get ready. Please take this opportunity to try out your game on the genBTC branch, it is slightly different but otherwise compatible.(look for new settings/tooltips, changelog is inaccurate,more work) <a href="https://github.com/genbtc/AutoTrimps/raw/gh-pages/.user.js">Install genBTC script into Tampermonkey/Greasemonkey</a> If you use the bookmarklet, replace the word zininzinin with genbtc in the URL. <i>Hit either button to exit</i>', 'cancelTooltip()', 'Script Update Notification/Request');
 }
 
 ////////////////////////////////////////
