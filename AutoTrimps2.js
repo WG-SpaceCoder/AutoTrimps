@@ -1107,6 +1107,8 @@ function buyStorage() {
 function safeFireJob(job,amount) {
     //do some jiggerypokery in case jobs overflow and firing -1 worker does 0 (java integer overflow)
     var oldjob = game.jobs[job].owned;
+    if (oldjob == 0)
+        return 0;    
     var test = oldjob;
     var x = 1;
     if (!Number.isSafeInteger(oldjob)){
