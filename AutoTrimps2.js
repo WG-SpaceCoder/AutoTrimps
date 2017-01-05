@@ -46,11 +46,8 @@ function initializeAutoTrimps() {
 
 function printChangelog() {
     tooltip('confirm', null, 'update', '\
-<br>12/23 v2.1.5.2 - BugFixes for 2.1.5.1\
-<br>12/23 v2.1.5.1 - Whole slew of changes, some small some big, Read commit history\
-<br><b><u>Report any bugs/problems please!</u></b>\
-<br><a href="https://github.com/genbtc/AutoTrimps#current-feature-changes-by-genbtc-up-to-date-as-of-12202016" target="#">Read the 12/20 Changelog Here</a>\
-<br><a href="https://github.com/genbtc/AutoTrimps/commits/gh-pages" target="#">Check the commit history</a> (if you care)\
+<br>12/23 v2.1.5.2 - You are on the outdated zininzinin branch. Please Update to the genBTC branch\
+<br><a href="https://github.com/genbtc/AutoTrimps/" target="#">Visit the github here</a>\
 ', 'cancelTooltip()', 'Script Update Notice ' + ATversion);
 }
 ////////////////////////////////////////
