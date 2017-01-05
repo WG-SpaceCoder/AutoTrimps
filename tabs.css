@@ -1,0 +1,60 @@
+/*For the autotrimps Top right Story/Loot/Unlocks/Combat/Settings/AutoTrimps Tabs, so they dont overlap*/
+#logBtnGroup div {
+    width: 19%!important;
+}
+div#logConfigHolder.btn-group {
+    width: 5%!important;    /* overriding like 3 previous things :/ */
+}
+#logConfigBtn {
+    padding: 6px 0px!important;
+}
+/*For the NEWUI2.js settings window*/
+
+/* Style the list */
+ul.tab {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Float the list items side by side */
+ul.tab li {float: left;}
+
+/* Style the links inside the list items */
+ul.tab li a {
+    display: inline-block;
+    color: black;
+    text-align: center;
+    padding: 0.5vh 1vw;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 2vh;
+}
+/* Create an active/current tablink class */
+ul.tab li a.active {background-color: #ccc;}
+
+/* Change background color of links on hover */
+ul.tab li a:hover {background-color: #ddd;}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    border: 1px solid #ccc;
+    border-top: none;
+    -webkit-animation: fadeEffect 1s;
+    animation: fadeEffect 1s; /* Fading effect takes 1 second */
+    transform: translateZ(0);
+}
+
+@-webkit-keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
