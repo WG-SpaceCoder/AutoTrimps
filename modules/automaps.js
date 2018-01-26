@@ -610,6 +610,7 @@ function autoMap() {
             if (needFarmSpire && MODULES["automaps"].SpireFarm199Maps)
                 document.getElementById("mapLevelInput").value = game.talents.mapLoot.purchased ? 199 : 200;
             //recalculate cost.
+            advSpecialSelect.value = fa;
             updateMapCost();
             //if we are "Farming" for resources, make sure it's Plentiful OR metal (and always aim for lowest difficulty)
             if(shouldFarm || !enoughDamage || !enoughHealth || game.global.challengeActive == 'Metal') {
