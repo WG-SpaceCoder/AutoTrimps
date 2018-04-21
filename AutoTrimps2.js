@@ -41,7 +41,8 @@ function initializeAutoTrimps() {
     toggleSettingsMenu();
     toggleSettingsMenu();
     //
-    debug('AutoTrimps v' + ATversion + ' Loaded!', '*spinner3');    
+    debug('AutoTrimps v' + ATversion + ' Loaded!', '*spinner3');   
+    settings.set();
 }
 
 function printChangelog() {
