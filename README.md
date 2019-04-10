@@ -1,3 +1,5 @@
+#For the latest version visit: https://github.com/Zorn192/AutoTrimps
+
 # AutoTrimps (genBTC version) backported to zininzinin.
 Automation script for the idle incremental game Trimps
 
